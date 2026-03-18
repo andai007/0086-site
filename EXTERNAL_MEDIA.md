@@ -1,21 +1,20 @@
 # External Media Setup
 
-This GitHub-ready copy externalizes large videos and images so the repository stays practical to push and publish.
+This GitHub-ready copy keeps normal assets in the repo and serves only the very large videos from GitHub Release assets.
 
 ## Files
-- Repo copy: HTML, CSS, JS, and smaller local assets
-- External media bundle: upload the contents of `/Users/andai007/Desktop/0086-large-media-20260318`
+- Repo copy: HTML, CSS, JS, images, and all assets up to 100 MiB
+- External media bundle: `/Users/andai007/Desktop/0086-large-media-20260318`
 
 ## Fast Path
-1. Upload the large media bundle to any public static host while preserving its folder structure.
-2. Edit `assets/external-media-config.js`.
-3. Replace `https://YOUR-PUBLIC-MEDIA-HOST/0086-media` with the public base URL of that upload.
-4. Publish this repo to GitHub and enable GitHub Pages.
+1. The release asset URLs are already wired in `assets/external-media-config.js`.
+2. Publish this repo to GitHub Pages from `main`.
+3. If you ever move these files away from GitHub Releases, update `overrides` in `assets/external-media-config.js`.
 
 ## If Paths Change
-- Keep `base` as-is if your external host preserves the same folder structure.
-- Use `overrides` if one or more files must point to fully custom URLs.
+- `overrides` is the source of truth for the 13 externalized videos.
+- `base` is unused in the current setup and can stay as a placeholder.
 
 ## Manifest
-- See `external-media-manifest.json` for the exact file list, sizes, and page dependencies.
-- The current externalization threshold in this publish variant is 5 MiB.
+- See `external-media-manifest.json` for the exact file list, sizes, page dependencies, and GitHub Release URLs.
+- The current externalization threshold in this publish variant is 100 MiB.
