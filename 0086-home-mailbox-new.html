@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>0086 | 沉浸式创意与 AI 首页</title>
+  <style>
+    :root {
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 20px;
+      --space-6: 24px;
+      --space-8: 32px;
+      --space-10: 40px;
+      --space-12: 48px;
+      --space-16: 64px;
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 22px;
+      --radius-pill: 999px;
+
+      --font-display: "Noto Serif SC", "Songti SC", "STSong", serif;
+      --font-body: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      --font-mono: "IBM Plex Mono", "SFMono-Regular", "Menlo", monospace;
+
+      --bg: #120d09;
+      --bg-alt: #1b1410;
+      --surface: rgba(35, 24, 18, 0.72);
+      --surface-strong: rgba(35, 24, 18, 0.92);
+      --line: rgba(243, 211, 158, 0.26);
+      --text: #f2e7d7;
+      --text-dim: rgba(242, 231, 215, 0.74);
+      --accent: #f0c46c;
+      --accent-2: #ff5d2d;
+      --success: #81e3b4;
+
+      --shadow-soft: 0 16px 50px rgba(0, 0, 0, 0.4);
+      --shadow-glow: 0 0 26px rgba(255, 134, 56, 0.42);
+
+      --duration-fast: 220ms;
+      --duration-mid: 420ms;
+      --duration-slow: 700ms;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      color-scheme: dark;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: var(--font-body);
+      color: var(--text);
+      background:
+        radial-gradient(circle at 16% 12%, rgba(235, 110, 64, 0.12), transparent 34%),
+        radial-gradient(circle at 80% 8%, rgba(211, 148, 55, 0.12), transparent 28%),
+        linear-gradient(180deg, #0f0b08 0%, var(--bg) 45%, #110d0a 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 232, 190, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 232, 190, 0.05) 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: 0.14;
+      z-index: -1;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-4) clamp(var(--space-4), 2.5vw, var(--space-10));
+      border-bottom: 1px solid rgba(255, 211, 150, 0.18);
+      background: linear-gradient(180deg, rgba(15, 11, 8, 0.92), rgba(15, 11, 8, 0.75));
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .brand img {
+      width: clamp(44px, 5vw, 56px);
+      height: auto;
+      filter: drop-shadow(0 0 16px rgba(255, 138, 66, 0.5));
+    }
+
+    .brand p {
+      font-family: var(--font-mono);
+      font-size: clamp(11px, 1.1vw, 13px);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(var(--space-3), 2vw, var(--space-8));
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav a {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      transition: color var(--duration-fast) ease;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible {
+      color: var(--accent);
+      outline: none;
+    }
+
+    .main {
+      width: min(1360px, 100% - var(--space-8));
+      margin-inline: auto;
+      padding: var(--space-10) 0 var(--space-16);
+      display: grid;
+      gap: var(--space-16);
+    }
+
+    .hero {
+      display: grid;
+      gap: var(--space-5);
+    }
+
+    .hero-headline {
+      display: grid;
+      gap: var(--space-3);
+      max-width: 860px;
+    }
+
+    .hero-kicker {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--success);
+    }
+
+    .hero-headline h1 {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 5vw, 68px);
+      line-height: 1.08;
+      font-weight: 600;
+      text-wrap: balance;
+    }
+
+    .hero-headline p {
+      max-width: 760px;
+      color: var(--text-dim);
+      font-size: clamp(15px, 1.9vw, 19px);
+      line-height: 1.85;
+    }
+
+    .hero-stage {
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, rgba(15, 11, 8, 0.86), rgba(18, 13, 9, 0.96));
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      isolation: isolate;
+      min-height: clamp(430px, 62vw, 760px);
+    }
+
+    .hero-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 30%), rgba(255, 163, 92, 0.2), transparent 36%),
+        linear-gradient(120deg, rgba(255, 126, 72, 0.12), transparent 48%);
+      pointer-events: none;
+      transition: opacity var(--duration-fast) ease;
+      z-index: 2;
+    }
+
+    .hero-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: saturate(0.95) contrast(0.94) brightness(0.86);
+    }
+
+    .hero-vignette {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, 0.24) 58%, rgba(0, 0, 0, 0.55) 100%),
+        linear-gradient(180deg, rgba(15, 9, 5, 0.62) 0%, rgba(15, 9, 5, 0.06) 42%, rgba(15, 9, 5, 0.62) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .glow-overlay {
+      position: absolute;
+      left: 50%;
+      top: 4%;
+      transform: translateX(-50%);
+      width: clamp(210px, 40vw, 590px);
+      height: clamp(90px, 12vw, 160px);
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .glow-red,
+    .glow-gold,
+    .glow-core {
+      position: absolute;
+      border-radius: var(--radius-pill);
+      inset: 0;
+      mix-blend-mode: screen;
+      transform-origin: center;
+    }
+
+    .glow-red {
+      background: radial-gradient(ellipse 62% 72% at 50% 56%, rgba(255, 50, 16, 0.6) 0%, rgba(255, 82, 28, 0.3) 40%, transparent 78%);
+      animation: breath-red 3.6s ease-in-out infinite;
+    }
+
+    .glow-gold {
+      inset: 9% 18%;
+      background: radial-gradient(ellipse 56% 66% at 50% 56%, rgba(255, 191, 82, 0.52) 0%, rgba(255, 174, 52, 0.22) 48%, transparent 74%);
+      animation: breath-gold 3.6s ease-in-out infinite;
+    }
+
+    .glow-core {
+      inset: 21% 30%;
+      background: radial-gradient(ellipse 58% 58% at 50% 56%, rgba(255, 244, 209, 0.42) 0%, rgba(255, 232, 171, 0.16) 54%, transparent 76%);
+      animation: breath-core 3.6s ease-in-out infinite;
+    }
+
+    .hero-logo {
+      position: absolute;
+      top: 2.2%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: clamp(58px, 7vw, 98px);
+      z-index: 5;
+      filter: drop-shadow(0 0 24px rgba(255, 122, 46, 0.56));
+      animation: logo-float 3.8s ease-in-out infinite;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .hotspot {
+      position: absolute;
+      z-index: 6;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      background: transparent;
+      transition:
+        background var(--duration-mid) var(--ease-out),
+        border-color var(--duration-fast) ease,
+        box-shadow var(--duration-fast) ease,
+        transform var(--duration-fast) ease;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-2);
+    }
+
+    .hotspot span {
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all var(--duration-fast) ease;
+      font-family: var(--font-mono);
+      font-size: clamp(10px, 1vw, 12px);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255, 214, 144, 0.95);
+      pointer-events: none;
+      text-shadow: 0 0 10px rgba(255, 190, 96, 0.45);
+    }
+
+    .hotspot:hover,
+    .hotspot:focus-visible {
+      background: rgba(16, 9, 5, 0.74);
+      mix-blend-mode: multiply;
+      border-color: rgba(255, 196, 106, 0.6);
+      box-shadow: 0 0 0 1px rgba(255, 196, 106, 0.25), var(--shadow-glow);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .hotspot:hover span,
+    .hotspot:focus-visible span {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hotspot-ai {
+      top: 33%;
+      left: 18%;
+      width: 24%;
+      height: 20%;
+    }
+
+    .hotspot-art {
+      top: 25%;
+      left: 58%;
+      width: 24%;
+      height: 21%;
+    }
+
+    .hotspot-work {
+      top: 57%;
+      left: 41%;
+      width: 28%;
+      height: 20%;
+    }
+
+    .hotspot-contact {
+      top: 63%;
+      left: 10%;
+      width: 24%;
+      height: 17%;
+    }
+
+    .hero-bottom {
+      position: absolute;
+      inset: auto 0 0;
+      z-index: 4;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: var(--space-4);
+      padding: var(--space-6);
+      background: linear-gradient(180deg, rgba(18, 13, 9, 0) 0%, rgba(18, 13, 9, 0.94) 74%);
+      pointer-events: none;
+    }
+
+    .hero-bottom small {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 225, 178, 0.8);
+    }
+
+    .hero-bottom p {
+      max-width: 56ch;
+      font-size: 14px;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+
+    .hero-tip {
+      color: rgba(243, 218, 171, 0.78);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding-left: var(--space-2);
+    }
+
+    .hero-tip::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: var(--radius-pill);
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(255, 199, 110, 0.7);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-4);
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      padding: var(--space-6);
+      display: grid;
+      gap: var(--space-2);
+      backdrop-filter: blur(7px);
+    }
+
+    .stat strong {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 3.2vw, 42px);
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .stat h2 {
+      font-size: clamp(16px, 1.6vw, 22px);
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .stat p {
+      color: var(--text-dim);
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .cases {
+      display: grid;
+      gap: var(--space-6);
+    }
+
+    .cases-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+
+    .cases-head h2 {
+      font-family: var(--font-display);
+      font-size: clamp(26px, 3.2vw, 44px);
+      line-height: 1.2;
+      max-width: 16ch;
+    }
+
+    .cases-head p {
+      max-width: 46ch;
+      color: var(--text-dim);
+      line-height: 1.75;
+      font-size: 15px;
+    }
+
+    .case-grid {
+      display: grid;
+      gap: var(--space-4);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .case-card {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: var(--surface-strong);
+      transition: transform var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+    }
+
+    .case-card:hover,
+    .case-card:focus-within {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .case-card img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      display: block;
+    }
+
+    .case-body {
+      padding: var(--space-4);
+      display: grid;
+      gap: var(--space-2);
+    }
+
+    .case-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--success);
+    }
+
+    .case-body h3 {
+      font-size: 18px;
+      line-height: 1.35;
+      font-weight: 600;
+    }
+
+    .case-body p {
+      color: var(--text-dim);
+      font-size: 14px;
+      line-height: 1.75;
+      min-height: 3.6em;
+    }
+
+    .case-link {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-top: var(--space-1);
+    }
+
+    .cta {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: clamp(var(--space-6), 3vw, var(--space-12));
+      display: grid;
+      grid-template-columns: 1.2fr auto;
+      gap: var(--space-6);
+      background:
+        linear-gradient(140deg, rgba(255, 126, 67, 0.12), rgba(255, 197, 92, 0.08) 42%, rgba(129, 227, 180, 0.06)),
+        var(--surface);
+      align-items: center;
+    }
+
+    .cta h2 {
+      font-family: var(--font-display);
+      font-size: clamp(22px, 2.8vw, 38px);
+      line-height: 1.2;
+      margin-bottom: var(--space-2);
+    }
+
+    .cta p {
+      color: var(--text-dim);
+      line-height: 1.8;
+      font-size: 15px;
+      max-width: 54ch;
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 209, 141, 0.52);
+      padding: 10px 18px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: rgba(30, 20, 14, 0.75);
+      transition: all var(--duration-fast) ease;
+    }
+
+    .btn:hover,
+    .btn:focus-visible {
+      background: rgba(255, 187, 95, 0.18);
+      color: #fff4df;
+      border-color: rgba(255, 209, 141, 0.76);
+      outline: none;
+    }
+
+    .btn.primary {
+      background: linear-gradient(110deg, rgba(255, 129, 64, 0.9), rgba(255, 195, 108, 0.9));
+      color: #2a1609;
+      border-color: rgba(255, 194, 102, 0.95);
+      font-weight: 600;
+    }
+
+    .btn.primary:hover,
+    .btn.primary:focus-visible {
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+    }
+
+    .site-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+      color: rgba(242, 231, 215, 0.6);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding-top: var(--space-4);
+      border-top: 1px solid rgba(243, 211, 158, 0.18);
+    }
+
+    .subpage-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      display: grid;
+      place-items: center;
+      background: rgba(11, 8, 6, 0);
+      pointer-events: none;
+      transition: background var(--duration-mid) ease;
+      padding: var(--space-6);
+    }
+
+    .subpage-overlay.active {
+      background: rgba(11, 8, 6, 0.9);
+      pointer-events: auto;
+    }
+
+    .subpage-dialog {
+      position: relative;
+      width: min(740px, 100%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, rgba(28, 20, 14, 0.98), rgba(20, 14, 10, 0.98));
+      box-shadow: var(--shadow-soft);
+      padding: clamp(var(--space-6), 4.5vw, var(--space-12));
+      opacity: 0;
+      transform: translateY(24px) scale(0.98);
+      transition: opacity var(--duration-mid) var(--ease-out), transform var(--duration-mid) var(--ease-out);
+    }
+
+    .subpage-overlay.active .subpage-dialog {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .subpage-close {
+      position: absolute;
+      top: var(--space-3);
+      right: var(--space-3);
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 210, 145, 0.5);
+      color: var(--text);
+      background: rgba(28, 19, 13, 0.9);
+      font-size: 19px;
+      line-height: 1;
+      cursor: pointer;
+      transition: transform var(--duration-fast) ease, border-color var(--duration-fast) ease;
+    }
+
+    .subpage-close:hover,
+    .subpage-close:focus-visible {
+      transform: rotate(90deg);
+      border-color: rgba(255, 210, 145, 0.9);
+      outline: none;
+    }
+
+    .subpage-dialog h2 {
+      font-family: var(--font-display);
+      font-size: clamp(26px, 3.4vw, 46px);
+      line-height: 1.2;
+      margin-bottom: var(--space-4);
+      color: #ffe4ba;
+    }
+
+    .subpage-dialog p {
+      color: var(--text-dim);
+      line-height: 1.9;
+      font-size: 15px;
+      margin-bottom: var(--space-3);
+    }
+
+    .subpage-actions {
+      margin-top: var(--space-6);
+      display: flex;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+    }
+
+    .audio-toggle {
+      position: fixed;
+      right: var(--space-4);
+      bottom: var(--space-4);
+      z-index: 90;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 207, 136, 0.6);
+      background: rgba(16, 11, 8, 0.88);
+      color: rgba(255, 225, 178, 0.9);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: all var(--duration-fast) ease;
+    }
+
+    .audio-toggle:hover,
+    .audio-toggle:focus-visible {
+      border-color: rgba(255, 207, 136, 0.95);
+      color: #fff2da;
+      box-shadow: var(--shadow-glow);
+      outline: none;
+    }
+
+    @keyframes breath-red {
+      0%, 100% { opacity: 0.22; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+
+    @keyframes breath-gold {
+      0%, 100% { opacity: 0.18; transform: scale(0.94); }
+      50% { opacity: 0.92; transform: scale(1.08); }
+    }
+
+    @keyframes breath-core {
+      0%, 100% { opacity: 0.12; transform: scale(0.87); }
+      50% { opacity: 0.86; transform: scale(1.14); }
+    }
+
+    @keyframes logo-float {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-2px); }
+    }
+
+    @media (max-width: 1024px) {
+      .main {
+        width: min(1360px, 100% - var(--space-6));
+        gap: var(--space-12);
+      }
+
+      .hero-stage {
+        min-height: clamp(420px, 72vw, 660px);
+      }
+
+      .stats,
+      .case-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .cta {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-actions {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .site-header {
+        gap: var(--space-4);
+      }
+
+      .nav {
+        gap: var(--space-3);
+      }
+
+      .nav a {
+        font-size: 11px;
+      }
+
+      .main {
+        width: min(1360px, 100% - var(--space-4));
+        padding-top: var(--space-6);
+      }
+
+      .hero-stage {
+        min-height: 132vw;
+      }
+
+      .glow-overlay {
+        top: 3%;
+      }
+
+      .hotspot-ai {
+        top: 28%;
+        left: 8%;
+        width: 36%;
+        height: 18%;
+      }
+
+      .hotspot-art {
+        top: 23%;
+        left: 57%;
+        width: 35%;
+        height: 18%;
+      }
+
+      .hotspot-work {
+        top: 56%;
+        left: 34%;
+        width: 54%;
+        height: 20%;
+      }
+
+      .hotspot-contact {
+        top: 64%;
+        left: 8%;
+        width: 38%;
+        height: 17%;
+      }
+
+      .hero-bottom {
+        padding: var(--space-4);
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .stats,
+      .case-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .audio-toggle {
+        right: var(--space-3);
+        bottom: var(--space-3);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-headline h1 {
+        font-size: clamp(28px, 9vw, 38px);
+      }
+
+      .hero-headline p,
+      .cases-head p,
+      .cta p {
+        font-size: 14px;
+      }
+
+      .subpage-dialog {
+        padding: var(--space-10) var(--space-5) var(--space-6);
+      }
+
+      .subpage-dialog p {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="home">
+    <a class="brand" href="0086-home-mailbox-new.html" aria-label="返回 0086 首页">
+      <img src="assets/0086-logo.png" alt="0086 Logo">
+      <p>AI + EXHIBITION STUDIO</p>
+    </a>
+    <nav class="nav" aria-label="主导航">
+      <a href="0086-ai.html">AI</a>
+      <a href="0086-services.html">Services</a>
+      <a href="0086-selected-works.html">Works</a>
+      <a href="0086-about.html">About</a>
+      <a href="0086-news.html">News</a>
+      <a href="0086-work.html">Contact</a>
+    </nav>
+  </header>
+
+  <main class="main">
+    <section class="hero" aria-labelledby="heroTitle">
+      <div class="hero-headline">
+        <p class="hero-kicker">0086 New Home Experience</p>
+        <h1 id="heroTitle">把品牌想象推进真实现场</h1>
+        <p>0086 用 AI、空间叙事与互动系统，把抽象概念转成可体验、可传播、可转化的品牌现场。点击主画面热区，直接进入四条核心能力线。</p>
+      </div>
+
+      <div class="hero-stage" id="heroStage">
+        <img class="hero-image" src="assets/cases/home-hero-0086.png" alt="0086 沉浸式主视觉">
+        <div class="hero-vignette"></div>
+
+        <div class="glow-overlay" aria-hidden="true">
+          <div class="glow-red"></div>
+          <div class="glow-gold"></div>
+          <div class="glow-core"></div>
+        </div>
+
+        <img class="hero-logo" src="assets/0086-logo.png" alt="">
+
+        <a class="hotspot hotspot-ai" href="#" data-panel="ai" aria-label="打开 AI 服务详情"><span>AI Service</span></a>
+        <a class="hotspot hotspot-art" href="#" data-panel="art" aria-label="打开展览与互动详情"><span>Spatial Art</span></a>
+        <a class="hotspot hotspot-work" href="#" data-panel="work" aria-label="打开精选案例详情"><span>Selected Works</span></a>
+        <a class="hotspot hotspot-contact" href="#" data-panel="contact" aria-label="打开联系详情"><span>Contact</span></a>
+
+        <div class="hero-bottom">
+          <small>Hotspot Driven Navigation</small>
+          <p>保留参考页的透明热区机制，hover 时通过混合模式增强可点击感，移动端则扩大触发范围，保证手势可达性与识别度。</p>
+        </div>
+      </div>
+
+      <p class="hero-tip">提示：支持键盘操作。Tab 聚焦热区后按 Enter 可打开详情，Esc 可关闭。</p>
+    </section>
+
+    <section class="stats" aria-label="关键指标">
+      <article class="stat">
+        <strong>120+</strong>
+        <h2>品牌现场与互动项目交付</h2>
+        <p>覆盖发布会、商业空间、文化展陈与城市公共叙事，形成从概念到上线的一体化生产链路。</p>
+      </article>
+      <article class="stat">
+        <strong>18 城</strong>
+        <h2>跨城市落地与联合执行能力</h2>
+        <p>支持跨地域团队协同，统一创意标准、技术基线与运营节奏，减少异地交付损耗。</p>
+      </article>
+      <article class="stat">
+        <strong>4 周</strong>
+        <h2>高密度项目最短成型周期</h2>
+        <p>通过 AI 内容生产与模块化工程策略，把方案评审、迭代测试和部署上线压缩到可控窗口。</p>
+      </article>
+    </section>
+
+    <section class="cases" id="works" aria-labelledby="casesTitle">
+      <div class="cases-head">
+        <h2 id="casesTitle">近期案例与可复用能力模块</h2>
+        <p>下列项目可作为你的起始模板。你可以直接复用交互框架、空间叙事结构与 AI 内容管线，再按品牌语境做定制化迭代。</p>
+      </div>
+
+      <div class="case-grid">
+        <article class="case-card">
+          <a href="case-ai-emotion-box.html">
+            <img src="assets/cases/teamlab-shenzhen.png" alt="AI 情绪互动装置案例">
+            <div class="case-body">
+              <span class="case-tag">AI Installation</span>
+              <h3>AI 情绪交互盒子</h3>
+              <p>把实时感知、生成式视觉与多通道音景组合成公共空间可持续互动体验。</p>
+              <span class="case-link">查看案例</span>
+            </div>
+          </a>
+        </article>
+
+        <article class="case-card">
+          <a href="case-immersive-experience.html">
+            <img src="assets/cases/teamlab-wuhan.png" alt="沉浸式展演案例">
+            <div class="case-body">
+              <span class="case-tag">Immersive Space</span>
+              <h3>沉浸式品牌叙事空间</h3>
+              <p>从入口动线到剧情节点，建立可记忆、可社交传播的多层次叙事场域。</p>
+              <span class="case-link">查看案例</span>
+            </div>
+          </a>
+        </article>
+
+        <article class="case-card">
+          <a href="case-poem-song.html">
+            <img data-external-src="assets/cases/sandaoshui-xuzhimo.png" alt="AI 文学音乐明信片案例">
+            <div class="case-body">
+              <span class="case-tag">Generative Media</span>
+              <h3>诗歌与 AI 音乐明信片</h3>
+              <p>把文化内容拆成可互动、可分享的轻量数字资产，提升二次传播效率。</p>
+              <span class="case-link">查看案例</span>
+            </div>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <section class="cta" aria-label="行动引导">
+      <div>
+        <h2>把下一场发布做成城市话题</h2>
+        <p>给我们一个品牌目标和档期窗口，0086 会在 48 小时内返回方向草案、场景脚本与执行框架，帮助你快速进入可评估、可落地的决策状态。</p>
+      </div>
+      <div class="cta-actions">
+        <a class="btn primary" href="0086-services.html">立即咨询</a>
+        <a class="btn" href="0086-selected-works.html">查看案例</a>
+        <a class="btn" href="0086-about.html">预约沟通</a>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <span>0086 Studios / AI + Art + Space</span>
+      <span>Shanghai · Shenzhen · Hangzhou</span>
+    </footer>
+  </main>
+
+  <div class="subpage-overlay" id="subpage" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="subpageTitle">
+    <article class="subpage-dialog" id="subpageDialog">
+      <button class="subpage-close" id="closeBtn" aria-label="关闭详情">×</button>
+      <div id="subpageContent"></div>
+    </article>
+  </div>
+
+  <button class="audio-toggle" id="audioToggle" aria-pressed="false">开启呼吸声</button>
+
+  <script>
+    const panels = {
+      ai: {
+        title: "AI 服务线",
+        body: [
+          "我们提供从模型策略、内容生产到实时交互部署的一体化方案，支持发布会、零售空间与常设展陈场景。",
+          "你可以选择标准模块快速上线，也可以按品牌资产做深度定制，兼顾可扩展性和现场稳定性。"
+        ],
+        primary: { href: "0086-ai.html", text: "查看 AI 服务" },
+        secondary: { href: "0086-service-ai-tech.html", text: "技术能力" }
+      },
+      art: {
+        title: "展览与互动线",
+        body: [
+          "从空间分镜、硬件联动到现场调度，我们把“看见”升级为“参与”，让观众成为叙事的一部分。",
+          "每个互动节点都围绕传播效率设计，确保品牌信息在体验完成后仍可被复述和分享。"
+        ],
+        primary: { href: "0086-service-exhibition.html", text: "查看展览服务" },
+        secondary: { href: "case-interactive-site.html", text: "互动案例" }
+      },
+      work: {
+        title: "精选项目线",
+        body: [
+          "0086 的案例覆盖文化内容、商业品牌与科技体验，既能处理大型空间叙事，也能完成轻量数字触点。",
+          "如果你希望用更短周期验证方向，可从已有模板切入，再逐步扩展到完整项目。"
+        ],
+        primary: { href: "0086-selected-works.html", text: "进入作品集" },
+        secondary: { href: "0086-work.html", text: "更多项目" }
+      },
+      contact: {
+        title: "合作与沟通线",
+        body: [
+          "提交项目背景、预算区间和时间节点后，我们会在两个工作日内给出分阶段执行建议。",
+          "你也可以先约一次 30 分钟在线沟通，快速判断项目匹配度与优先级。"
+        ],
+        primary: { href: "0086-about.html", text: "联系 0086" },
+        secondary: { href: "0086-services.html", text: "服务总览" }
+      }
+    };
+
+    const overlay = document.getElementById("subpage");
+    const content = document.getElementById("subpageContent");
+    const closeBtn = document.getElementById("closeBtn");
+    const hotspots = document.querySelectorAll(".hotspot");
+    const heroStage = document.getElementById("heroStage");
+
+    let lastTrigger = null;
+
+    function renderPanel(key) {
+      const panel = panels[key];
+      if (!panel) return;
+
+      content.innerHTML = `
+        <h2 id="subpageTitle">${panel.title}</h2>
+        <p>${panel.body[0]}</p>
+        <p>${panel.body[1]}</p>
+        <div class="subpage-actions">
+          <a class="btn primary" href="${panel.primary.href}">${panel.primary.text}</a>
+          <a class="btn" href="${panel.secondary.href}">${panel.secondary.text}</a>
+        </div>
+      `;
+    }
+
+    function openPanel(key, triggerEl) {
+      renderPanel(key);
+      overlay.classList.add("active");
+      overlay.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      lastTrigger = triggerEl;
+      closeBtn.focus();
+    }
+
+    function closePanel() {
+      overlay.classList.remove("active");
+      overlay.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      if (lastTrigger) lastTrigger.focus();
+    }
+
+    hotspots.forEach((item) => {
+      item.addEventListener("click", (event) => {
+        event.preventDefault();
+        openPanel(item.dataset.panel, item);
+      });
+    });
+
+    closeBtn.addEventListener("click", closePanel);
+
+    overlay.addEventListener("click", (event) => {
+      if (event.target === overlay) closePanel();
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && overlay.classList.contains("active")) {
+        closePanel();
+      }
+    });
+
+    heroStage.addEventListener("pointermove", (event) => {
+      const rect = heroStage.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width) * 100;
+      const y = ((event.clientY - rect.top) / rect.height) * 100;
+      heroStage.style.setProperty("--mouse-x", `${x}%`);
+      heroStage.style.setProperty("--mouse-y", `${y}%`);
+    });
+
+    heroStage.addEventListener("pointerleave", () => {
+      heroStage.style.setProperty("--mouse-x", "50%");
+      heroStage.style.setProperty("--mouse-y", "30%");
+    });
+
+    const audioToggle = document.getElementById("audioToggle");
+
+    let audioCtx;
+    let masterGain;
+    let initialized = false;
+    let active = false;
+
+    function initAudio() {
+      if (initialized) return;
+
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      masterGain = audioCtx.createGain();
+      masterGain.gain.value = 0;
+      masterGain.connect(audioCtx.destination);
+
+      const bedOsc = audioCtx.createOscillator();
+      bedOsc.type = "sine";
+      bedOsc.frequency.value = 74;
+      const bedGain = audioCtx.createGain();
+      bedGain.gain.value = 0.03;
+
+      const pulseOsc = audioCtx.createOscillator();
+      pulseOsc.type = "triangle";
+      pulseOsc.frequency.value = 126;
+      const pulseGain = audioCtx.createGain();
+      pulseGain.gain.value = 0.018;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.value = 420;
+      filter.Q.value = 0.8;
+
+      const lfo = audioCtx.createOscillator();
+      lfo.type = "sine";
+      lfo.frequency.value = 0.22;
+      const lfoGain = audioCtx.createGain();
+      lfoGain.gain.value = 0.045;
+
+      bedOsc.connect(bedGain);
+      pulseOsc.connect(pulseGain);
+      bedGain.connect(filter);
+      pulseGain.connect(filter);
+      filter.connect(masterGain);
+
+      lfo.connect(lfoGain);
+      lfoGain.connect(masterGain.gain);
+
+      bedOsc.start();
+      pulseOsc.start();
+      lfo.start();
+
+      initialized = true;
+    }
+
+    async function toggleAudio() {
+      initAudio();
+      if (audioCtx.state === "suspended") {
+        await audioCtx.resume();
+      }
+
+      active = !active;
+      const now = audioCtx.currentTime;
+      masterGain.gain.cancelScheduledValues(now);
+      masterGain.gain.setTargetAtTime(active ? 0.08 : 0, now, 0.25);
+
+      audioToggle.textContent = active ? "关闭呼吸声" : "开启呼吸声";
+      audioToggle.setAttribute("aria-pressed", String(active));
+    }
+
+    audioToggle.addEventListener("click", toggleAudio);
+  </script>
+  <script src="assets/external-media-config.js"></script>
+  <script src="assets/external-media-loader.js"></script>
+</body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>文化IP及展览案例</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;600;800&display=swap');
+    :root { --black:#000; --white:#fff; --gray-mid:#e0e0e0; --gray-dark:#999; }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Inter',sans-serif;background:#fff;color:#000;min-height:100vh;}
+    body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#d8d8d8 8px,transparent 8px);background-size:100px 100px;background-position:50px 50px;pointer-events:none;z-index:0;}
+    a,a:visited{color:#000;}
+    header{position:sticky;top:0;background:#fff;z-index:10;padding:18px 24px;display:flex;align-items:center;gap:16px;}
+    .brand{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;}
+    .logo-img{height:28px;display:block;}
+    .actions{margin-left:auto;display:flex;gap:16px;}
+    .action{background:#000;color:#fff;padding:8px 14px;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;}
+    main{position:relative;z-index:1;padding:16px 24px 40px;}
+    .meta{font-size:13px;margin:8px 0 16px;}
+    .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;}
+    .card img{width:100%;height:130px;object-fit:cover;display:block;background:#f4f4f4;}
+    .card p{font-size:12px;margin-top:6px;}
+    @media(max-width:1200px){.grid{grid-template-columns:repeat(4,1fr);} .card img{height:150px;}}
+    @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr);} .card img{height:160px;}}
+  
+        /* ========== 0086 Banner Sync ========== */
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --red: #ff0000;
+            --gray-light: #f0f0f0;
+            --gray-mid: #e0e0e0;
+            --gray-dark: #999999;
+            --logo-red-filter: brightness(0) saturate(100%) invert(10%) sepia(95%) saturate(7000%) hue-rotate(0deg) brightness(85%) contrast(120%);
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            height: 51px;
+            padding: 0 24px;
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-mid);
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 12px;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 0.2px;
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .logo-tm {
+            font-size: 9px;
+            font-weight: 700;
+            vertical-align: super;
+        }
+
+        .logo-type {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            width: auto;
+            border-right: none;
+            animation: none;
+        }
+
+        .logo-img {
+            height: 51px;
+            display: block;
+            transform: scale(0.5);
+            transform-origin: left center;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            margin-right: 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            padding: 0 24px;
+            min-width: 180px;
+            background: var(--gray-light);
+            border-right: 1px solid var(--gray-mid);
+            text-decoration: none;
+            color: var(--black);
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            transition: background 0.35s, transform 0.2s, box-shadow 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #e8e8e8;
+            transform: translateY(1px);
+            box-shadow: inset 0 2px 0 rgba(0,0,0,0.15);
+        }
+
+        .nav-dot {
+            width: 28px;
+            height: 28px;
+            background: var(--white);
+            border-radius: 50%;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .nav-dot::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--red);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+
+        .header-right {
+            margin-left: auto;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .header-icon {
+            font-size: 18px;
+            color: var(--red);
+            cursor: pointer;
+        }
+
+        .header-icon-img {
+            height: 51px;
+            display: block;
+            opacity: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .header-icon-canvas {
+            height: 51px;
+            display: block;
+        }
+
+        main {
+            padding-top: 56px;
+        }
+
+        @media (max-width: 1024px) {
+            .nav-item {
+                min-width: 140px;
+                padding: 0 16px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                height: 51px;
+                padding: 0 16px;
+            }
+            .header-nav {
+                display: none;
+            }
+            main {
+                padding-top: 48px;
+            }
+        }
+            
+    
+        .corner-icons {
+            position: fixed;
+            right: 10px;
+            bottom: 0;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+        }
+
+        .corner-icon-mask {
+            display: inline-block;
+            overflow: hidden;
+            width: 0;
+        }
+
+        .corner-icon-mask img {
+            height: 51px;
+            width: auto;
+            display: block;
+        }
+
+        @keyframes cornerType {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+
+        .corner-icons.is-typing .corner-icon-mask {
+            animation: cornerType 1.4s steps(18, end) both;
+        }
+
+    
+
+        
+        
+        
+        
+        
+        /* nav dot override to ensure perfect circle */
+
+
+        .nav-item:hover .nav-dot::after {
+            opacity: 1;
+        }
+
+
+        .header-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--black);
+            letter-spacing: 0.2px;
+            margin-top: 8px;
+            margin-right: -16px;
+            padding-right: 24px;
+            transform: translate(130px, 20px);
+        }
+
+        .header-back img {
+            height: 18px;
+            width: auto;
+            display: block;
+        }
+
+
+        .header-back:active img {
+            filter: brightness(0) saturate(100%) invert(12%) sepia(90%) saturate(4500%) hue-rotate(350deg) brightness(95%) contrast(120%);
+        }
+
+
+        .header-back {
+            position: relative;
+        }
+
+        .header-back::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 18px;
+            height: 18px;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #ff2b2b 0%, #ff7a00 100%);
+            -webkit-mask: url('assets/icons/icon2.svg') no-repeat center / contain;
+            mask: url('assets/icons/icon2.svg') no-repeat center / contain;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .header-back:active::before {
+            opacity: 1;
+        }
+
+        .header-back:active img {
+            opacity: 0;
+        }
+
+
+        .nav-item.is-active {
+            background: #cfcfcf;
+            box-shadow: inset 0 2px 0 rgba(0,0,0,0.15);
+        }
+
+        .nav-item.is-active .nav-dot::after {
+            opacity: 1;
+        }
+</style>
+</head>
+<body>
+  <header>
+        <div class="header-logo">
+            <a href="0086-studios-virgil-strict.html" class="logo-text"><img class="logo-img" src="assets/0086-logo.png" alt="0086 logo"></a>
+        </div>
+
+        <nav class="header-nav">
+            <a href="0086-about.html" class="nav-item">
+                about us
+                <span class="nav-dot"></span>
+            </a>
+            <a href="0086-service-ai-installation.html" class="nav-item" data-filter="interactive">
+                互动装置
+                <span class="nav-dot"></span>
+            </a>
+            <a href="#" class="nav-item" data-filter="space">
+                空间
+                <span class="nav-dot"></span>
+            </a>
+            <a href="0086-services.html" class="nav-item" data-filter="exhibition">
+                展览
+                <span class="nav-dot"></span>
+            </a>
+            <a href="case-mazu-ip.html" class="nav-item" data-filter="ip">
+                IP设计
+                <span class="nav-dot"></span>
+            </a>
+        </nav>
+
+<div class="header-right">
+<a class="header-back" href="javascript:history.back()">
+                <img src="assets/icons/icon2.svg" alt="back">
+                <span>BACK</span>
+            </a>
+<img id="header-icon-img" class="header-icon-img" src="assets/top-icons.png" alt="icons">
+            <canvas id="header-icon-canvas" class="header-icon-canvas" aria-hidden="true"></canvas>
+        </div>
+    </header>
+  <main>
+    <div class="meta">Search Results: 9</div>
+    <div class="grid">
+      <a class="card" href="case-wangguowei.html"><img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&q=80" alt="故纸新词-王国维在海宁"><p>故纸新词-王国维在海宁</p></a>
+      <a class="card" href="case-xuzhimo-haining.html"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=600&q=80" alt="从水中诗，到诗中潮—徐志摩在海宁"><p>从水中诗，到诗中潮—徐志摩在海宁</p></a>
+      <a class="card" href="case-heart-in-thinkpad.html"><img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80" alt="亲密人机-A Heart in Thinkpad"><p>亲密人机-A Heart in Thinkpad</p></a>
+      <a class="card" href="case-game-on.html"><img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&q=80" alt="GAME ON"><p>GAME ON 潮流游戏展</p></a>
+      <a class="card" href="https://hk.thevalue.com/articles/exhibition-mysterious-dunhuang-buddhist-statuary-and-frescoes-ar-shenzhen-future-park-2018"><img src="assets/cases/dunhuang.png" alt="敦煌"><p>神秘敦煌文化展</p></a>
+      <a class="card" href="https://www.teamlab.art/zh-hans/e/wuatc/"><img src="assets/cases/flower-impression.png" alt="花舞印象"><p>花舞印象</p></a>
+      <a class="card" href="https://www.teamlab.art/e/shenzhen/"><img src="assets/cases/teamlab-shenzhen.png" alt="teamLab 深圳"><p>teamLab 深圳</p></a>
+      <a class="card" href="https://futurepark.teamlab.art/en/places/mpluswuhan/"><img src="assets/cases/teamlab-wuhan.png" alt="teamLab 武汉"><p>teamLab 武汉</p></a>
+      <a class="card" href="https://jiaju.sina.cn/news/20170629/6286044594455249476.shtml"><img src="assets/cases/blooming-garden.jpg" alt="绽放花园"><p>绽放花园</p></a>
+    </div>
+  </main>
+
+    
+
+
+    <div class="corner-icons" aria-hidden="true">
+        <div class="corner-icon-mask">
+            <img src="assets/icons/icon4.svg" alt="">
+        </div>
+    </div>
+
+
+    <script>
+        (function () {
+            const icon = document.querySelector('.corner-icons');
+            if (!icon) return;
+            const loop = () => {
+                icon.classList.remove('is-typing');
+                void icon.offsetWidth;
+                icon.classList.add('is-typing');
+                const delay = 800 + Math.random() * 1200;
+                const duration = 1400;
+                setTimeout(loop, delay + duration);
+            };
+            loop();
+        })();
+    </script>
+
+<script>
+    (function () {
+      const nav = document.querySelector('.header-nav');
+      if (!nav) return;
+      nav.addEventListener('click', (event) => {
+        const link = event.target.closest('.nav-item');
+        if (!link) return;
+        nav.querySelectorAll('.nav-item').forEach((el) => el.classList.remove('is-active'));
+        link.classList.add('is-active');
+      });
+    })();
+  </script>
+</body>
+</html>

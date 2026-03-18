@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>0086 呼吸灯</title>
+  <style>
+    :root {
+      --bg: #130d0a;
+      --glow-red: rgba(255, 45, 0, 0.95);
+      --glow-orange: rgba(255, 173, 64, 0.9);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      background: radial-gradient(90% 80% at 50% 10%, #2c1813 0%, var(--bg) 65%);
+      overflow: hidden;
+      font-family: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .stage {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 2.5vmin;
+    }
+
+    .hero {
+      position: relative;
+      width: min(95vw, 1500px);
+      aspect-ratio: 1536 / 1024;
+      border-radius: 18px;
+      overflow: hidden;
+      transform: translateY(16px) scale(0.985);
+      opacity: 0;
+      transition: opacity 800ms ease, transform 1000ms ease;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero.is-loaded {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      user-select: none;
+      -webkit-user-drag: none;
+      pointer-events: none;
+    }
+
+    .loader {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      z-index: 3;
+      background:
+        radial-gradient(50% 35% at 50% 10%, rgba(255, 89, 0, 0.26), rgba(0, 0, 0, 0) 70%),
+        rgba(16, 9, 6, 0.42);
+      backdrop-filter: blur(2px);
+      transition: opacity 420ms ease;
+    }
+
+    .loader.is-hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loader-track {
+      width: min(42vw, 280px);
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 212, 154, 0.28);
+      overflow: hidden;
+      box-shadow: 0 0 12px rgba(255, 82, 0, 0.28);
+    }
+
+    .loader-fill {
+      width: 50%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, rgba(255, 150, 42, 0.2), rgba(255, 255, 220, 0.95), rgba(255, 111, 0, 0.35));
+      filter: drop-shadow(0 0 8px rgba(255, 120, 20, 0.7));
+      animation: loading-scan 1.15s ease-in-out infinite;
+    }
+
+    .pulse-copy {
+      position: absolute;
+      inset: 0;
+      mix-blend-mode: screen;
+      opacity: 0.22;
+      clip-path: inset(2.5% 35% 78% 34.5%);
+      filter:
+        saturate(1.25)
+        brightness(1.15)
+        drop-shadow(0 0 6px var(--glow-orange))
+        drop-shadow(0 0 18px var(--glow-red))
+        drop-shadow(0 0 42px rgba(255, 32, 0, 0.72));
+      transform-origin: 50% 12%;
+      animation: breathe-core 2.8s ease-in-out infinite;
+    }
+
+    .pulse-halo {
+      position: absolute;
+      left: 50%;
+      top: 11.3%;
+      width: 33%;
+      height: 17%;
+      transform: translate(-50%, -50%);
+      background:
+        radial-gradient(closest-side, rgba(255, 70, 0, 0.48) 0%, rgba(255, 70, 0, 0.18) 45%, rgba(255, 70, 0, 0) 78%),
+        radial-gradient(closest-side, rgba(255, 196, 110, 0.28) 0%, rgba(255, 196, 110, 0) 75%);
+      filter: blur(11px);
+      mix-blend-mode: screen;
+      pointer-events: none;
+      animation: breathe-halo 2.8s ease-in-out infinite;
+    }
+
+    @keyframes breathe-core {
+      0%, 100% {
+        opacity: 0.2;
+        transform: scale(1);
+        filter:
+          saturate(1.1)
+          brightness(1.05)
+          drop-shadow(0 0 4px rgba(255, 177, 70, 0.35))
+          drop-shadow(0 0 12px rgba(255, 56, 0, 0.4))
+          drop-shadow(0 0 24px rgba(255, 56, 0, 0.35));
+      }
+      50% {
+        opacity: 0.92;
+        transform: scale(1.015);
+        filter:
+          saturate(1.4)
+          brightness(1.34)
+          drop-shadow(0 0 12px rgba(255, 210, 130, 0.95))
+          drop-shadow(0 0 30px rgba(255, 70, 0, 0.9))
+          drop-shadow(0 0 58px rgba(255, 30, 0, 0.85));
+      }
+    }
+
+    @keyframes breathe-halo {
+      0%, 100% {
+        opacity: 0.22;
+        transform: translate(-50%, -50%) scale(0.97);
+      }
+      50% {
+        opacity: 0.98;
+        transform: translate(-50%, -50%) scale(1.06);
+      }
+    }
+
+    @keyframes loading-scan {
+      0% {
+        transform: translateX(-130%);
+      }
+      50% {
+        transform: translateX(80%);
+      }
+      100% {
+        transform: translateX(220%);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        width: min(98vw, 1500px);
+        border-radius: 12px;
+      }
+      .pulse-halo {
+        top: 11.6%;
+        width: 38%;
+      }
+    }
+  </style>
+</head>
+  <body>
+  <main class="stage">
+    <section class="hero" id="hero">
+      <div class="loader" id="loader" aria-hidden="true">
+        <div class="loader-track"><div class="loader-fill"></div></div>
+      </div>
+      <img id="heroImage" src="assets/cases/home-hero-0086.png" alt="0086 mailbox wall" />
+      <img class="pulse-copy" src="assets/cases/home-hero-0086.png" alt="" aria-hidden="true" />
+      <div class="pulse-halo" aria-hidden="true"></div>
+    </section>
+  </main>
+
+  <script>
+    window.addEventListener("load", function () {
+      var hero = document.getElementById("hero");
+      var loader = document.getElementById("loader");
+      var image = document.getElementById("heroImage");
+
+      function finishLoad() {
+        hero.classList.add("is-loaded");
+        loader.classList.add("is-hidden");
+      }
+
+      if (image.complete) {
+        finishLoad();
+      } else {
+        image.addEventListener("load", finishLoad, { once: true });
+      }
+    });
+  </script>
+</body>
+</html>

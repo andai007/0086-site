@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0086 Studios</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Digital';
+            src: local('Courier New');
+        }
+
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --gray-100: #0a0a0a;
+            --gray-200: #111111;
+            --gray-300: #1a1a1a;
+            --gray-400: #222222;
+            --gray-500: #333333;
+            --gray-600: #666666;
+            --gray-700: #999999;
+            --text-dim: rgba(255,255,255,0.4);
+            --text-mid: rgba(255,255,255,0.6);
+            
+            /* 0086 品牌渐变色 */
+            --gradient-full: linear-gradient(90deg, #00F0FF, #00FF88, #E8FF00, #FF6B00, #FF00E5, #8B00FF);
+            --cyan: #00F0FF;
+            --green: #00FF88;
+            --yellow: #E8FF00;
+            --orange: #FF6B00;
+            --magenta: #FF00E5;
+            --purple: #8B00FF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        ::selection {
+            background: var(--cyan);
+            color: var(--black);
+        }
+
+        html {
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, sans-serif;
+            background: var(--black);
+            color: var(--white);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        .mono {
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        /* 顶部导航 - Bito风格 */
+        header {
+            position: fixed;
+            top: 0;
+            right: 10px;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            mix-blend-mode: difference;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .logo-text {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -1px;
+            color: var(--white);
+        }
+
+        .logo-img {
+            height: 51px;
+            display: block;
+        }
+
+        .logo-cursor {
+            width: 8px;
+            height: 51px;
+            background: var(--white);
+            animation: blink 1s infinite;
+            margin-right: 10px;
+            margin-bottom: 0;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        nav {
+            display: flex;
+            gap: 40px;
+        }
+
+        nav a {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 13px;
+            color: var(--white);
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.5;
+        }
+
+        /* 彩虹渐变条 - 品牌标识 */
+        .brand-bar {
+            position: fixed;
+            bottom: 0;
+            right: 10px;
+            right: 10px;
+            height: 51px;
+            background: var(--gradient-full);
+            z-index: 1000;
+        }
+
+        /* 主内容区 */
+        main {
+            padding-top: 80px;
+        }
+
+        /* 项目网格 - Bito风格 */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .project-item {
+            position: relative;
+            aspect-ratio: 16/10;
+            overflow: hidden;
+            cursor: pointer;
+            background: var(--gray-200);
+        }
+
+        .project-item.large {
+            grid-column: span 2;
+            aspect-ratio: 21/9;
+        }
+
+        .project-item.tall {
+            aspect-ratio: 4/5;
+        }
+
+        .project-item img,
+        .project-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .project-item:hover img,
+        .project-item:hover video {
+            transform: scale(1.05);
+        }
+
+        /* 项目信息 - 悬停显示 */
+        .project-info {
+            position: absolute;
+            bottom: 0;
+            right: 10px;
+            right: 10px;
+            padding: 30px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .project-item:hover .project-info {
+            transform: translateY(0);
+        }
+
+        .hero-label {
+            position: absolute;
+            top: 24px;
+            right: 10px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 2px;
+            padding: 6px 10px;
+            color: var(--white);
+            border: 1px solid rgba(255,255,255,0.4);
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(6px);
+            z-index: 2;
+        }
+
+        .project-category {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 1px;
+            margin-bottom: 0;
+            display: inline-block;
+            padding: 4px 0;
+            border-bottom: 1px solid currentColor;
+        }
+
+        .project-category.ai-install { color: var(--cyan); }
+        .project-category.ai-tech { color: var(--green); }
+        .project-category.exhibition { color: var(--magenta); }
+
+        .project-title {
+            font-size: 22px;
+            font-weight: 500;
+            margin-bottom: 0;
+        }
+
+        .project-subtitle {
+            font-size: 13px;
+            color: var(--text-mid);
+        }
+
+        /* 服务板块 - Teenage Engineering风格 */
+        .services-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            border-top: 1px solid var(--gray-400);
+        }
+
+        .service-block {
+            padding: 60px 40px;
+            border-right: 1px solid var(--gray-400);
+            position: relative;
+            transition: background 0.4s;
+        }
+
+        .service-block:last-child {
+            border-right: none;
+        }
+
+        .service-block:hover {
+            background: var(--gray-200);
+        }
+
+        .service-number {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-bottom: 0;
+            letter-spacing: 2px;
+        }
+
+        .service-title {
+            font-size: 28px;
+            font-weight: 500;
+            margin-bottom: 0;
+            transition: color 0.3s;
+        }
+
+        .service-block:nth-child(1):hover .service-title { color: var(--cyan); }
+        .service-block:nth-child(2):hover .service-title { color: var(--green); }
+        .service-block:nth-child(3):hover .service-title { color: var(--magenta); }
+
+        .service-title-en {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            margin-bottom: 0;
+        }
+
+        .service-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .service-tag {
+            font-size: 12px;
+            color: var(--text-mid);
+            padding: 6px 12px;
+            border: 1px solid var(--gray-500);
+            transition: all 0.3s;
+        }
+
+        .service-block:hover .service-tag {
+            border-color: var(--gray-600);
+        }
+
+        .service-arrow {
+            position: absolute;
+            top: 60px;
+            right: 40px;
+            font-size: 20px;
+            color: var(--text-dim);
+            transition: all 0.3s;
+        }
+
+        .service-block:hover .service-arrow {
+            color: var(--white);
+            transform: translate(5px, -5px);
+        }
+
+        /* 关于区域 */
+        .about-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-top: 1px solid var(--gray-400);
+        }
+
+        .about-text {
+            padding: 80px 60px;
+            border-right: 1px solid var(--gray-400);
+        }
+
+        .about-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            margin-bottom: 0;
+        }
+
+        .about-headline {
+            font-size: 36px;
+            font-weight: 500;
+            line-height: 1.4;
+            margin-bottom: 0;
+        }
+
+        .about-headline span {
+            background: var(--gradient-full);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .about-description {
+            font-size: 15px;
+            line-height: 1.9;
+            color: var(--text-mid);
+            max-width: 500px;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .stat-item {
+            padding: 60px 40px;
+            border-bottom: 1px solid var(--gray-400);
+            border-right: 1px solid var(--gray-400);
+        }
+
+        .stat-item:nth-child(even) {
+            border-right: none;
+        }
+
+        .stat-number {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 48px;
+            font-weight: 300;
+            color: var(--white);
+            margin-bottom: 0;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+
+        /* 合作伙伴 - 极简滚动 */
+        .partners-section {
+            padding: 60px 0;
+            border-top: 1px solid var(--gray-400);
+            overflow: hidden;
+        }
+
+        .partners-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 0;
+        }
+
+        .partners-track {
+            display: flex;
+            animation: scroll 30s linear infinite;
+        }
+
+        .partners-track:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .partner-item {
+            flex-shrink: 0;
+            padding: 0 50px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 14px;
+            color: var(--gray-600);
+            transition: color 0.3s;
+            white-space: nowrap;
+        }
+
+        .partner-item:hover {
+            color: var(--white);
+        }
+
+        /* 页脚 - Bito风格 */
+        footer {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            border-top: 1px solid var(--gray-400);
+            padding: 60px 40px;
+        }
+
+        .footer-block {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .footer-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            margin-bottom: 0;
+        }
+
+        .footer-link {
+            font-size: 14px;
+            color: var(--white);
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .footer-link:hover {
+            opacity: 0.5;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 25px;
+        }
+
+        .footer-copyright {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: var(--text-dim);
+            align-self: flex-end;
+        }
+
+        /* 筛选器 - 悬浮 */
+        .filter-bar {
+            position: fixed;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 5px;
+            padding: 6px;
+            background: rgba(20,20,20,0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--gray-400);
+            z-index: 999;
+        }
+
+        .filter-btn {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-mid);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            color: var(--white);
+        }
+
+        .filter-btn.active {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        /* 响应式 */
+        @media (max-width: 1024px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            .project-item.large {
+                grid-column: span 1;
+            }
+            .services-section {
+                grid-template-columns: 1fr;
+            }
+            .service-block {
+                border-right: none;
+                border-bottom: 1px solid var(--gray-400);
+            }
+            .about-section {
+                grid-template-columns: 1fr;
+            }
+            .about-text {
+                border-right: none;
+                border-bottom: 1px solid var(--gray-400);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+            nav {
+                display: none;
+            }
+            .about-text {
+                padding: 50px 30px;
+            }
+            .about-headline {
+                font-size: 28px;
+            }
+            footer {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .filter-bar {
+                bottom: 0;
+                right: 10px;
+                right: 20px;
+                transform: none;
+                justify-content: center;
+            }
+            .filter-btn {
+                padding: 8px 12px;
+                font-size: 11px;
+            }
+        }
+
+        /* 页面加载动画 */
+        .project-item {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .project-item:nth-child(1) { animation-delay: 0.1s; }
+        .project-item:nth-child(2) { animation-delay: 0.2s; }
+        .project-item:nth-child(3) { animation-delay: 0.3s; }
+        .project-item:nth-child(4) { animation-delay: 0.4s; }
+        .project-item:nth-child(5) { animation-delay: 0.5s; }
+        .project-item:nth-child(6) { animation-delay: 0.6s; }
+        .project-item:nth-child(7) { animation-delay: 0.7s; }
+        .project-item:nth-child(8) { animation-delay: 0.8s; }
+        .project-item:nth-child(9) { animation-delay: 0.9s; }
+        .project-item:nth-child(10) { animation-delay: 1.0s; }
+
+        /* 隐藏/显示 */
+        .project-item.hidden {
+            display: none;
+        }
+    
+        /* ========== 0086 Banner Sync ========== */
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --red: #ff0000;
+            --gray-light: #f0f0f0;
+            --gray-mid: #e0e0e0;
+            --gray-dark: #999999;
+            --logo-red-filter: brightness(0) saturate(100%) invert(10%) sepia(95%) saturate(7000%) hue-rotate(0deg) brightness(85%) contrast(120%);
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            height: 51px;
+            padding: 0 24px;
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-mid);
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 12px;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 0.2px;
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .logo-tm {
+            font-size: 9px;
+            font-weight: 700;
+            vertical-align: super;
+        }
+
+        .logo-type {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            width: auto;
+            border-right: none;
+            animation: none;
+        }
+
+        .logo-img {
+            height: 51px;
+            display: block;
+            transform: scale(0.5);
+            transform-origin: left center;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            margin-right: 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            padding: 0 24px;
+            min-width: 180px;
+            background: var(--gray-light);
+            border-right: 1px solid var(--gray-mid);
+            text-decoration: none;
+            color: var(--black);
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            transition: background 0.35s, transform 0.2s, box-shadow 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #e8e8e8;
+            transform: translateY(1px);
+            box-shadow: inset 0 2px 0 rgba(0,0,0,0.15);
+        }
+
+        .nav-dot {
+            width: 28px;
+            height: 28px;
+            background: var(--white);
+            border-radius: 50%;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .nav-dot::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--red);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+
+        .header-right {
+            margin-left: auto;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .header-icon {
+            font-size: 18px;
+            color: var(--red);
+            cursor: pointer;
+        }
+
+        .header-icon-img {
+            height: 51px;
+            display: block;
+            opacity: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .header-icon-canvas {
+            height: 51px;
+            display: block;
+        }
+
+        main {
+            padding-top: 56px;
+        }
+
+        @media (max-width: 1024px) {
+            .nav-item {
+                min-width: 140px;
+                padding: 0 16px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                height: 51px;
+                padding: 0 16px;
+            }
+            .header-nav {
+                display: none;
+            }
+            main {
+                padding-top: 48px;
+            }
+        }
+            
+    
+        .corner-icons {
+            position: fixed;
+            right: 10px;
+            bottom: 0;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+        }
+
+        .corner-icon-mask {
+            display: inline-block;
+            overflow: hidden;
+            width: 0;
+        }
+
+        .corner-icon-mask img {
+            height: 51px;
+            width: auto;
+            display: block;
+        }
+
+        @keyframes cornerType {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+
+        .corner-icons.is-typing .corner-icon-mask {
+            animation: cornerType 1.4s steps(18, end) both;
+        }
+
+    
+
+        
+        
+        
+        
+        
+        /* nav dot override to ensure perfect circle */
+
+
+        .nav-item:hover .nav-dot::after {
+            opacity: 1;
+        }
+
+
+        .header-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--black);
+            letter-spacing: 0.2px;
+            margin-top: 8px;
+            margin-right: -16px;
+            padding-right: 24px;
+            transform: translate(130px, 20px);
+        }
+
+        .header-back img {
+            height: 18px;
+            width: auto;
+            display: block;
+        }
+
+
+        .header-back:active img {
+            filter: brightness(0) saturate(100%) invert(12%) sepia(90%) saturate(4500%) hue-rotate(350deg) brightness(95%) contrast(120%);
+        }
+
+
+        .header-back {
+            position: relative;
+        }
+
+        .header-back::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 18px;
+            height: 18px;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #ff2b2b 0%, #ff7a00 100%);
+            -webkit-mask: url('assets/icons/icon2.svg') no-repeat center / contain;
+            mask: url('assets/icons/icon2.svg') no-repeat center / contain;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .header-back:active::before {
+            opacity: 1;
+        }
+
+        .header-back:active img {
+            opacity: 0;
+        }
+
+
+        .nav-item.is-active {
+            background: #cfcfcf;
+            box-shadow: inset 0 2px 0 rgba(0,0,0,0.15);
+        }
+
+        .nav-item.is-active .nav-dot::after {
+            opacity: 1;
+        }
+</style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <header>
+        <div class="header-logo">
+            <a href="0086-studios-virgil-strict.html" class="logo-text"><img class="logo-img" src="assets/0086-logo.png" alt="0086 logo"></a>
+        </div>
+
+        <nav class="header-nav">
+            <a href="0086-about.html" class="nav-item">
+                about us
+                <span class="nav-dot"></span>
+            </a>
+            <a href="0086-service-ai-installation.html" class="nav-item" data-filter="interactive">
+                互动装置
+                <span class="nav-dot"></span>
+            </a>
+            <a href="#" class="nav-item" data-filter="space">
+                空间
+                <span class="nav-dot"></span>
+            </a>
+            <a href="0086-services.html" class="nav-item" data-filter="exhibition">
+                展览
+                <span class="nav-dot"></span>
+            </a>
+            <a href="case-mazu-ip.html" class="nav-item" data-filter="ip">
+                IP设计
+                <span class="nav-dot"></span>
+            </a>
+        </nav>
+
+<div class="header-right">
+<a class="header-back" href="javascript:history.back()">
+                <img src="assets/icons/icon2.svg" alt="back">
+                <span>BACK</span>
+            </a>
+<img id="header-icon-img" class="header-icon-img" src="assets/top-icons.png" alt="icons">
+            <canvas id="header-icon-canvas" class="header-icon-canvas" aria-hidden="true"></canvas>
+        </div>
+    </header>
+
+    <!-- 品牌渐变条 -->
+    <div class="brand-bar"></div>
+
+    <main>
+        <!-- 项目网格 -->
+        <section class="projects-grid" id="work">
+            <!-- 大图项目 -->
+            <div class="project-item large" data-category="ai-install">
+                <img src="https://images.unsplash.com/photo-1633412802994-5c058f151b66?w=1600&q=80" alt="AI情绪思想盒">
+                <div class="hero-label">01 AI互动装置</div>
+                <div class="project-info">
+                    <span class="project-category ai-install">AI Interactive Installation</span>
+                    <h3 class="project-title">AI情绪思想盒</h3>
+                    <p class="project-subtitle">观众肖像实时转化为四种情绪艺术影像</p>
+                </div>
+            </div>
+
+            <div class="project-item" data-category="exhibition">
+                <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80" alt="teamLab">
+                <div class="project-info">
+                    <span class="project-category exhibition">Commercial Curating</span>
+                    <h3 class="project-title">teamLab 数字艺术展</h3>
+                    <p class="project-subtitle">中国艺术商业展览票房纪录</p>
+                </div>
+            </div>
+
+            <div class="project-item" data-category="ai-tech">
+                <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80" alt="AIGC">
+                <div class="project-info">
+                    <span class="project-category ai-tech">AI Technology</span>
+                    <h3 class="project-title">AI Agent 解决方案</h3>
+                    <p class="project-subtitle">全站式AIGC系统设计与开发</p>
+                </div>
+            </div>
+
+            <div class="project-item" data-category="ai-install">
+                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80" alt="AI换衣间">
+                <div class="project-info">
+                    <span class="project-category ai-install">AI Interactive Installation</span>
+                    <h3 class="project-title">衣等舱 AI换衣间</h3>
+                    <p class="project-subtitle">数字时尚与智能零售一体化</p>
+                </div>
+            </div>
+
+            <div class="project-item" data-category="exhibition">
+                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80" alt="ThinkPad">
+                <div class="project-info">
+                    <span class="project-category exhibition">Commercial Curating</span>
+                    <h3 class="project-title">ThinkPad 零售体验升级</h3>
+                    <p class="project-subtitle">上海/天津门店智能场景改造</p>
+                </div>
+            </div>
+
+            <div class="project-item large" data-category="exhibition">
+                <img src="https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=1600&q=80" alt="敦煌">
+                <div class="project-info">
+                    <span class="project-category exhibition">Commercial Curating</span>
+                    <h3 class="project-title">神秘敦煌文化展</h3>
+                    <p class="project-subtitle">与敦煌研究院合作 · 中国首个数字敦煌艺术展</p>
+                </div>
+            </div>
+
+            <div class="project-item" data-category="ai-install">
+                <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&q=80" alt="诗的歌">
+                <div class="project-info">
+                    <span class="project-category ai-install">AI Interactive Installation</span>
+                    <h3 class="project-title">诗的歌</h3>
+                    <p class="project-subtitle">徐志摩诗歌AIGC音乐明信片</p>
+                </div>
+            </div>
+
+            <div class="project-item" data-category="ai-tech">
+                <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&q=80" alt="NFT">
+                <div class="project-info">
+                    <span class="project-category ai-tech">AI Technology</span>
+                    <h3 class="project-title">0086 虚拟潮牌</h3>
+                    <p class="project-subtitle">中国首个虚拟潮牌 · NFT数字文创</p>
+                </div>
+            </div>
+
+            <div class="project-item" data-category="exhibition">
+                <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&q=80" alt="王国维">
+                <div class="project-info">
+                    <span class="project-category exhibition">Commercial Curating</span>
+                    <h3 class="project-title">故纸新词·王国维在海宁</h3>
+                    <p class="project-subtitle">传统文化与数字艺术融合策展</p>
+                </div>
+            </div>
+
+            <div class="project-item" data-category="exhibition">
+                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80" alt="GAME ON">
+                <div class="project-info">
+                    <span class="project-category exhibition">Commercial Curating</span>
+                    <h3 class="project-title">GAME ON 潮流游戏展</h3>
+                    <p class="project-subtitle">与伦敦巴比肯艺术中心合作</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 服务板块 -->
+        <section class="services-section" id="services">
+            <div class="service-block">
+                <span class="service-number">01</span>
+                <span class="service-arrow">↗</span>
+                <h3 class="service-title">AI互动装置</h3>
+                <p class="service-title-en">INTERACTIVE INSTALLATION</p>
+                <div class="service-tags">
+                    <span class="service-tag">人像识别</span>
+                    <span class="service-tag">实时生成</span>
+                    <span class="service-tag">情感计算</span>
+                    <span class="service-tag">空间叙事</span>
+                </div>
+            </div>
+
+            <div class="service-block">
+                <span class="service-number">02</span>
+                <span class="service-arrow">↗</span>
+                <h3 class="service-title">AI技术开发</h3>
+                <p class="service-title-en">AI END-TO-END SERVICES</p>
+                <div class="service-tags">
+                    <span class="service-tag">AI Agent</span>
+                    <span class="service-tag">AIGC应用</span>
+                    <span class="service-tag">策略咨询</span>
+                    <span class="service-tag">系统设计</span>
+                </div>
+            </div>
+
+            <div class="service-block">
+                <span class="service-number">03</span>
+                <span class="service-arrow">↗</span>
+                <h3 class="service-title">文化展览策划</h3>
+                <p class="service-title-en">COMMERCIAL CURATING</p>
+                <div class="service-tags">
+                    <span class="service-tag">数字化策展</span>
+                    <span class="service-tag">品牌文化空间</span>
+                    <span class="service-tag">跨界运营</span>
+                    <span class="service-tag">国际资源</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 关于区域 -->
+        <section class="about-section" id="about">
+            <div class="about-text">
+                <p class="about-label">ABOUT</p>
+                <h2 class="about-headline">
+                    中国领先的<br><span>AI数字创意机构</span>
+                </h2>
+                <p class="about-description">
+                    0086 Studios以国际化视野融合先锋创意与前沿AI技术，构建从概念到产品的完整商业化闭环。我们是中国最早将数字艺术成功商业化运营的团队，如今以AI Agent为核心引擎，打造全站式AI解决方案。
+                </p>
+            </div>
+            <div class="about-stats">
+                <div class="stat-item">
+                    <p class="stat-number">5800万+</p>
+                    <p class="stat-label">单展览最高营收</p>
+                </div>
+                <div class="stat-item">
+                    <p class="stat-number">100+</p>
+                    <p class="stat-label">成功项目案例</p>
+                </div>
+                <div class="stat-item">
+                    <p class="stat-number">50+</p>
+                    <p class="stat-label">品牌合作伙伴</p>
+                </div>
+                <div class="stat-item">
+                    <p class="stat-number">8年+</p>
+                    <p class="stat-label">行业深耕经验</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 合作伙伴 -->
+        <section class="partners-section">
+            <p class="partners-label">PARTNERS</p>
+            <div class="partners-track">
+                <span class="partner-item">HUAWEI</span>
+                <span class="partner-item">Tencent</span>
+                <span class="partner-item">ByteDance</span>
+                <span class="partner-item">ThinkPad</span>
+                <span class="partner-item">XPENG</span>
+                <span class="partner-item">teamLab</span>
+                <span class="partner-item">Universal</span>
+                <span class="partner-item">Barbican</span>
+                <span class="partner-item">ANTA</span>
+                <span class="partner-item">PING AN</span>
+                <span class="partner-item">CPIC</span>
+                <span class="partner-item">敦煌研究院</span>
+                <!-- 重复一遍实现无缝滚动 -->
+                <span class="partner-item">HUAWEI</span>
+                <span class="partner-item">Tencent</span>
+                <span class="partner-item">ByteDance</span>
+                <span class="partner-item">ThinkPad</span>
+                <span class="partner-item">XPENG</span>
+                <span class="partner-item">teamLab</span>
+                <span class="partner-item">Universal</span>
+                <span class="partner-item">Barbican</span>
+                <span class="partner-item">ANTA</span>
+                <span class="partner-item">PING AN</span>
+                <span class="partner-item">CPIC</span>
+                <span class="partner-item">敦煌研究院</span>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer id="contact">
+        <div class="footer-block">
+            <p class="footer-label">CONTACT</p>
+            <a href="mailto:contact@0086studios.com" class="footer-link">contact@0086studios.com</a>
+            <a href="tel:+86-xxx-xxxx-xxxx" class="footer-link">+86 xxx xxxx xxxx</a>
+        </div>
+        <div class="footer-block">
+            <p class="footer-label">SOCIAL</p>
+            <div class="footer-social">
+                <a href="#" class="footer-link">WeChat</a>
+                <a href="#" class="footer-link">Weibo</a>
+                <a href="#" class="footer-link">Behance</a>
+            </div>
+        </div>
+        <div class="footer-block">
+            <p class="footer-copyright">© 0086 Studios 2026<br>Shenzhen, China</p>
+        </div>
+    </footer>
+
+    <!-- 筛选器 -->
+    <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="ai-install">AI装置</button>
+        <button class="filter-btn" data-filter="ai-tech">AI技术</button>
+        <button class="filter-btn" data-filter="exhibition">展览策划</button>
+    </div>
+
+    
+
+
+    <div class="corner-icons" aria-hidden="true">
+        <div class="corner-icon-mask">
+            <img src="assets/icons/icon4.svg" alt="">
+        </div>
+    </div>
+
+
+    <script>
+        (function () {
+            const icon = document.querySelector('.corner-icons');
+            if (!icon) return;
+            const loop = () => {
+                icon.classList.remove('is-typing');
+                void icon.offsetWidth;
+                icon.classList.add('is-typing');
+                const delay = 800 + Math.random() * 1200;
+                const duration = 1400;
+                setTimeout(loop, delay + duration);
+            };
+            loop();
+        })();
+    </script>
+
+<script>
+    (function () {
+      const nav = document.querySelector('.header-nav');
+      if (!nav) return;
+      nav.addEventListener('click', (event) => {
+        const link = event.target.closest('.nav-item');
+        if (!link) return;
+        nav.querySelectorAll('.nav-item').forEach((el) => el.classList.remove('is-active'));
+        link.classList.add('is-active');
+      });
+    })();
+  </script>
+</body>
+</html>

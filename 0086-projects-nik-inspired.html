@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>0086 Projects</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4efe7;
+      --bg-soft: #efe7dc;
+      --ink: #101010;
+      --ink-soft: rgba(16, 16, 16, 0.64);
+      --line: rgba(16, 16, 16, 0.14);
+      --accent: #d94b2b;
+      --accent-2: #b79655;
+      --card: #fbf8f3;
+      --shadow: 0 18px 60px rgba(16, 16, 16, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Space Grotesk", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(217, 75, 43, 0.08), transparent 26%),
+        radial-gradient(circle at 85% 22%, rgba(183, 150, 85, 0.12), transparent 24%),
+        linear-gradient(180deg, #f7f3ec 0%, var(--bg) 100%);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      position: relative;
+      padding: 22px 22px 60px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 18px;
+      align-items: center;
+      padding: 18px 0 16px;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(180deg, rgba(247, 243, 236, 0.92), rgba(247, 243, 236, 0.72));
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .brand-code {
+      font-size: 14px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+
+    .brand-name {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(2.2rem, 3.3vw, 4rem);
+      line-height: 0.9;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+    }
+
+    .topbar-note,
+    .topbar-link {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--ink-soft);
+    }
+
+    .topbar-link {
+      justify-self: end;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      transition: transform 180ms ease, border-color 180ms ease, color 180ms ease;
+    }
+
+    .topbar-link:hover {
+      transform: translateY(-2px);
+      color: var(--ink);
+      border-color: rgba(16, 16, 16, 0.34);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.5fr);
+      gap: 22px;
+      align-items: end;
+      padding: 34px 0 18px;
+      min-height: 42vh;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 18px;
+      align-self: stretch;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.24em;
+      color: var(--ink-soft);
+    }
+
+    .hero-title {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(4.5rem, 10vw, 11rem);
+      line-height: 0.82;
+      font-weight: 600;
+      letter-spacing: -0.06em;
+      max-width: 10ch;
+    }
+
+    .hero-summary {
+      max-width: 34ch;
+      font-size: clamp(1rem, 1.5vw, 1.2rem);
+      line-height: 1.65;
+      color: var(--ink-soft);
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-top: 12px;
+    }
+
+    .meta-pill {
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.36);
+    }
+
+    .hero-panel {
+      display: grid;
+      align-content: end;
+      min-height: 420px;
+      padding: 18px;
+      border-radius: 26px;
+      overflow: hidden;
+      border: 1px solid rgba(16, 16, 16, 0.08);
+      box-shadow: var(--shadow);
+      background:
+        linear-gradient(180deg, rgba(16, 16, 16, 0.02), rgba(16, 16, 16, 0.28)),
+        url("./0086coover.png") center/cover no-repeat;
+    }
+
+    .hero-panel-card {
+      max-width: 340px;
+      padding: 18px 18px 16px;
+      border-radius: 18px;
+      background: rgba(250, 246, 240, 0.88);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(16, 16, 16, 0.08);
+    }
+
+    .hero-panel-card p:first-child {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--ink-soft);
+      margin-bottom: 10px;
+    }
+
+    .hero-panel-card p:last-child {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1.8rem;
+      line-height: 0.96;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 18px 0 26px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .filter-btn {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.42);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font: inherit;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 180ms ease, color 180ms ease, transform 180ms ease, border-color 180ms ease;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.is-active {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+      transform: translateY(-1px);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 18px;
+      padding: 22px 0 0;
+    }
+
+    .project-card {
+      position: relative;
+      display: grid;
+      min-height: 320px;
+      overflow: hidden;
+      border-radius: 22px;
+      background: var(--card);
+      border: 1px solid rgba(16, 16, 16, 0.08);
+      box-shadow: var(--shadow);
+      transform: translateY(0);
+      transition: transform 220ms ease, box-shadow 220ms ease, opacity 220ms ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 28px 70px rgba(16, 16, 16, 0.12);
+    }
+
+    .project-card.is-hidden {
+      display: none;
+    }
+
+    .project-card[data-size="hero"] {
+      grid-column: span 8;
+      min-height: 620px;
+    }
+
+    .project-card[data-size="wide"] {
+      grid-column: span 7;
+      min-height: 420px;
+    }
+
+    .project-card[data-size="tall"] {
+      grid-column: span 5;
+      min-height: 560px;
+    }
+
+    .project-card[data-size="standard"] {
+      grid-column: span 4;
+      min-height: 360px;
+    }
+
+    .project-card[data-size="small"] {
+      grid-column: span 3;
+      min-height: 300px;
+    }
+
+    .media {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #ddd7cf;
+      transition: transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .project-card:hover .media {
+      transform: scale(1.04);
+    }
+
+    .project-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(16, 16, 16, 0.04) 20%, rgba(16, 16, 16, 0.72) 100%);
+      pointer-events: none;
+    }
+
+    .project-label {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      z-index: 2;
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      background: rgba(255, 249, 241, 0.86);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(16, 16, 16, 0.08);
+    }
+
+    .project-info {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 2;
+      display: grid;
+      gap: 10px;
+      padding: 20px;
+      color: #fff;
+    }
+
+    .project-meta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.74);
+    }
+
+    .project-title {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(2rem, 3vw, 3.8rem);
+      line-height: 0.9;
+      font-weight: 600;
+      max-width: 9ch;
+    }
+
+    .project-desc {
+      max-width: 42ch;
+      font-size: 14px;
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.82);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 220ms ease, transform 220ms ease;
+    }
+
+    .project-card:hover .project-desc {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .footer-note {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      padding: 30px 0 0;
+      margin-top: 26px;
+      border-top: 1px solid var(--line);
+      color: var(--ink-soft);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 1100px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-panel {
+        min-height: 320px;
+      }
+
+      .project-card[data-size="hero"],
+      .project-card[data-size="wide"],
+      .project-card[data-size="tall"],
+      .project-card[data-size="standard"],
+      .project-card[data-size="small"] {
+        grid-column: span 6;
+        min-height: 420px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page-shell {
+        padding: 16px 16px 40px;
+      }
+
+      .topbar {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        align-items: start;
+      }
+
+      .topbar-link {
+        justify-self: start;
+      }
+
+      .hero-title {
+        font-size: clamp(3.4rem, 18vw, 6rem);
+      }
+
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .project-card[data-size="hero"],
+      .project-card[data-size="wide"],
+      .project-card[data-size="tall"],
+      .project-card[data-size="standard"],
+      .project-card[data-size="small"] {
+        grid-column: span 1;
+        min-height: 340px;
+      }
+
+      .project-title {
+        max-width: 12ch;
+      }
+
+      .footer-note {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-code">0086</span>
+        <span class="brand-name">Selected Projects</span>
+      </div>
+      <div class="topbar-note">AI, installation, exhibition, IP</div>
+      <a class="topbar-link" href="0086-studios-home-v3_14.html?ended=1">Enter Home</a>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">A new editorial concept for 0086</p>
+        <h1 class="hero-title">Cases shaped as a living archive.</h1>
+        <p class="hero-summary">
+          This version turns 0086 into a project index first: large media, irregular rhythm, quieter navigation,
+          and case cards that behave more like magazine spreads than corporate modules.
+        </p>
+        <div class="hero-meta">
+          <span class="meta-pill">2026 concept</span>
+          <span class="meta-pill">reference-adapted</span>
+          <span class="meta-pill">static prototype</span>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <div class="hero-panel-card">
+          <p>Format</p>
+          <p>Project-first landing page for 0086 studios and cultural technology work.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="controls" aria-label="Filter projects">
+      <button class="filter-btn is-active" type="button" data-filter="all">All</button>
+      <button class="filter-btn" type="button" data-filter="interactive">Interactive</button>
+      <button class="filter-btn" type="button" data-filter="exhibition">Exhibition</button>
+      <button class="filter-btn" type="button" data-filter="ai">AI</button>
+      <button class="filter-btn" type="button" data-filter="ip">IP</button>
+    </section>
+
+    <section class="projects-grid">
+      <a class="project-card" data-category="interactive ai" data-size="hero" href="case-immersive-experience.html">
+        <video class="media" autoplay muted loop playsinline preload="metadata" data-external-poster="assets/haining-reply/haining-01.png">
+          <source data-external-src="assets/haining-reply/haining-reply.mp4" type="video/mp4">
+        </video>
+        <span class="project-label">2025 / Interactive</span>
+        <div class="project-info">
+          <div class="project-meta"><span>Immersive</span><span>AI Narrative</span><span>Reply Engine</span></div>
+          <h2 class="project-title">海宁回信</h2>
+          <p class="project-desc">A flagship opening card using motion first, built to introduce the site with the same image-led confidence as the reference.</p>
+        </div>
+      </a>
+
+      <a class="project-card" data-category="exhibition" data-size="tall" href="case-wangguowei.html">
+        <img class="media" data-external-src="assets/wangguowei/IMG_0997.png" alt="故纸新词 - 王国维在海宁">
+        <span class="project-label">2025 / Exhibition</span>
+        <div class="project-info">
+          <div class="project-meta"><span>Culture</span><span>Research</span></div>
+          <h2 class="project-title">故纸新词</h2>
+          <p class="project-desc">Editorial exhibition work positioned as a slower, denser card against motion-heavy projects.</p>
+        </div>
+      </a>
+
+      <a class="project-card" data-category="interactive ai" data-size="wide" href="case-ai-fitting-room.html">
+        <img class="media" data-external-src="assets/yidengcang/IMG_4266-2.png" alt="衣等舱 AI换衣间">
+        <span class="project-label">2025 / AI Retail</span>
+        <div class="project-info">
+          <div class="project-meta"><span>Retail</span><span>AIGC</span><span>Fashion</span></div>
+          <h2 class="project-title">衣等舱</h2>
+          <p class="project-desc">A wide horizontal card for commercial AI application, balancing the cultural projects with a more product-facing case.</p>
+        </div>
+      </a>
+
+      <a class="project-card" data-category="interactive ai" data-size="small" href="case-ai-emotion-box.html">
+        <img class="media" data-external-src="assets/ai-emotion-box/ai-emotion-01.png" alt="AI情绪思想盒">
+        <span class="project-label">2024 / AI Object</span>
+        <div class="project-info">
+          <div class="project-meta"><span>Object</span><span>Emotion</span></div>
+          <h2 class="project-title">AI 情绪思想盒</h2>
+          <p class="project-desc">Compact format for a sharper experimental project.</p>
+        </div>
+      </a>
+
+      <a class="project-card" data-category="interactive" data-size="small" href="case-poem-song.html">
+        <img class="media" data-external-src="assets/poem-song/poem-01.png" alt="诗的歌">
+        <span class="project-label">2025 / Music</span>
+        <div class="project-info">
+          <div class="project-meta"><span>Poetry</span><span>Music</span></div>
+          <h2 class="project-title">诗的歌</h2>
+          <p class="project-desc">A smaller tile designed to keep the grid rhythm uneven and alive.</p>
+        </div>
+      </a>
+
+      <a class="project-card" data-category="interactive" data-size="standard" href="case-beyond-the-boundary.html">
+        <img class="media" data-external-src="assets/beyond-the-boundary/截屏2025-06-12 19.44.40.png" alt="Beyond The Boundary">
+        <span class="project-label">2024 / Experience</span>
+        <div class="project-info">
+          <div class="project-meta"><span>Space</span><span>Interactive</span></div>
+          <h2 class="project-title">Beyond The Boundary</h2>
+          <p class="project-desc">Placed as a mid-density card to bridge the visual tone from art direction to immersive systems.</p>
+        </div>
+      </a>
+
+      <a class="project-card" data-category="interactive exhibition" data-size="wide" href="case-heart-in-thinkpad.html">
+        <img class="media" src="assets/thinkpad/1DSC00798-1.jpg" alt="亲密人机 - A Heart in Thinkpad">
+        <span class="project-label">2024 / Exhibition</span>
+        <div class="project-info">
+          <div class="project-meta"><span>Brand</span><span>Human Machine</span></div>
+          <h2 class="project-title">A Heart in ThinkPad</h2>
+          <p class="project-desc">A larger branded case that benefits from a cleaner title treatment and dense atmospheric crop.</p>
+        </div>
+      </a>
+
+      <a class="project-card" data-category="interactive" data-size="small" href="case-sandaoshui-xuzhimo.html">
+        <img class="media" data-external-src="assets/cases/sandaoshui-xuzhimo.png" alt="三道水 - 徐志摩">
+        <span class="project-label">2025 / Installation</span>
+        <div class="project-info">
+          <div class="project-meta"><span>Literature</span><span>Spatial Story</span></div>
+          <h2 class="project-title">三道水</h2>
+          <p class="project-desc">Small card, strong crop, quick read.</p>
+        </div>
+      </a>
+
+      <a class="project-card" data-category="interactive ai" data-size="standard" href="case-narrative-installation.html">
+        <img class="media" src="assets/thinkpad-retail/img-7773.jpg" alt="ThinkPad 零售门店">
+        <span class="project-label">Retail / System</span>
+        <div class="project-info">
+          <div class="project-meta"><span>Spatial Tech</span><span>Retail OS</span></div>
+          <h2 class="project-title">ThinkPad 零售门店</h2>
+          <p class="project-desc">The reference site mixes campaign, object, and installation. This card preserves that spectrum for 0086.</p>
+        </div>
+      </a>
+
+      <a class="project-card" data-category="ip exhibition" data-size="tall" href="case-mazu-ip.html">
+        <img class="media" src="assets/mazu/湄洲妈进度汇报v07170202.002.jpeg" alt="湄洲妈 - 妈祖 IP">
+        <span class="project-label">2023 / IP</span>
+        <div class="project-info">
+          <div class="project-meta"><span>Character</span><span>Culture</span></div>
+          <h2 class="project-title">湄洲妈</h2>
+          <p class="project-desc">An IP card gives the page a broader commercial/cultural range, which helps the archive feel complete.</p>
+        </div>
+      </a>
+
+      <a class="project-card" data-category="ip" data-size="standard" href="case-gehuo.html">
+        <img class="media" src="assets/gehuo/gehuo-09.jpg" alt="隔火">
+        <span class="project-label">2023 / Product IP</span>
+        <div class="project-info">
+          <div class="project-meta"><span>Incense</span><span>Packaging</span></div>
+          <h2 class="project-title">隔火</h2>
+          <p class="project-desc">A 2023 line-incense product identity that combines packaging, object design, and still-life art direction.</p>
+        </div>
+      </a>
+
+      <a class="project-card" data-category="interactive" data-size="standard" href="case-interactive-site.html">
+        <img class="media" data-external-src="assets/autoband/autoband-01.jpg" alt="Autoband">
+        <span class="project-label">2024 / Web</span>
+        <div class="project-info">
+          <div class="project-meta"><span>Web</span><span>Experiment</span></div>
+          <h2 class="project-title">Autoband</h2>
+          <p class="project-desc">A digital-only case helps the page avoid looking like a pure exhibition archive.</p>
+        </div>
+      </a>
+    </section>
+
+    <footer class="footer-note">
+      <p>Concept page for 0086 case browsing. Built from current local assets and case links.</p>
+      <p><a href="0086-studios-home-v3_14.html?ended=1">Return to current homepage</a></p>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      const buttons = Array.from(document.querySelectorAll(".filter-btn"));
+      const cards = Array.from(document.querySelectorAll(".project-card"));
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", function () {
+          const filter = this.dataset.filter;
+
+          buttons.forEach((item) => item.classList.toggle("is-active", item === this));
+
+          cards.forEach((card) => {
+            const categories = card.dataset.category || "";
+            const visible = filter === "all" || categories.includes(filter);
+            card.classList.toggle("is-hidden", !visible);
+          });
+        });
+      });
+    }());
+  </script>
+  <script src="assets/external-media-config.js"></script>
+  <script src="assets/external-media-loader.js"></script>
+</body>
+</html>

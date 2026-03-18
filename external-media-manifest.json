@@ -1,0 +1,1111 @@
+{
+  "media_root_placeholder": "https://YOUR-PUBLIC-MEDIA-HOST/0086-media",
+  "externalized_threshold_mib": 5,
+  "files": [
+    {
+      "path": "assets/ai-emotion-box/ai-emotion-01.png",
+      "size_bytes": 9007873,
+      "size_mib": 8.6,
+      "pages": [
+        "0086-cases-grid.html",
+        "case-ai-emotion-box.html",
+        "0086-service-ai-installation.html",
+        "0086-projects-nik-inspired.html"
+      ]
+    },
+    {
+      "path": "assets/ai-emotion-box/ai-emotion-02.png",
+      "size_bytes": 12425618,
+      "size_mib": 11.8,
+      "pages": [
+        "case-ai-emotion-box.html"
+      ]
+    },
+    {
+      "path": "assets/ai-emotion-box/ai-emotion-03.png",
+      "size_bytes": 13689007,
+      "size_mib": 13.1,
+      "pages": [
+        "case-ai-emotion-box.html"
+      ]
+    },
+    {
+      "path": "assets/ai-emotion-box/ai-emotion-04.png",
+      "size_bytes": 13285763,
+      "size_mib": 12.7,
+      "pages": [
+        "case-ai-emotion-box.html"
+      ]
+    },
+    {
+      "path": "assets/ai-emotion-box/ai-emotion-05.png",
+      "size_bytes": 12643215,
+      "size_mib": 12.1,
+      "pages": [
+        "case-ai-emotion-box.html"
+      ]
+    },
+    {
+      "path": "assets/ai-emotion-box/ai-emotion-06.png",
+      "size_bytes": 12968986,
+      "size_mib": 12.4,
+      "pages": [
+        "case-ai-emotion-box.html"
+      ]
+    },
+    {
+      "path": "assets/ai-emotion-box/ai-emotion-box.mov",
+      "size_bytes": 200993597,
+      "size_mib": 191.7,
+      "pages": [
+        "case-ai-emotion-box.html"
+      ]
+    },
+    {
+      "path": "assets/autoband/autoband-01.jpg",
+      "size_bytes": 6545257,
+      "size_mib": 6.2,
+      "pages": [
+        "0086-cases-grid.html",
+        "0086-service-ai-installation.html",
+        "case-interactive-site.html",
+        "0086-projects-nik-inspired.html"
+      ]
+    },
+    {
+      "path": "assets/autoband/autoband-03.jpg",
+      "size_bytes": 5359259,
+      "size_mib": 5.1,
+      "pages": [
+        "case-interactive-site.html"
+      ]
+    },
+    {
+      "path": "assets/autoband/autoband.mov",
+      "size_bytes": 117464007,
+      "size_mib": 112.0,
+      "pages": [
+        "case-interactive-site.html"
+      ]
+    },
+    {
+      "path": "assets/beyond-the-boundary/南极.mov",
+      "size_bytes": 242948083,
+      "size_mib": 231.7,
+      "pages": [
+        "case-beyond-the-boundary.html"
+      ]
+    },
+    {
+      "path": "assets/beyond-the-boundary/小黑屋1.mov",
+      "size_bytes": 516182493,
+      "size_mib": 492.3,
+      "pages": [
+        "case-beyond-the-boundary.html"
+      ]
+    },
+    {
+      "path": "assets/beyond-the-boundary/截屏2025-01-14 22.00.48.png",
+      "size_bytes": 14099497,
+      "size_mib": 13.4,
+      "pages": [
+        "case-beyond-the-boundary.html"
+      ]
+    },
+    {
+      "path": "assets/beyond-the-boundary/截屏2025-01-14 22.01.45.png",
+      "size_bytes": 11628336,
+      "size_mib": 11.1,
+      "pages": [
+        "case-beyond-the-boundary.html"
+      ]
+    },
+    {
+      "path": "assets/beyond-the-boundary/截屏2025-06-12 19.44.40.png",
+      "size_bytes": 14585917,
+      "size_mib": 13.9,
+      "pages": [
+        "0086-cases-grid.html",
+        "0086-service-ai-installation.html",
+        "0086-projects-nik-inspired.html",
+        "case-beyond-the-boundary.html"
+      ]
+    },
+    {
+      "path": "assets/beyond-the-boundary/红晕.mov",
+      "size_bytes": 462347971,
+      "size_mib": 440.9,
+      "pages": [
+        "case-beyond-the-boundary.html"
+      ]
+    },
+    {
+      "path": "assets/cases/sandaoshui-xuzhimo.png",
+      "size_bytes": 8628278,
+      "size_mib": 8.2,
+      "pages": [
+        "0086-cases-grid.html",
+        "0086-service-ai-installation.html",
+        "0086-projects-nik-inspired.html",
+        "0086-home-mailbox-new.html"
+      ]
+    },
+    {
+      "path": "assets/game-on/2018Gameonshenzhen.MOV",
+      "size_bytes": 143052898,
+      "size_mib": 136.4,
+      "pages": [
+        "case-game-on.html"
+      ]
+    },
+    {
+      "path": "assets/game-on/2019GAMEONCHENGDU.MOV",
+      "size_bytes": 115963569,
+      "size_mib": 110.6,
+      "pages": [
+        "case-game-on.html"
+      ]
+    },
+    {
+      "path": "assets/haining-reply/haining-01.png",
+      "size_bytes": 16525413,
+      "size_mib": 15.8,
+      "pages": [
+        "0086-cases-grid.html",
+        "0086-service-ai-installation.html",
+        "0086-projects-nik-inspired.html",
+        "case-immersive-experience.html"
+      ]
+    },
+    {
+      "path": "assets/haining-reply/haining-02.png",
+      "size_bytes": 6301841,
+      "size_mib": 6.0,
+      "pages": [
+        "case-immersive-experience.html"
+      ]
+    },
+    {
+      "path": "assets/haining-reply/haining-03.png",
+      "size_bytes": 5465891,
+      "size_mib": 5.2,
+      "pages": [
+        "case-immersive-experience.html"
+      ]
+    },
+    {
+      "path": "assets/haining-reply/haining-reply.mp4",
+      "size_bytes": 207657041,
+      "size_mib": 198.0,
+      "pages": [
+        "0086-projects-nik-inspired.html",
+        "case-immersive-experience.html"
+      ]
+    },
+    {
+      "path": "assets/home-hero.mov",
+      "size_bytes": 102621987,
+      "size_mib": 97.9,
+      "pages": [
+        "0086-studios-home-v3_14.html"
+      ]
+    },
+    {
+      "path": "assets/home-hero.mp4",
+      "size_bytes": 102620974,
+      "size_mib": 97.9,
+      "pages": [
+        "0086-studios-home-v3_14.html"
+      ]
+    },
+    {
+      "path": "assets/home-hero/home-hero.mov",
+      "size_bytes": 102621987,
+      "size_mib": 97.9,
+      "pages": []
+    },
+    {
+      "path": "assets/mazu/千里眼神装-红色背景.mp4",
+      "size_bytes": 9115728,
+      "size_mib": 8.7,
+      "pages": [
+        "case-mazu-ip.html"
+      ]
+    },
+    {
+      "path": "assets/mazu/妈祖现代-金色背景.mp4",
+      "size_bytes": 7364940,
+      "size_mib": 7.0,
+      "pages": [
+        "case-mazu-ip.html"
+      ]
+    },
+    {
+      "path": "assets/mazu/妈祖神装-红色背景.mp4",
+      "size_bytes": 10248433,
+      "size_mib": 9.8,
+      "pages": [
+        "case-mazu-ip.html"
+      ]
+    },
+    {
+      "path": "assets/mazu/海龙王神装-红色背景.mp4",
+      "size_bytes": 9016720,
+      "size_mib": 8.6,
+      "pages": [
+        "case-mazu-ip.html"
+      ]
+    },
+    {
+      "path": "assets/mazu/湄洲女-红色背景.mp4",
+      "size_bytes": 7018092,
+      "size_mib": 6.7,
+      "pages": [
+        "case-mazu-ip.html"
+      ]
+    },
+    {
+      "path": "assets/mazu/顺风耳神装-红色背景.mp4",
+      "size_bytes": 10295225,
+      "size_mib": 9.8,
+      "pages": [
+        "case-mazu-ip.html"
+      ]
+    },
+    {
+      "path": "assets/mazu/龙少年-金色背景.mp4",
+      "size_bytes": 7156771,
+      "size_mib": 6.8,
+      "pages": [
+        "case-mazu-ip.html"
+      ]
+    },
+    {
+      "path": "assets/package-nft/0086 敲门砖.mp4",
+      "size_bytes": 18029400,
+      "size_mib": 17.2,
+      "pages": [
+        "case-nft.html"
+      ]
+    },
+    {
+      "path": "assets/package-nft/俄罗斯方块合体版40M.m4v",
+      "size_bytes": 41693019,
+      "size_mib": 39.8,
+      "pages": [
+        "case-nft.html"
+      ]
+    },
+    {
+      "path": "assets/package-nft/染色体.mp4",
+      "size_bytes": 25181302,
+      "size_mib": 24.0,
+      "pages": [
+        "case-nft.html"
+      ]
+    },
+    {
+      "path": "assets/package-nft/横版视频.mp4",
+      "size_bytes": 27929363,
+      "size_mib": 26.6,
+      "pages": [
+        "case-nft.html"
+      ]
+    },
+    {
+      "path": "assets/package-nft/砖头合成成片.mp4",
+      "size_bytes": 63546382,
+      "size_mib": 60.6,
+      "pages": [
+        "case-nft.html"
+      ]
+    },
+    {
+      "path": "assets/package-sandaoshui/三道水-1.png",
+      "size_bytes": 8628278,
+      "size_mib": 8.2,
+      "pages": [
+        "case-sandaoshui-xuzhimo.html"
+      ]
+    },
+    {
+      "path": "assets/package-sandaoshui/三道水.mp4",
+      "size_bytes": 1566355237,
+      "size_mib": 1493.8,
+      "pages": [
+        "case-sandaoshui-xuzhimo.html"
+      ]
+    },
+    {
+      "path": "assets/poem-song/img-4469.jpg",
+      "size_bytes": 6501553,
+      "size_mib": 6.2,
+      "pages": [
+        "case-poem-song.html"
+      ]
+    },
+    {
+      "path": "assets/poem-song/img-4473.jpg",
+      "size_bytes": 6309148,
+      "size_mib": 6.0,
+      "pages": [
+        "case-poem-song.html"
+      ]
+    },
+    {
+      "path": "assets/poem-song/img-4475.jpg",
+      "size_bytes": 7142834,
+      "size_mib": 6.8,
+      "pages": [
+        "case-poem-song.html"
+      ]
+    },
+    {
+      "path": "assets/poem-song/img-4476.jpg",
+      "size_bytes": 6591738,
+      "size_mib": 6.3,
+      "pages": [
+        "case-poem-song.html"
+      ]
+    },
+    {
+      "path": "assets/poem-song/poem-01.png",
+      "size_bytes": 18128177,
+      "size_mib": 17.3,
+      "pages": [
+        "0086-cases-grid.html",
+        "0086-service-ai-installation.html",
+        "0086-projects-nik-inspired.html",
+        "case-poem-song.html"
+      ]
+    },
+    {
+      "path": "assets/poem-song/poem-02.png",
+      "size_bytes": 21472463,
+      "size_mib": 20.5,
+      "pages": [
+        "case-poem-song.html"
+      ]
+    },
+    {
+      "path": "assets/poem-song/poem-03.png",
+      "size_bytes": 10733358,
+      "size_mib": 10.2,
+      "pages": [
+        "case-poem-song.html"
+      ]
+    },
+    {
+      "path": "assets/poem-song/poem-04.png",
+      "size_bytes": 15488858,
+      "size_mib": 14.8,
+      "pages": [
+        "case-poem-song.html"
+      ]
+    },
+    {
+      "path": "assets/poem-song/poem-song.mov",
+      "size_bytes": 191346070,
+      "size_mib": 182.5,
+      "pages": [
+        "case-poem-song.html"
+      ]
+    },
+    {
+      "path": "assets/thinkpad-retail/img-7770.jpg",
+      "size_bytes": 5568996,
+      "size_mib": 5.3,
+      "pages": [
+        "case-narrative-installation.html"
+      ]
+    },
+    {
+      "path": "assets/thinkpad-retail/thinkpad-retail.mov",
+      "size_bytes": 92627687,
+      "size_mib": 88.3,
+      "pages": [
+        "case-narrative-installation.html"
+      ]
+    },
+    {
+      "path": "assets/thinkpad-src/11.png",
+      "size_bytes": 16247023,
+      "size_mib": 15.5,
+      "pages": []
+    },
+    {
+      "path": "assets/thinkpad-src/12.png",
+      "size_bytes": 14099497,
+      "size_mib": 13.4,
+      "pages": []
+    },
+    {
+      "path": "assets/thinkpad-src/13.png",
+      "size_bytes": 11628336,
+      "size_mib": 11.1,
+      "pages": []
+    },
+    {
+      "path": "assets/thinkpad-src/1DSC00798-1.tif",
+      "size_bytes": 34163992,
+      "size_mib": 32.6,
+      "pages": []
+    },
+    {
+      "path": "assets/thinkpad/11.png",
+      "size_bytes": 16247023,
+      "size_mib": 15.5,
+      "pages": []
+    },
+    {
+      "path": "assets/thinkpad/12.png",
+      "size_bytes": 14099497,
+      "size_mib": 13.4,
+      "pages": []
+    },
+    {
+      "path": "assets/thinkpad/13.png",
+      "size_bytes": 11628336,
+      "size_mib": 11.1,
+      "pages": []
+    },
+    {
+      "path": "assets/thinkpad/1DSC00798-1.tif",
+      "size_bytes": 34163992,
+      "size_mib": 32.6,
+      "pages": []
+    },
+    {
+      "path": "assets/thinkpad/2月7日(3).mov",
+      "size_bytes": 985334424,
+      "size_mib": 939.7,
+      "pages": [
+        "case-heart-in-thinkpad.html"
+      ]
+    },
+    {
+      "path": "assets/wangguowei/IMG_0983.png",
+      "size_bytes": 5875570,
+      "size_mib": 5.6,
+      "pages": [
+        "case-wangguowei.html"
+      ]
+    },
+    {
+      "path": "assets/wangguowei/IMG_0984.png",
+      "size_bytes": 7037122,
+      "size_mib": 6.7,
+      "pages": [
+        "case-wangguowei.html"
+      ]
+    },
+    {
+      "path": "assets/wangguowei/IMG_0985.png",
+      "size_bytes": 5939141,
+      "size_mib": 5.7,
+      "pages": [
+        "case-wangguowei.html"
+      ]
+    },
+    {
+      "path": "assets/wangguowei/IMG_0993.png",
+      "size_bytes": 6301841,
+      "size_mib": 6.0,
+      "pages": [
+        "case-wangguowei.html"
+      ]
+    },
+    {
+      "path": "assets/wangguowei/IMG_0994.png",
+      "size_bytes": 5457506,
+      "size_mib": 5.2,
+      "pages": [
+        "case-wangguowei.html"
+      ]
+    },
+    {
+      "path": "assets/wangguowei/IMG_0996.png",
+      "size_bytes": 6018544,
+      "size_mib": 5.7,
+      "pages": [
+        "case-wangguowei.html"
+      ]
+    },
+    {
+      "path": "assets/wangguowei/IMG_0997.png",
+      "size_bytes": 5465891,
+      "size_mib": 5.2,
+      "pages": [
+        "0086-cases-grid.html",
+        "0086-service-ai-installation.html",
+        "0086-projects-nik-inspired.html",
+        "case-wangguowei.html"
+      ]
+    },
+    {
+      "path": "assets/wangguowei/IMG_0998.png",
+      "size_bytes": 5661357,
+      "size_mib": 5.4,
+      "pages": [
+        "case-wangguowei.html"
+      ]
+    },
+    {
+      "path": "assets/wangguowei/dji_mimo_20250630_152454_20250630151814_1751349326242_video.MP4",
+      "size_bytes": 1260609325,
+      "size_mib": 1202.2,
+      "pages": [
+        "case-wangguowei.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/FullSizeRender 12.png",
+      "size_bytes": 6907388,
+      "size_mib": 6.6,
+      "pages": [
+        "0086-cases-grid.html",
+        "0086-service-ai-installation.html",
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/FullSizeRender 13.png",
+      "size_bytes": 6471427,
+      "size_mib": 6.2,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/FullSizeRender 14.png",
+      "size_bytes": 7369652,
+      "size_mib": 7.0,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/FullSizeRender 16.png",
+      "size_bytes": 12635766,
+      "size_mib": 12.1,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/FullSizeRender 17.png",
+      "size_bytes": 7572250,
+      "size_mib": 7.2,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/FullSizeRender 18.png",
+      "size_bytes": 8377991,
+      "size_mib": 8.0,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/FullSizeRender 19.png",
+      "size_bytes": 10878701,
+      "size_mib": 10.4,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/FullSizeRender 20.png",
+      "size_bytes": 8054712,
+      "size_mib": 7.7,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/FullSizeRender 21.png",
+      "size_bytes": 5334151,
+      "size_mib": 5.1,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/FullSizeRender 23.png",
+      "size_bytes": 10723909,
+      "size_mib": 10.2,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/FullSizeRender 24.png",
+      "size_bytes": 11950789,
+      "size_mib": 11.4,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/FullSizeRender 25.png",
+      "size_bytes": 15597173,
+      "size_mib": 14.9,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/FullSizeRender 28.png",
+      "size_bytes": 13252995,
+      "size_mib": 12.6,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4381.JPG",
+      "size_bytes": 6018027,
+      "size_mib": 5.7,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4395.JPG",
+      "size_bytes": 6795885,
+      "size_mib": 6.5,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4397.JPG",
+      "size_bytes": 7326985,
+      "size_mib": 7.0,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4398.JPG",
+      "size_bytes": 7851927,
+      "size_mib": 7.5,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4401.JPG",
+      "size_bytes": 8990154,
+      "size_mib": 8.6,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4404.JPG",
+      "size_bytes": 6213432,
+      "size_mib": 5.9,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4411.JPG",
+      "size_bytes": 6757865,
+      "size_mib": 6.4,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4412.JPG",
+      "size_bytes": 6664252,
+      "size_mib": 6.4,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4420.JPG",
+      "size_bytes": 6308900,
+      "size_mib": 6.0,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4428.JPG",
+      "size_bytes": 6413559,
+      "size_mib": 6.1,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4431.JPG",
+      "size_bytes": 6199083,
+      "size_mib": 5.9,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4434.JPG",
+      "size_bytes": 6382271,
+      "size_mib": 6.1,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4437.JPG",
+      "size_bytes": 5521566,
+      "size_mib": 5.3,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4438.JPG",
+      "size_bytes": 6414147,
+      "size_mib": 6.1,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4450.JPG",
+      "size_bytes": 9177228,
+      "size_mib": 8.8,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4451.JPG",
+      "size_bytes": 8910843,
+      "size_mib": 8.5,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4453.JPG",
+      "size_bytes": 5281265,
+      "size_mib": 5.0,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4456.JPG",
+      "size_bytes": 5349906,
+      "size_mib": 5.1,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4457.JPG",
+      "size_bytes": 5618985,
+      "size_mib": 5.4,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4459.JPG",
+      "size_bytes": 9983635,
+      "size_mib": 9.5,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4461.JPG",
+      "size_bytes": 8441818,
+      "size_mib": 8.1,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4462.JPG",
+      "size_bytes": 9897215,
+      "size_mib": 9.4,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4465.JPG",
+      "size_bytes": 6207310,
+      "size_mib": 5.9,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4466.JPG",
+      "size_bytes": 6254625,
+      "size_mib": 6.0,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4467.JPG",
+      "size_bytes": 7039256,
+      "size_mib": 6.7,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4468.JPG",
+      "size_bytes": 7061927,
+      "size_mib": 6.7,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4469.JPG",
+      "size_bytes": 6501553,
+      "size_mib": 6.2,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4473.JPG",
+      "size_bytes": 6309148,
+      "size_mib": 6.0,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4475.JPG",
+      "size_bytes": 7142834,
+      "size_mib": 6.8,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4476.JPG",
+      "size_bytes": 6591738,
+      "size_mib": 6.3,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4480.JPG",
+      "size_bytes": 10108119,
+      "size_mib": 9.6,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4481.JPG",
+      "size_bytes": 9188613,
+      "size_mib": 8.8,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4484.JPG",
+      "size_bytes": 8336964,
+      "size_mib": 8.0,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4488.JPG",
+      "size_bytes": 7489627,
+      "size_mib": 7.1,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4489.JPG",
+      "size_bytes": 8047694,
+      "size_mib": 7.7,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4490.JPG",
+      "size_bytes": 7421068,
+      "size_mib": 7.1,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4491.JPG",
+      "size_bytes": 9650888,
+      "size_mib": 9.2,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4493.JPG",
+      "size_bytes": 10360322,
+      "size_mib": 9.9,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4497.JPG",
+      "size_bytes": 6069737,
+      "size_mib": 5.8,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4500.JPG",
+      "size_bytes": 5652041,
+      "size_mib": 5.4,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4502.JPG",
+      "size_bytes": 5457390,
+      "size_mib": 5.2,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4503.JPG",
+      "size_bytes": 5431259,
+      "size_mib": 5.2,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4505.JPG",
+      "size_bytes": 6048520,
+      "size_mib": 5.8,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4512.JPG",
+      "size_bytes": 6846599,
+      "size_mib": 6.5,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4514.JPG",
+      "size_bytes": 6389104,
+      "size_mib": 6.1,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_4516.JPG",
+      "size_bytes": 5397057,
+      "size_mib": 5.1,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_8903 2.png",
+      "size_bytes": 13785778,
+      "size_mib": 13.1,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_8910.png",
+      "size_bytes": 12580183,
+      "size_mib": 12.0,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_8917 2.png",
+      "size_bytes": 11932161,
+      "size_mib": 11.4,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_8919.png",
+      "size_bytes": 15125524,
+      "size_mib": 14.4,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_8924 2.png",
+      "size_bytes": 17911119,
+      "size_mib": 17.1,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_8926 2.png",
+      "size_bytes": 8398515,
+      "size_mib": 8.0,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/xuzhimo-haining/IMG_8928.png",
+      "size_bytes": 17599234,
+      "size_mib": 16.8,
+      "pages": [
+        "case-xuzhimo-haining.html"
+      ]
+    },
+    {
+      "path": "assets/yidengcang/IMG_4202.MOV",
+      "size_bytes": 132269215,
+      "size_mib": 126.1,
+      "pages": [
+        "case-ai-fitting-room.html"
+      ]
+    },
+    {
+      "path": "assets/yidengcang/IMG_4266-2.png",
+      "size_bytes": 20294286,
+      "size_mib": 19.4,
+      "pages": [
+        "0086-cases-grid.html",
+        "0086-service-ai-installation.html",
+        "0086-projects-nik-inspired.html",
+        "case-ai-fitting-room.html"
+      ]
+    }
+  ]
+}

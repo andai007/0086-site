@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>0086 Studios Home V2</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Cormorant+Garamond:wght@500;600;700&display=swap');
+    :root {
+      --ink: #1a1a1a;
+      --paper: #ececec;
+      --line: #cfcfcf;
+      --win-blue: #0e63c7;
+      --win-blue-2: #2f84e6;
+      --win-red: #d8261f;
+      --hero-h: min(68vw, 980px);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    .notice-bar {
+      display: none;
+    }
+
+    .top-row {
+      position: absolute;
+      inset: 24px 20px auto 20px;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .burst-mark {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, #fff 0 2px, transparent 3px 100%),
+        conic-gradient(from 0deg, #fff 0 8deg, transparent 8deg 16deg, #fff 16deg 24deg, transparent 24deg 32deg, #fff 32deg 40deg, transparent 40deg 48deg, #fff 48deg 56deg, transparent 56deg 64deg, #fff 64deg 72deg, transparent 72deg 80deg, #fff 80deg 88deg, transparent 88deg 96deg, #fff 96deg 104deg, transparent 104deg 112deg, #fff 112deg 120deg, transparent 120deg 128deg, #fff 128deg 136deg, transparent 136deg 144deg, #fff 144deg 152deg, transparent 152deg 160deg, #fff 160deg 168deg, transparent 168deg 176deg, #fff 176deg 184deg, transparent 184deg 192deg, #fff 192deg 200deg, transparent 200deg 208deg, #fff 208deg 216deg, transparent 216deg 224deg, #fff 224deg 232deg, transparent 232deg 240deg, #fff 240deg 248deg, transparent 248deg 256deg, #fff 256deg 264deg, transparent 264deg 272deg, #fff 272deg 280deg, transparent 280deg 288deg, #fff 288deg 296deg, transparent 296deg 304deg, #fff 304deg 312deg, transparent 312deg 320deg, #fff 320deg 328deg, transparent 328deg 336deg, #fff 336deg 344deg, transparent 344deg 352deg, #fff 352deg 360deg);
+      opacity: 0.9;
+    }
+
+    .top-icons {
+      display: flex;
+      gap: 8px;
+      pointer-events: auto;
+    }
+
+    .top-icons span {
+      display: inline-flex;
+      width: 16px;
+      height: 16px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      color: #fff;
+      font-size: 10px;
+      line-height: 1;
+      opacity: 0.9;
+    }
+
+    .hero-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1920 / 1080;
+      margin: 0 auto;
+      overflow: hidden;
+      background: #1a1410;
+      border-bottom: 1px solid #bbbbbb;
+    }
+
+    .hero-image {
+      position: absolute;
+      inset: 0;
+      background-image: url('assets/mailbox/0086-cover-v3.jpg');
+      background-position: center center;
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    .ambient-top {
+      position: absolute;
+      top: -12%;
+      left: 30%;
+      width: 40%;
+      height: 22%;
+      background: radial-gradient(ellipse at 50% 100%, rgba(255, 50, 15, 0.18) 0%, transparent 70%);
+      animation: ambientPulse 3s ease-in-out infinite;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      z-index: 7;
+    }
+
+    .glow-overlay {
+      position: absolute;
+      top: -2%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 48%;
+      height: 18%;
+      pointer-events: none;
+      z-index: 8;
+    }
+
+    .glow-red {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 70% at 50% 65%, rgba(255, 40, 10, 0.65) 0%, rgba(255, 50, 15, 0.35) 30%, rgba(255, 30, 5, 0.12) 55%, transparent 78%);
+      animation: breathRed 3s ease-in-out infinite;
+      mix-blend-mode: screen;
+    }
+
+    .glow-gold {
+      position: absolute;
+      inset: 5% 15%;
+      background: radial-gradient(ellipse 55% 65% at 50% 60%, rgba(255, 200, 60, 0.5) 0%, rgba(255, 180, 40, 0.22) 35%, transparent 68%);
+      animation: breathGold 3s ease-in-out infinite;
+      mix-blend-mode: screen;
+    }
+
+    .glow-core {
+      position: absolute;
+      inset: 15% 25%;
+      background: radial-gradient(ellipse 60% 55% at 50% 58%, rgba(255, 245, 210, 0.4) 0%, rgba(255, 225, 160, 0.18) 35%, transparent 65%);
+      animation: breathCore 3s ease-in-out infinite;
+      mix-blend-mode: screen;
+    }
+
+    .hero-hotspot {
+      position: absolute;
+      z-index: 26;
+      cursor: default;
+      transform: translate(-50%, -50%);
+      padding: 0;
+      display: block;
+    }
+
+    .hero-hotspot span {
+      color: #000;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      line-height: 1;
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    .hero-hotspot:hover span,
+    .hero-hotspot:focus-visible span {
+      opacity: 1;
+    }
+
+    .hero-hotspot:focus-visible {
+      outline: 1px dashed rgba(0, 0, 0, 0.5);
+      outline-offset: 2px;
+    }
+
+    .hotspot-ai {
+      left: 32.29%;
+      top: 37.96%;
+      width: 12.2%;
+      height: 31%;
+    }
+
+    .hotspot-ai span {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-style: italic;
+      font-size: clamp(32px, 4vw, 60px);
+      letter-spacing: 0.05em;
+    }
+
+    .hotspot-art {
+      left: 47.4%;
+      top: 26.85%;
+      width: 12.8%;
+      height: 28%;
+    }
+
+    .hotspot-art span {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-style: italic;
+      font-size: clamp(32px, 4vw, 60px);
+      letter-spacing: 0.08em;
+    }
+
+    .hotspot-about {
+      left: 19.27%;
+      top: 49.07%;
+      width: 15.2%;
+      height: 10.6%;
+    }
+
+    .hotspot-about span {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: clamp(16px, 1.8vw, 28px);
+      letter-spacing: 0.02em;
+    }
+
+    .hotspot-contact {
+      left: 27.6%;
+      top: 49.07%;
+      width: 13.6%;
+      height: 10.6%;
+    }
+
+    .hotspot-contact span {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: clamp(16px, 1.8vw, 28px);
+      letter-spacing: 0.02em;
+    }
+
+    .hero-logo-0086 {
+      position: absolute;
+      left: 50%;
+      top: 3.8%;
+      width: min(640px, 46vw);
+      height: min(240px, 18vw);
+      transform: translateX(-50%);
+      z-index: 9;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .hero-logo-0086.breathe-glow {
+      position: relative;
+      isolation: isolate;
+      border-radius: 999px;
+      background: rgba(255, 0, 0, 0.22);
+      box-shadow: 0 0 20px 20px rgba(255, 0, 0, 0.35);
+      animation: breatheGlow 4s ease-in-out infinite;
+    }
+
+    .hero-logo-0086.breathe-glow::before {
+      content: '';
+      position: absolute;
+      inset: 8% 4% 20% 4%;
+      border-radius: 999px;
+      background:
+        radial-gradient(
+          ellipse at center,
+          rgba(255, 0, 0, 0.95) 0 30%,
+          rgba(255, 0, 0, 0.62) 48%,
+          rgba(255, 0, 0, 0.28) 62%,
+          rgba(255, 0, 0, 0) 78%
+        );
+      filter: blur(20px);
+      opacity: 0.55;
+      pointer-events: none;
+      z-index: 1;
+      will-change: filter, opacity, box-shadow;
+    }
+
+    .desktop-window {
+      position: absolute;
+      border-top: 2px solid #f3f3f3;
+      border-left: 2px solid #f3f3f3;
+      border-right: 2px solid #4e4e4e;
+      border-bottom: 2px solid #4e4e4e;
+      background: #c9c9c9;
+      z-index: 8;
+      display: grid;
+      grid-template-rows: 22px 1fr;
+      overflow: hidden;
+      font-family: Geneva, Tahoma, "MS Sans Serif", sans-serif;
+      box-shadow: none;
+    }
+
+    .window-link {
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .desktop-window::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-top: 1px solid #ffffff;
+      border-left: 1px solid #ffffff;
+      border-right: 1px solid #757575;
+      border-bottom: 1px solid #757575;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .desktop-window .title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 6px;
+      position: relative;
+      font-size: 10px;
+      color: #101010;
+      text-transform: uppercase;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          #ececec 0 2px,
+          #d4d4d4 2px 4px
+        );
+      border-bottom: 1px solid #666;
+      letter-spacing: 0.03em;
+      font-weight: 700;
+      z-index: 3;
+    }
+
+    .desktop-window .controls {
+      position: absolute;
+      left: 5px;
+      top: 4px;
+      display: flex;
+      gap: 3px;
+    }
+
+    .desktop-window .close,
+    .desktop-window .zoom {
+      width: 11px;
+      height: 11px;
+      display: block;
+      background: #d9d9d9;
+      border-top: 1px solid #ffffff;
+      border-left: 1px solid #ffffff;
+      border-right: 1px solid #353535;
+      border-bottom: 1px solid #353535;
+      position: relative;
+    }
+
+    .desktop-window .close::after,
+    .desktop-window .zoom::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border: 1px solid #4d4d4d;
+    }
+
+    .desktop-window .title-text {
+      background: #dcdcdc;
+      border-top: 1px solid #fff;
+      border-left: 1px solid #fff;
+      border-right: 1px solid #666;
+      border-bottom: 1px solid #666;
+      padding: 1px 8px 0;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .desktop-window .panel {
+      background: #d3d3d3;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border-top: 1px solid #ffffff;
+      border-left: 1px solid #ffffff;
+      border-right: 1px solid #7d7d7d;
+      border-bottom: 1px solid #7d7d7d;
+      margin: 1px;
+      z-index: 1;
+    }
+
+    .desktop-window img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .win-bag {
+      left: clamp(24px, 7vw, 140px);
+      top: clamp(28px, 5vw, 68px);
+      width: clamp(220px, 23vw, 450px);
+      height: clamp(110px, 10vw, 178px);
+      animation-delay: 0.2s;
+    }
+
+    .win-runway {
+      right: clamp(18px, 5vw, 110px);
+      top: clamp(26px, 5vw, 72px);
+      width: clamp(190px, 20vw, 360px);
+      height: clamp(180px, 21vw, 310px);
+      animation-delay: 0.9s;
+    }
+
+    .win-topic {
+      left: clamp(8px, 1.4vw, 20px);
+      top: clamp(130px, 13vw, 196px);
+      width: clamp(92px, 9vw, 146px);
+      height: clamp(150px, 16vw, 250px);
+      animation-delay: 1.3s;
+    }
+
+    .win-topic .panel {
+      background:
+        linear-gradient(135deg, #efefef 0 40%, #f8f8f8 40% 100%),
+        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.045), rgba(0, 0, 0, 0.045) 1px, transparent 1px, transparent 4px);
+      place-items: start;
+      align-content: start;
+      padding: 8px 6px;
+    }
+
+    .topic-label {
+      font-weight: 800;
+      color: #d62523;
+      font-size: clamp(16px, 1.5vw, 28px);
+      letter-spacing: 0.05em;
+      line-height: 0.9;
+      text-transform: uppercase;
+      margin-top: 48px;
+    }
+
+    .menu-strip {
+      position: absolute;
+      left: 50%;
+      bottom: clamp(22px, 2.5vw, 36px);
+      transform: translateX(-50%);
+      z-index: 10;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(90px, 220px));
+      gap: 2px;
+      width: min(860px, calc(100% - 40px));
+    }
+
+    .menu-strip a {
+      text-decoration: none;
+      color: #111;
+      text-align: center;
+      background: rgba(247, 247, 247, 0.97);
+      border: 1px solid #bcbcbc;
+      font-size: clamp(10px, 0.95vw, 14px);
+      padding: 14px 8px;
+      text-transform: uppercase;
+      transition: background 0.2s ease;
+    }
+
+    .menu-strip a:hover {
+      background: #fff;
+    }
+
+    .store-locator {
+      position: absolute;
+      right: clamp(16px, 2.4vw, 30px);
+      bottom: clamp(30px, 2.8vw, 46px);
+      width: clamp(84px, 7vw, 108px);
+      aspect-ratio: 1 / 1;
+      border-radius: 999px;
+      border: 1px solid #a7a7a7;
+      background: rgba(242, 242, 242, 0.96);
+      color: #181818;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: clamp(10px, 0.82vw, 12px);
+      line-height: 1.15;
+      z-index: 10;
+    }
+
+    .store-locator .mini {
+      width: 32px;
+      height: 22px;
+      border: 2px solid #222;
+      border-radius: 2px;
+      position: relative;
+      margin-bottom: 4px;
+    }
+
+    .store-locator .mini::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(90deg, transparent 0 4px, #222 4px 6px);
+      opacity: 0.6;
+    }
+
+    .below-title {
+      background: #efefef;
+      border-top: 1px solid #d7d7d7;
+      border-bottom: 1px solid #d7d7d7;
+      padding: 14px clamp(16px, 2vw, 26px);
+      font-size: 11px;
+      color: #737373;
+      text-transform: uppercase;
+    }
+
+    .site-footer {
+      background: #ececec;
+      padding: clamp(30px, 4vw, 48px) clamp(14px, 2vw, 28px) clamp(20px, 2.2vw, 30px);
+    }
+
+    .footer-grid {
+      width: min(1320px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(140px, 1fr)) minmax(190px, 280px);
+      gap: clamp(14px, 2.2vw, 28px);
+      align-items: start;
+    }
+
+    .footer-col h4 {
+      font-size: 14px;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      font-size: 13px;
+      color: #2f2f2f;
+    }
+
+    .footer-col a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .footer-col a:hover {
+      text-decoration: underline;
+    }
+
+    .partner-col {
+      justify-self: end;
+      display: grid;
+      gap: 18px;
+      text-align: right;
+    }
+
+    .partner-row {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .partner-box {
+      border: 1px solid #bdbdbd;
+      padding: 10px 8px;
+      font-size: 11px;
+      text-transform: uppercase;
+      background: #f6f6f6;
+      min-width: 72px;
+      text-align: center;
+    }
+
+    .social-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .copyright {
+      width: min(1320px, 100%);
+      margin: 24px auto 0;
+      font-size: 12px;
+      color: #3f3f3f;
+    }
+
+    @keyframes floatWindow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+
+    @keyframes breatheGlow {
+      0%, 100% {
+        box-shadow: 0 0 20px 20px rgba(255, 0, 0, 0.35);
+        background: rgba(255, 0, 0, 0.22);
+      }
+      50% {
+        box-shadow: 0 0 45px 45px rgba(255, 0, 0, 0.65);
+        background: rgba(255, 0, 0, 0.44);
+      }
+    }
+
+    @keyframes breathRed {
+      0%, 100% { opacity: 0.15; transform: scale(0.88); }
+      50% { opacity: 1; transform: scale(1.12); }
+    }
+
+    @keyframes breathGold {
+      0%, 100% { opacity: 0.12; transform: scale(0.92); }
+      50% { opacity: 0.95; transform: scale(1.08); }
+    }
+
+    @keyframes breathCore {
+      0%, 100% { opacity: 0.08; transform: scale(0.85); }
+      50% { opacity: 0.9; transform: scale(1.15); }
+    }
+
+    @keyframes ambientPulse {
+      0%, 100% { opacity: 0.12; }
+      50% { opacity: 0.8; }
+    }
+
+    @media (max-width: 900px) {
+      .hero-logo-0086 {
+        top: 4.8%;
+        width: min(560px, 66vw);
+        height: min(220px, 24vw);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .hero-logo-0086 {
+        top: 6.2%;
+        width: min(460px, 78vw);
+        height: min(180px, 31vw);
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .hero-wrap {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .notice-bar {
+        font-size: 9px;
+        padding-inline: 12px;
+      }
+
+      .top-row {
+        inset: 18px 12px auto 12px;
+      }
+
+      .win-topic {
+        display: none;
+      }
+
+      .hero-wrap {
+        width: 100%;
+      }
+
+      .win-bag {
+        left: 12px;
+        width: min(56vw, 280px);
+        top: 56px;
+      }
+
+      .win-runway {
+        right: 12px;
+        width: min(46vw, 240px);
+        height: min(43vw, 230px);
+        top: 72px;
+      }
+
+      .menu-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        bottom: 20px;
+      }
+
+      .store-locator {
+        right: 12px;
+        bottom: 118px;
+      }
+
+      .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .partner-col {
+        justify-self: start;
+        text-align: left;
+      }
+
+      .partner-row,
+      .social-row {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .top-icons span {
+        width: 14px;
+        height: 14px;
+        font-size: 9px;
+      }
+
+      .hero-wrap {
+        width: 100%;
+      }
+
+      .win-bag {
+        top: 44px;
+      }
+
+      .win-runway {
+        top: 176px;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .desktop-window {
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero-wrap" aria-label="Hero">
+      <div class="hero-image" aria-hidden="true"></div>
+      <div class="ambient-top" aria-hidden="true"></div>
+      <div class="glow-overlay" aria-hidden="true">
+        <div class="glow-red"></div>
+        <div class="glow-gold"></div>
+        <div class="glow-core"></div>
+      </div>
+      <div class="hero-hotspot hotspot-ai"><span>AI</span></div>
+      <div class="hero-hotspot hotspot-art"><span>ART</span></div>
+      <div class="hero-hotspot hotspot-about"><span>About us</span></div>
+      <div class="hero-hotspot hotspot-contact"><span>Contact</span></div>
+
+      <div class="top-row" aria-hidden="true">
+        <span class="burst-mark"></span>
+        <div class="top-icons">
+          <span>⌕</span>
+          <span>◎</span>
+          <span>⌂</span>
+        </div>
+      </div>
+
+      <nav class="menu-strip" aria-label="Category">
+        <a href="0086-service-ai-installation.html">MENS</a>
+        <a href="0086-service-exhibition.html">WOMENS</a>
+        <a href="0086-ai.html">SHOES</a>
+        <a href="0086-selected-works.html">ACCESSORY</a>
+      </nav>
+
+      <a class="store-locator" href="0086-about.html">
+        <span class="mini" aria-hidden="true"></span>
+        <span>STORE<br>LOCATOR</span>
+      </a>
+    </section>
+
+    <div class="below-title">Maison 0086 Studios</div>
+
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <section class="footer-col">
+          <h4>Shopping Guide</h4>
+          <ul>
+            <li><a href="#">Cancellation, Exchange and Return</a></li>
+            <li><a href="#">Payment</a></li>
+            <li><a href="#">Shipping</a></li>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </section>
+
+        <section class="footer-col">
+          <h4>Members</h4>
+          <ul>
+            <li><a href="#">My Account</a></li>
+            <li><a href="#">Forgot Password</a></li>
+            <li><a href="#">Point</a></li>
+            <li><a href="#">Member Registration</a></li>
+          </ul>
+        </section>
+
+        <section class="footer-col">
+          <h4>About Us</h4>
+          <ul>
+            <li><a href="0086-about.html">ABOUT 0086 STUDIOS</a></li>
+            <li><a href="0086-about.html">STUDIO PROFILE</a></li>
+            <li><a href="0086-about.html">STORE LOCATOR</a></li>
+          </ul>
+        </section>
+
+        <section class="footer-col">
+          <h4>Legal Area</h4>
+          <ul>
+            <li><a href="#">Company</a></li>
+            <li><a href="#">Terms of Use</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Specified Commercial Transaction Act</a></li>
+          </ul>
+        </section>
+
+        <section class="partner-col">
+          <div class="partner-row">
+            <span class="partner-box">0086</span>
+            <span class="partner-box">KAMIYA</span>
+            <span class="partner-box">IN-STRU</span>
+            <span class="partner-box">General Scale</span>
+          </div>
+          <div class="social-row" aria-label="Social">
+            <span>◉</span>
+            <span>f</span>
+            <span>X</span>
+          </div>
+        </section>
+      </div>
+
+      <p class="copyright">© Maison 0086 STUDIOS ONLINE STORE all rights reserved.</p>
+    </footer>
+  </main>
+  <script>
+    let audioCtx;
+    let audioReady = false;
+    let audioEnabled = false;
+    let breathingGain;
+
+    function initAudio() {
+      if (audioReady) return;
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      const mainGain = audioCtx.createGain();
+      mainGain.gain.value = 0.12;
+      mainGain.connect(audioCtx.destination);
+
+      breathingGain = audioCtx.createGain();
+      breathingGain.gain.value = 0;
+      breathingGain.connect(mainGain);
+
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      const g1 = audioCtx.createGain();
+      const g2 = audioCtx.createGain();
+
+      osc1.type = "sine";
+      osc1.frequency.value = 80;
+      osc2.type = "sine";
+      osc2.frequency.value = 160;
+
+      g1.gain.value = 0.06;
+      g2.gain.value = 0.025;
+
+      const lfo = audioCtx.createOscillator();
+      const lfoGain = audioCtx.createGain();
+      lfo.type = "sine";
+      lfo.frequency.value = 1 / 3;
+      lfoGain.gain.value = 0.05;
+
+      lfo.connect(lfoGain);
+      lfoGain.connect(g1.gain);
+
+      osc1.connect(g1);
+      osc2.connect(g2);
+      g1.connect(breathingGain);
+      g2.connect(breathingGain);
+
+      osc1.start();
+      osc2.start();
+      lfo.start();
+
+      audioReady = true;
+    }
+
+    async function ensureAudioContext() {
+      initAudio();
+      if (audioCtx.state === "suspended") {
+        await audioCtx.resume();
+      }
+    }
+
+    function setBreathingSound(enabled) {
+      if (!audioReady) return;
+      const now = audioCtx.currentTime;
+      breathingGain.gain.cancelScheduledValues(now);
+      breathingGain.gain.setTargetAtTime(enabled ? 1 : 0, now, 0.25);
+      audioEnabled = enabled;
+    }
+
+    function playHoverSound() {
+      if (!audioReady || !audioEnabled) return;
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = "sine";
+      o.frequency.value = 520;
+      g.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+      o.connect(g);
+      g.connect(audioCtx.destination);
+      o.start();
+      o.stop(audioCtx.currentTime + 0.3);
+    }
+
+    function playClickSound() {
+      if (!audioReady || !audioEnabled) return;
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = "triangle";
+      o.frequency.setValueAtTime(680, audioCtx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(340, audioCtx.currentTime + 0.15);
+      g.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+      o.connect(g);
+      g.connect(audioCtx.destination);
+      o.start();
+      o.stop(audioCtx.currentTime + 0.25);
+    }
+
+    const hotspots = document.querySelectorAll(".hero-hotspot");
+
+    document.addEventListener(
+      "click",
+      async () => {
+        if (audioEnabled) return;
+        await ensureAudioContext();
+        setBreathingSound(true);
+      },
+      { once: true }
+    );
+
+    hotspots.forEach((hotspot) => {
+      hotspot.addEventListener("mouseenter", playHoverSound);
+      hotspot.addEventListener("focus", playHoverSound);
+    });
+  </script>
+</body>
+</html>

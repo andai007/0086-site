@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>0086.AI — 业务介绍</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;600;800&display=swap');
+    :root { --black:#000; --white:#fff; --gray-mid:#e0e0e0; --gray-dark:#999; --red:#e00000; }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Inter',sans-serif;background:#fff;color:#000;min-height:100vh;}
+    body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#d8d8d8 8px,transparent 8px);background-size:100px 100px;background-position:50px 50px;pointer-events:none;z-index:0;}
+    a,a:visited{color:#000;}
+    header{position:sticky;top:0;background:#fff;z-index:10;padding:18px 24px;display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--gray-mid);}
+    .brand{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;}
+    .logo-img{height:28px;display:block;}
+    .actions{margin-left:auto;display:flex;gap:12px;}
+    .action{border:1px solid #000;color:#000;padding:6px 12px;font-size:11px;text-transform:uppercase;letter-spacing:0.8px;background:#fff;}
+    main{position:relative;z-index:1;padding:32px 40px 60px;max-width:100%;width:100%;}
+    h1{font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.8px;}
+    .ai-hero{margin-bottom:24px;}
+    .ai-logo{height:120px;display:block;margin-bottom:10px;}
+    .sub{font-size:12px;color:var(--gray-dark);margin-bottom:12px;text-transform:uppercase;letter-spacing:1.2px;}
+    .hero-row{display:flex;align-items:center;gap:16px;}
+    .hero-row img{height:18px;display:block;margin-left:auto;}
+    .section{border-top:1px solid var(--red);padding-top:20px;margin-top:24px;}
+    .section-title{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+    .section-title img{height:36px;display:block;}
+    .section h2{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;margin:0;color:var(--red);}
+    .section h3{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;margin:14px 0 8px;}
+    .section p{font-size:15px;line-height:1.7;color:#111;margin-bottom:10px;max-width:none;}
+    .grid{display:grid;grid-template-columns:1fr;gap:24px;}
+    .card{border:1px solid var(--red);background:#fff;padding:16px;}
+    ul{margin:8px 0 0 18px;}
+    li{margin:6px 0;line-height:1.6;}
+    .back{margin-top:28px;display:inline-block;text-decoration:underline;font-size:13px;}
+    @media(max-width:900px){main{padding:28px 20px;} .grid{grid-template-columns:1fr;} h1{font-size:36px;}}
+  
+        /* ========== 0086 Banner Sync ========== */
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --red: #ff0000;
+            --gray-light: #f0f0f0;
+            --gray-mid: #e0e0e0;
+            --gray-dark: #999999;
+            --logo-red-filter: brightness(0) saturate(100%) invert(10%) sepia(95%) saturate(7000%) hue-rotate(0deg) brightness(85%) contrast(120%);
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            height: 51px;
+            padding: 0 24px;
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-mid);
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 12px;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 0.2px;
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .logo-tm {
+            font-size: 9px;
+            font-weight: 700;
+            vertical-align: super;
+        }
+
+        .logo-type {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            width: auto;
+            border-right: none;
+            animation: none;
+        }
+
+        .logo-img {
+            height: 51px;
+            display: block;
+            transform: scale(0.5);
+            transform-origin: left center;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            margin-right: 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            padding: 0 24px;
+            min-width: 180px;
+            background: var(--gray-light);
+            border-right: 1px solid var(--gray-mid);
+            text-decoration: none;
+            color: var(--black);
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            transition: background 0.35s, transform 0.2s, box-shadow 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #e8e8e8;
+            transform: translateY(1px);
+            box-shadow: inset 0 2px 0 rgba(0,0,0,0.15);
+        }
+
+        .nav-dot {
+            width: 28px;
+            height: 28px;
+            background: var(--white);
+            border-radius: 50%;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .nav-dot::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--red);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+
+        .header-right {
+            margin-left: auto;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .header-icon {
+            font-size: 18px;
+            color: var(--red);
+            cursor: pointer;
+        }
+
+        .header-icon-img {
+            height: 51px;
+            display: block;
+            opacity: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .header-icon-canvas {
+            height: 51px;
+            display: block;
+        }
+
+        main {
+            padding-top: 56px;
+        }
+
+        @media (max-width: 1024px) {
+            .nav-item {
+                min-width: 140px;
+                padding: 0 16px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                height: 51px;
+                padding: 0 16px;
+            }
+            .header-nav {
+                display: none;
+            }
+            main {
+                padding-top: 48px;
+            }
+        }
+            
+    
+        .corner-icons {
+            position: fixed;
+            right: 10px;
+            bottom: 0;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+        }
+
+        .corner-icon-mask {
+            display: inline-block;
+            overflow: hidden;
+            width: 0;
+        }
+
+        .corner-icon-mask img {
+            height: 51px;
+            width: auto;
+            display: block;
+        }
+
+        @keyframes cornerType {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+
+        .corner-icons.is-typing .corner-icon-mask {
+            animation: cornerType 1.4s steps(18, end) both;
+        }
+
+    
+
+        
+        
+        
+        
+        
+        /* nav dot override to ensure perfect circle */
+
+
+        .nav-item:hover .nav-dot::after {
+            opacity: 1;
+        }
+
+
+        .header-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--black);
+            letter-spacing: 0.2px;
+            margin: 0;
+            padding: 4px 0;
+            transform: translate(130px, 20px);
+            z-index: 5;
+        }
+
+        .header-back img {
+            height: 18px;
+            width: auto;
+            display: block;
+        }
+
+
+        .header-back:active img {
+            filter: brightness(0) saturate(100%) invert(12%) sepia(90%) saturate(4500%) hue-rotate(350deg) brightness(95%) contrast(120%);
+        }
+
+
+        .header-back {
+            position: relative;
+        }
+
+        .header-back::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 18px;
+            height: 18px;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #ff2b2b 0%, #ff7a00 100%);
+            -webkit-mask: url('assets/icons/icon2.svg') no-repeat center / contain;
+            mask: url('assets/icons/icon2.svg') no-repeat center / contain;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .header-back:active::before {
+            opacity: 1;
+        }
+
+        .header-back:active img {
+            opacity: 0;
+        }
+
+
+        .nav-item.is-active {
+            background: #cfcfcf;
+            box-shadow: inset 0 2px 0 rgba(0,0,0,0.15);
+        }
+
+        .nav-item.is-active .nav-dot::after {
+            opacity: 1;
+        }
+</style>
+</head>
+<body>
+  <header>
+        <div class="header-logo">
+            <a href="0086-studios-virgil-strict.html" class="logo-text"><img class="logo-img" src="assets/0086-logo.png" alt="0086 logo"></a>
+        </div>
+
+        <nav class="header-nav">
+            <a href="0086-about.html" class="nav-item">
+                about us
+                <span class="nav-dot"></span>
+            </a>
+            <a href="0086-service-ai-installation.html" class="nav-item" data-filter="interactive">
+                互动装置
+                <span class="nav-dot"></span>
+            </a>
+            <a href="#" class="nav-item" data-filter="space">
+                空间
+                <span class="nav-dot"></span>
+            </a>
+            <a href="0086-services.html" class="nav-item" data-filter="exhibition">
+                展览
+                <span class="nav-dot"></span>
+            </a>
+            <a href="case-mazu-ip.html" class="nav-item" data-filter="ip">
+                IP设计
+                <span class="nav-dot"></span>
+            </a>
+        </nav>
+
+<div class="header-right">
+<a class="header-back" href="0086-studios-home-v3_14.html?ended=1">
+                <img src="assets/icons/icon2.svg" alt="back">
+                <span>BACK</span>
+            </a>
+<img id="header-icon-img" class="header-icon-img" src="assets/top-icons.png" alt="icons">
+            <canvas id="header-icon-canvas" class="header-icon-canvas" aria-hidden="true"></canvas>
+        </div>
+    </header>
+
+  <main>
+    <div class="ai-hero">
+      <img class="ai-logo" src="assets/brand/ai0086.svg" alt="0086.AI logo">
+      <div class="hero-row">
+        <div class="sub">Business Introduction</div>
+        <img src="assets/top-icons.png" alt="icons">
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>一、公司介绍</h2>
+        <img src="assets/icons/icon1.svg" alt="icon 1">
+      </div>
+      <p>0086.AI是一家致力于定义“AI+”商业新范式的原生 AI 科技企业。我们正在重塑传统企业服务的交付逻辑——拒绝兜售仅供操作的软件工具，而是通过前沿的 AI Agent（智能体）技术，为您交付可直接落地、具备执行力的业务结果。</p>
+      <p>我们的核心优势在于构建一支由 AI 驱动的“全能数字专家团”。从顶层的商业战略梳理，到前端的智能建站与全球化营销，再到后端的海外获客、产品设计与内部人才赋能，我们将先进的 AI 能力无缝融入企业经营的关键环节。</p>
+      <p>凭借一支兼具全球化技术视野与深厚落地经验的专家团队，我们致力于帮助每一家企业构建专属的 AI 数字化核心竞争力，在人工智能时代实现运营效率的指数级跃升与商业模式的敏捷重塑。</p>
+      <div class="grid">
+        <div class="card">
+          <h3>使命 (Mission) - What we do</h3>
+          <p>将前沿 AI 能力转化为核心生产力，通过深度整合业务流，驱动企业商业价值的持续跃升。</p>
+        </div>
+        <div class="card">
+          <h3>愿景 (Vision) - Where we go</h3>
+          <p>让每家企业都能拥有自己的 AI “超级员工”，成为企业在 AI 时代最值得信赖的共生伙伴。</p>
+        </div>
+      </div>
+      <div class="card" style="margin-top:18px;">
+        <h3>核心价值观 (Core Values)</h3>
+        <ul>
+          <li><strong>创新 (Innovation) - 以终为始</strong>：拒绝盲目的技术堆砌。我们坚持以终为始，用最前沿的 AI 技术，解决最棘手的商业挑战，确保每一次创新都能转化为客户的竞争优势。</li>
+          <li><strong>敏捷 (Agility) - 拥抱变化</strong>：在不确定性中寻找确定性。我们保持极度敏锐的市场嗅觉与技术快速迭代的执行力，以初创者的速度，响应瞬息万变的业务需求。</li>
+          <li><strong>信赖 (Trust) - 坚守底线</strong>：数据安全是我们的生命线。我们深知商业秘密是企业的核心命脉，严守数据伦理与合规边界，是我们对客户不可逾越的承诺。</li>
+          <li><strong>共生 (Partnership) - 互相成就</strong>：客户的成功是我们存在的唯一理由。我们不只交付项目，更致力于成为企业长期的外部智囊与战略技术合伙人，在 AI 浪潮中共同进化。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>二、产品与服务体系 (Products &amp; Services)</h2>
+        <img src="assets/icons/icon2.svg" alt="icon 2">
+      </div>
+      <p><strong>核心架构：1 + 6 全链路智能赋能</strong></p>
+      <p>我们要构建的不是一套软件，而是一个能进化的企业 AI 生命体。我们以“核心智脑（AI 知识库）”为资产地基，驱动六大“超级员工”深入业务前线，为企业构建从战略决策到市场变现的完整闭环。</p>
+
+      <div class="card">
+        <h3>Phase 1: 核心地基 (The Foundation)</h3>
+        <p><strong>服务前提</strong>：在部署任何 Agent 之前，我们首先协助企业完成核心数据的私有化沉淀。</p>
+        <p><strong>核心智脑 - 基于 RAG 技术的企业级专属 AI 知识库</strong></p>
+        <p>定义：不仅仅是存储文档的云盘，而是企业的“数字大脑”。它是所有上层 AI Agent 的智慧源头，确保每一次 AI 的产出都精准符合企业的品牌调性与业务逻辑。</p>
+        <p>核心价值：沉淀专属数字资产</p>
+        <p>服务内容：我们提供“全量混合采集”服务。不仅通过技术清洗产品手册、历史合同等显性文档，更通过深度访谈挖掘创始人与业务专家的隐性经验（直觉、判例、方法论），将散落在人脑中的智慧转化为可永久传承、可被 AI 调用的结构化资产。</p>
+      </div>
+
+      <div class="card" style="margin-top:18px;">
+        <h3>Phase 2: 六大核心引擎 (The 6 Core Agents)</h3>
+        <ul>
+          <li><strong>战略罗盘：品牌战略咨询 Agent</strong>（老板的 AI 战略合伙人）—— 挖掘商业直觉，将模糊想法转化为清晰战略。</li>
+          <li><strong>数字门面：全栈智能官网 Agent</strong>（AI 交互建站专家）—— 拒绝模板填空，自然语言生成国际化官网，一键部署维护。</li>
+          <li><strong>流量引擎：营销内容生成 Agent</strong>（爆款文案制造机）—— 懂品牌更懂流量，批量生产符合全球社媒算法的高转化内容。</li>
+          <li><strong>组织战力：内部培训内容生成 Agent</strong>（AI 金牌培训师）—— 基于业务实战案例，自动生成培训课件，快速复制优秀员工能力。</li>
+          <li><strong>全球拓客：海外客户搜索 Agent</strong>（外贸情报侦察兵）—— 精准穿透全球数据，筛选高价值客户，助力外贸精准出海。</li>
+          <li><strong>创新加速：设计辅助 Agent</strong>（产品研发与视觉设计师）—— 侧重研发加速，快速生成产品概念设计图，兼顾营销物料美化。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <h2>三、核心优势：为什么选择 0086.AI (Why Choose Us)</h2>
+        <img src="assets/icons/icon3.svg" alt="icon 3">
+      </div>
+      <div class="card">
+        <h3>“咨询+技术”双引擎驱动</h3>
+        <p><strong>核心主张</strong>：先梳理业务，再部署 AI。</p>
+        <p><strong>价值</strong>：区别于纯技术公司，我们兼具“商业咨询基因”。先用顾问视角深入剖析业务痛点，再将模糊需求翻译为精准的技术方案，确保交付物完全契合业务逻辑。</p>
+      </div>
+      <div class="card" style="margin-top:18px;">
+        <h3>零门槛的“开箱即用”体验</h3>
+        <p><strong>核心主张</strong>：我们解决复杂的专业技术，把简单的使用留给用户。</p>
+        <p><strong>价值</strong>：将复杂的技术简单化，通过自然语言交互，只需像聊天一样对话，无需培训即可指挥 Agent 完成专家级任务，真正实现 AI 超级员工赋能。</p>
+      </div>
+      <div class="card" style="margin-top:18px;">
+        <h3>动态迭代与持续调优</h3>
+        <p><strong>核心主张</strong>：交付只是开始，共生才是目的。</p>
+        <p><strong>价值</strong>：提供全周期服务。我们不仅在初期构建知识库，更持续进行模型调优与策略迭代，确保您的“超级员工”随着业务发展持续增值。</p>
+      </div>
+      <div class="card" style="margin-top:18px;">
+        <h3>全球化技术视野</h3>
+        <p><strong>核心主张</strong>：保持极度敏锐，同步全球节拍。</p>
+        <p><strong>价值</strong>：AI 技术日新月异，企业最怕掉队。我们持续跟踪全球（特别是硅谷）的 AI 趋势，凭借极度敏锐的洞察力与快速反应能力，第一时间将最前沿的技术迭代进您的产品。我们是您的前沿技术雷达，确保您始终运行在 AI 时代的最前线。</p>
+      </div>
+    </section>
+
+    <a class="back" href="0086-studios-virgil-strict.html">返回首页</a>
+  </main>
+
+    
+
+
+    <div class="corner-icons" aria-hidden="true">
+        <div class="corner-icon-mask">
+            <img src="assets/icons/icon4.svg" alt="">
+        </div>
+    </div>
+
+
+    <script>
+        (function () {
+            const icon = document.querySelector('.corner-icons');
+            if (!icon) return;
+            const loop = () => {
+                icon.classList.remove('is-typing');
+                void icon.offsetWidth;
+                icon.classList.add('is-typing');
+                const delay = 800 + Math.random() * 1200;
+                const duration = 1400;
+                setTimeout(loop, delay + duration);
+            };
+            loop();
+        })();
+    </script>
+
+<script>
+    (function () {
+      const nav = document.querySelector('.header-nav');
+      if (!nav) return;
+      nav.addEventListener('click', (event) => {
+        const link = event.target.closest('.nav-item');
+        if (!link) return;
+        nav.querySelectorAll('.nav-item').forEach((el) => el.classList.remove('is-active'));
+        link.classList.add('is-active');
+      });
+    })();
+  </script>
+</body>
+</html>

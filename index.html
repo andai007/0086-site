@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>0086 Hero Hotspots</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body { background: #111; }
+
+    /* 给 body 加上 debug-hotspots 类名时，才显示调试描边 */
+    body.debug-hotspots .hotspot:hover,
+    body.debug-hotspots .hotspot:focus-visible {
+      outline: 1px solid rgba(255, 255, 255, 0.45);
+      outline-offset: -1px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .hero {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .hero img {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .hotspot {
+      position: absolute;
+      display: block;
+      background: transparent;
+      text-decoration: none;
+      z-index: 2;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* 估计值（按图片缩放自适应） */
+    .hotspot-ai {
+      left: 26.19%;
+      top: 22.46%;
+      width: 12.20%;
+      height: 31.00%;
+    }
+
+    .hotspot-art {
+      left: 41.00%;
+      top: 12.85%;
+      width: 12.80%;
+      height: 28.00%;
+    }
+
+    .hotspot-about {
+      left: 11.67%;
+      top: 43.77%;
+      width: 15.20%;
+      height: 10.60%;
+    }
+
+    .hotspot-contact {
+      left: 20.80%;
+      top: 43.77%;
+      width: 13.60%;
+      height: 10.60%;
+    }
+  </style>
+</head>
+<body class="debug-hotspots">
+  <main class="hero" aria-label="Mailbox hero">
+    <img src="assets/mailbox/0086-cover-v3.jpg" alt="0086 mailbox cover" />
+
+    <a class="hotspot hotspot-ai" href="/ai" aria-label="AI">
+      <span class="sr-only">AI</span>
+    </a>
+
+    <a class="hotspot hotspot-art" href="/art" aria-label="ART">
+      <span class="sr-only">ART</span>
+    </a>
+
+    <a class="hotspot hotspot-about" href="/about" aria-label="About us">
+      <span class="sr-only">About us</span>
+    </a>
+
+    <a class="hotspot hotspot-contact" href="/contact" aria-label="Contact">
+      <span class="sr-only">Contact</span>
+    </a>
+  </main>
+</body>
+</html>

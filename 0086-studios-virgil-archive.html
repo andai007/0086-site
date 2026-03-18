@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>0086 Studios Archive</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0b0b0b;
+      --paper: #ffffff;
+      --line: #e6e6e6;
+      --muted: #6c6c6c;
+      --tab: #dcdcdc;
+      --tab-dark: #bcbcbc;
+      --accent: #e10000;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 16px; }
+    body {
+      font-family: "IBM Plex Sans", sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: radial-gradient(circle at 22px 22px, rgba(0,0,0,0.12) 0 3px, rgba(0,0,0,0) 4px);
+      background-size: 64px 64px;
+      opacity: 0.4;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 300px 1fr 200px;
+      align-items: stretch;
+      border-bottom: 1px solid var(--line);
+      height: 51px;
+    }
+
+    .logo-slot {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .logo-dot {
+      width: 22px;
+      height: 51px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    .logo-img{height:22px;display:block;}
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-left: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      height: 51px;
+    }
+
+    .tab {
+      background: linear-gradient(#efefef, #dcdcdc);
+      border-right: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-size: 20px;
+      color: #111111;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.12);
+    }
+
+    .tab:last-child { border-right: none; }
+
+    .tab-dot {
+      width: 18px;
+      height: 51px;
+      border-radius: 50%;
+      background: #f2f2f2;
+      box-shadow: inset 0 0 0 2px #d0d0d0, 0 2px 4px rgba(0,0,0,0.15);
+    }
+
+    .tools {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 10px 18px;
+      font-size: 18px;
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 22px;
+      font-weight: 500;
+    }
+
+    .nav-links a:first-child {
+      font-weight: 600;
+    }
+
+    .hero {
+      padding: 26px 24px 10px;
+    }
+
+    .hero-banner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .blue-card {
+      background: #68c6f0;
+      color: #0b0b0b;
+      padding: 12px 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+    }
+
+    .blue-card .mono {
+      font-weight: 700;
+      color: #0b0b0b;
+    }
+
+    .hero-dashed {
+      border: 2px dashed #8a8a8a;
+      padding: 12px 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .hero-logo {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 18px;
+      padding: 26px 8px 0;
+    }
+
+    .hero-wordmark {
+      font-size: 120px;
+      font-weight: 800;
+      letter-spacing: -4px;
+      line-height: 1;
+    }
+
+    .hero-mark {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .hero-text {
+      padding: 26px 8px 10px;
+    }
+
+    .hero-text p {
+      font-size: clamp(34px, 5.6vw, 60px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.3px;
+    }
+
+    .section {
+      padding: 26px 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-title {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 0;
+    }
+
+    .section-body {
+      font-size: 16px;
+      color: var(--ink);
+      max-width: 1100px;
+    }
+
+    .grid {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      padding: 16px;
+      min-height: 51px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .card .meta {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 10px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.8px;
+    }
+
+    .card h3 {
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .archive {
+      display: grid;
+      gap: 14px;
+    }
+
+    .archive-item {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .archive-item:last-child { border-bottom: none; }
+
+    .archive-num {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    footer {
+      padding: 28px;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      color: var(--muted);
+      display: grid;
+      gap: 6px;
+    }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      .tabs { grid-template-columns: 1fr; }
+      .topbar { grid-template-columns: 1fr; }
+      .hero-banner { grid-template-columns: 1fr; }
+    }
+  
+        /* ========== 0086 Banner Sync ========== */
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --red: #ff0000;
+            --gray-light: #f0f0f0;
+            --gray-mid: #e0e0e0;
+            --gray-dark: #999999;
+            --logo-red-filter: brightness(0) saturate(100%) invert(10%) sepia(95%) saturate(7000%) hue-rotate(0deg) brightness(85%) contrast(120%);
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            height: 51px;
+            padding: 0 24px;
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-mid);
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 12px;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 0.2px;
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .logo-tm {
+            font-size: 9px;
+            font-weight: 700;
+            vertical-align: super;
+        }
+
+        .logo-type {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            width: auto;
+            border-right: none;
+            animation: none;
+        }
+
+        .logo-img {
+            height: 51px;
+            display: block;
+            transform: scale(0.5);
+            transform-origin: left center;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            margin-right: 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            padding: 0 24px;
+            min-width: 180px;
+            background: var(--gray-light);
+            border-right: 1px solid var(--gray-mid);
+            text-decoration: none;
+            color: var(--black);
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            transition: background 0.35s, transform 0.2s, box-shadow 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #e8e8e8;
+            transform: translateY(1px);
+            box-shadow: inset 0 2px 0 rgba(0,0,0,0.15);
+        }
+
+        .nav-dot {
+            width: 28px;
+            height: 28px;
+            background: var(--white);
+            border-radius: 50%;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .nav-dot::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--red);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+
+        .header-right {
+            margin-left: auto;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .header-icon {
+            font-size: 18px;
+            color: var(--red);
+            cursor: pointer;
+        }
+
+        .header-icon-img {
+            height: 51px;
+            display: block;
+            opacity: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .header-icon-canvas {
+            height: 51px;
+            display: block;
+        }
+
+        main {
+            padding-top: 56px;
+        }
+
+        @media (max-width: 1024px) {
+            .nav-item {
+                min-width: 140px;
+                padding: 0 16px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                height: 51px;
+                padding: 0 16px;
+            }
+            .header-nav {
+                display: none;
+            }
+            main {
+                padding-top: 48px;
+            }
+        }
+            
+    
+        .corner-icons {
+            position: fixed;
+            right: 10px;
+            bottom: 0;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+        }
+
+        .corner-icon-mask {
+            display: inline-block;
+            overflow: hidden;
+            width: 0;
+        }
+
+        .corner-icon-mask img {
+            height: 51px;
+            width: auto;
+            display: block;
+        }
+
+        @keyframes cornerType {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+
+        .corner-icons.is-typing .corner-icon-mask {
+            animation: cornerType 1.4s steps(18, end) both;
+        }
+
+    
+
+        
+        
+        
+        
+        
+        /* nav dot override to ensure perfect circle */
+
+
+        .nav-item:hover .nav-dot::after {
+            opacity: 1;
+        }
+
+
+        .header-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--black);
+            letter-spacing: 0.2px;
+            margin-top: 8px;
+            margin-right: -16px;
+            padding-right: 24px;
+            transform: translate(130px, 20px);
+        }
+
+        .header-back img {
+            height: 18px;
+            width: auto;
+            display: block;
+        }
+
+
+        .header-back:active img {
+            filter: brightness(0) saturate(100%) invert(12%) sepia(90%) saturate(4500%) hue-rotate(350deg) brightness(95%) contrast(120%);
+        }
+
+
+        .header-back {
+            position: relative;
+        }
+
+        .header-back::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 18px;
+            height: 18px;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #ff2b2b 0%, #ff7a00 100%);
+            -webkit-mask: url('assets/icons/icon2.svg') no-repeat center / contain;
+            mask: url('assets/icons/icon2.svg') no-repeat center / contain;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .header-back:active::before {
+            opacity: 1;
+        }
+
+        .header-back:active img {
+            opacity: 0;
+        }
+
+
+        .nav-item.is-active {
+            background: #cfcfcf;
+            box-shadow: inset 0 2px 0 rgba(0,0,0,0.15);
+        }
+
+        .nav-item.is-active .nav-dot::after {
+            opacity: 1;
+        }
+</style>
+</head>
+<body>
+  <header>
+        <div class="header-logo">
+            <a href="0086-studios-virgil-strict.html" class="logo-text"><img class="logo-img" src="assets/0086-logo.png" alt="0086 logo"></a>
+        </div>
+
+        <nav class="header-nav">
+            <a href="0086-about.html" class="nav-item">
+                about us
+                <span class="nav-dot"></span>
+            </a>
+            <a href="0086-service-ai-installation.html" class="nav-item" data-filter="interactive">
+                互动装置
+                <span class="nav-dot"></span>
+            </a>
+            <a href="#" class="nav-item" data-filter="space">
+                空间
+                <span class="nav-dot"></span>
+            </a>
+            <a href="0086-services.html" class="nav-item" data-filter="exhibition">
+                展览
+                <span class="nav-dot"></span>
+            </a>
+            <a href="case-mazu-ip.html" class="nav-item" data-filter="ip">
+                IP设计
+                <span class="nav-dot"></span>
+            </a>
+        </nav>
+
+<div class="header-right">
+<a class="header-back" href="javascript:history.back()">
+                <img src="assets/icons/icon2.svg" alt="back">
+                <span>BACK</span>
+            </a>
+<img id="header-icon-img" class="header-icon-img" src="assets/top-icons.png" alt="icons">
+            <canvas id="header-icon-canvas" class="header-icon-canvas" aria-hidden="true"></canvas>
+        </div>
+    </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-banner">
+        <div class="blue-card mono">STREET LAB / SKATE DEMO<br>HOSTED BY 0086 STUDIOS</div>
+        <div class="hero-dashed mono">Learn More</div>
+      </div>
+      <div class="hero-logo">
+        <div class="hero-wordmark">0086</div>
+        <div class="hero-mark">TM</div>
+      </div>
+      <div class="hero-text">
+        <p>
+          The 0086 Studios Archive™ is a collection of over 100+ projects across AI installations, commercial exhibitions, design, music, art, and technology, including original works, prototypes, sketches, digital media, and ephemera, alongside materials from our collection and library.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="section-title">About</div>
+      <div class="section-body">
+        0086 Studios is an AI digital creative studio. We build experiences that merge technology, culture and commerce. Our archive documents more than 100 projects across exhibition, interactive installations, and AI products.
+      </div>
+    </section>
+
+    <section class="section" id="invitational">
+      <div class="section-title">Invitational</div>
+      <div class="section-body">
+        The 0086 Invitational highlights the intersection of culture and technology through collaborative showcases and limited-run exhibitions.
+      </div>
+      <div class="grid">
+        <div class="card">
+          <div class="meta">AI INSTALLATION</div>
+          <h3>AI情绪思想盒</h3>
+          <p>观众肖像实时转化为四种情绪艺术影像</p>
+        </div>
+        <div class="card">
+          <div class="meta">EXHIBITION</div>
+          <h3>teamLab 数字艺术展</h3>
+          <p>中国艺术商业展览票房纪录</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="shop">
+      <div class="section-title">Shop</div>
+      <div class="section-body">
+        Limited archival publications, project catalogs, and artifacts will be released here. Launching soon.
+      </div>
+      <div class="archive">
+        <div class="archive-item">
+          <div class="archive-num">01</div>
+          <div>
+            <div class="meta">AI TECHNOLOGY</div>
+            <h3>AI Agent 解决方案</h3>
+            <p>全站式AIGC系统设计与开发</p>
+          </div>
+        </div>
+        <div class="archive-item">
+          <div class="archive-num">02</div>
+          <div>
+            <div class="meta">EXHIBITION</div>
+            <h3>神秘敦煌文化展</h3>
+            <p>与敦煌研究院合作 · 中国首个数字敦煌艺术展</p>
+          </div>
+        </div>
+        <div class="archive-item">
+          <div class="archive-num">03</div>
+          <div>
+            <div class="meta">AI INSTALLATION</div>
+            <h3>诗的歌</h3>
+            <p>徐志摩诗歌AIGC音乐明信片</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>contact@0086studios.com</div>
+    <div>© 0086 Studios 2026 · Shenzhen, China</div>
+  </footer>
+
+    
+
+
+    <div class="corner-icons" aria-hidden="true">
+        <div class="corner-icon-mask">
+            <img src="assets/icons/icon4.svg" alt="">
+        </div>
+    </div>
+
+
+    <script>
+        (function () {
+            const icon = document.querySelector('.corner-icons');
+            if (!icon) return;
+            const loop = () => {
+                icon.classList.remove('is-typing');
+                void icon.offsetWidth;
+                icon.classList.add('is-typing');
+                const delay = 800 + Math.random() * 1200;
+                const duration = 1400;
+                setTimeout(loop, delay + duration);
+            };
+            loop();
+        })();
+    </script>
+
+<script>
+    (function () {
+      const nav = document.querySelector('.header-nav');
+      if (!nav) return;
+      nav.addEventListener('click', (event) => {
+        const link = event.target.closest('.nav-item');
+        if (!link) return;
+        nav.querySelectorAll('.nav-item').forEach((el) => el.classList.remove('is-active'));
+        link.classList.add('is-active');
+      });
+    })();
+  </script>
+</body>
+</html>

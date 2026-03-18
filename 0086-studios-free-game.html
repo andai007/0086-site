@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>0086 Studios — Free Game Edition</title>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #111111;
+      --paper: #ffffff;
+      --red: #d60000;
+      --red-dark: #9b0000;
+      --gray: #777777;
+      --line: #e2e2e2;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 16px; }
+
+    body {
+      font-family: "EB Garamond", serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.55;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='0.6'/></svg>");
+    }
+
+    .mono {
+      font-family: "IBM Plex Mono", monospace;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      right: 10px;
+      right: 10px;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 32px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.95), rgba(255,255,255,0));
+      border-bottom: 1px solid var(--line);
+    }
+
+    .logo {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      color: var(--red);
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-img {
+      height: 51px;
+      display: block;
+    }
+
+    nav { display: flex; gap: 22px; font-size: 11px; }
+    nav a {
+      color: var(--ink);
+      text-decoration: none;
+      font-family: "IBM Plex Mono", monospace;
+      opacity: 0.85;
+    }
+    nav a:hover { opacity: 1; }
+
+    main { padding-top: 86px; }
+
+    .hero {
+      padding: 90px 7vw 60px;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .hero-title {
+      font-size: clamp(46px, 6.2vw, 92px);
+      line-height: 1.02;
+      font-weight: 500;
+    }
+
+    .hero-sub {
+      margin-top: 18px;
+      font-size: 16px;
+      color: var(--gray);
+      max-width: 520px;
+    }
+
+    .hero-meta {
+      margin-top: 22px;
+      font-size: 11px;
+      color: var(--red);
+    }
+
+    .hero-media {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: #f3f3f3;
+      border: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    .hero-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%);
+    }
+
+    .section {
+      padding: 70px 7vw;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-title {
+      font-size: 11px;
+      color: var(--red);
+      margin-bottom: 0;
+      letter-spacing: 1.4px;
+    }
+
+    .intro {
+      max-width: 780px;
+      font-size: 18px;
+    }
+
+    .grid {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px 24px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      padding: 24px;
+      min-height: 51px;
+      background: #fff;
+    }
+
+    .card .mono {
+      font-size: 10px;
+      color: var(--red);
+    }
+
+    .card h3 {
+      margin: 10px 0 8px;
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: var(--gray);
+    }
+
+    .dot {
+      display: inline-block;
+      width: 10px;
+      height: 51px;
+      background: var(--red);
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .list {
+      margin-top: 30px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .list-item {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .list-item:last-child { border-bottom: none; }
+
+    .list-num {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      color: var(--red);
+    }
+
+    footer {
+      padding: 40px 7vw 70px;
+      color: var(--red-dark);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 980px) {
+      header nav { display: none; }
+      .hero { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+      footer { grid-template-columns: 1fr; }
+    }
+  
+        /* ========== 0086 Banner Sync ========== */
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --red: #ff0000;
+            --gray-light: #f0f0f0;
+            --gray-mid: #e0e0e0;
+            --gray-dark: #999999;
+            --logo-red-filter: brightness(0) saturate(100%) invert(10%) sepia(95%) saturate(7000%) hue-rotate(0deg) brightness(85%) contrast(120%);
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            height: 51px;
+            padding: 0 24px;
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-mid);
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 12px;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 0.2px;
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .logo-tm {
+            font-size: 9px;
+            font-weight: 700;
+            vertical-align: super;
+        }
+
+        .logo-type {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            width: auto;
+            border-right: none;
+            animation: none;
+        }
+
+        .logo-img {
+            height: 51px;
+            display: block;
+            transform: scale(0.5);
+            transform-origin: left center;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            margin-right: 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            padding: 0 24px;
+            min-width: 180px;
+            background: var(--gray-light);
+            border-right: 1px solid var(--gray-mid);
+            text-decoration: none;
+            color: var(--black);
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            transition: background 0.35s, transform 0.2s, box-shadow 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #e8e8e8;
+            transform: translateY(1px);
+            box-shadow: inset 0 2px 0 rgba(0,0,0,0.15);
+        }
+
+        .nav-dot {
+            width: 28px;
+            height: 28px;
+            background: var(--white);
+            border-radius: 50%;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .nav-dot::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--red);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+
+        .header-right {
+            margin-left: auto;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .header-icon {
+            font-size: 18px;
+            color: var(--red);
+            cursor: pointer;
+        }
+
+        .header-icon-img {
+            height: 51px;
+            display: block;
+            opacity: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .header-icon-canvas {
+            height: 51px;
+            display: block;
+        }
+
+        main {
+            padding-top: 56px;
+        }
+
+        @media (max-width: 1024px) {
+            .nav-item {
+                min-width: 140px;
+                padding: 0 16px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                height: 51px;
+                padding: 0 16px;
+            }
+            .header-nav {
+                display: none;
+            }
+            main {
+                padding-top: 48px;
+            }
+        }
+            
+    
+        .corner-icons {
+            position: fixed;
+            right: 10px;
+            bottom: 0;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+        }
+
+        .corner-icon-mask {
+            display: inline-block;
+            overflow: hidden;
+            width: 0;
+        }
+
+        .corner-icon-mask img {
+            height: 51px;
+            width: auto;
+            display: block;
+        }
+
+        @keyframes cornerType {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+
+        .corner-icons.is-typing .corner-icon-mask {
+            animation: cornerType 1.4s steps(18, end) both;
+        }
+
+    
+
+        
+        
+        
+        
+        
+        /* nav dot override to ensure perfect circle */
+
+
+        .nav-item:hover .nav-dot::after {
+            opacity: 1;
+        }
+
+
+        .header-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--black);
+            letter-spacing: 0.2px;
+            margin-top: 8px;
+            margin-right: -16px;
+            padding-right: 24px;
+            transform: translate(130px, 20px);
+        }
+
+        .header-back img {
+            height: 18px;
+            width: auto;
+            display: block;
+        }
+
+
+        .header-back:active img {
+            filter: brightness(0) saturate(100%) invert(12%) sepia(90%) saturate(4500%) hue-rotate(350deg) brightness(95%) contrast(120%);
+        }
+
+
+        .header-back {
+            position: relative;
+        }
+
+        .header-back::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 18px;
+            height: 18px;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #ff2b2b 0%, #ff7a00 100%);
+            -webkit-mask: url('assets/icons/icon2.svg') no-repeat center / contain;
+            mask: url('assets/icons/icon2.svg') no-repeat center / contain;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .header-back:active::before {
+            opacity: 1;
+        }
+
+        .header-back:active img {
+            opacity: 0;
+        }
+
+
+        .nav-item.is-active {
+            background: #cfcfcf;
+            box-shadow: inset 0 2px 0 rgba(0,0,0,0.15);
+        }
+
+        .nav-item.is-active .nav-dot::after {
+            opacity: 1;
+        }
+</style>
+</head>
+<body>
+  <header>
+        <div class="header-logo">
+            <a href="0086-studios-virgil-strict.html" class="logo-text"><img class="logo-img" src="assets/0086-logo.png" alt="0086 logo"></a>
+        </div>
+
+        <nav class="header-nav">
+            <a href="0086-about.html" class="nav-item">
+                about us
+                <span class="nav-dot"></span>
+            </a>
+            <a href="0086-service-ai-installation.html" class="nav-item" data-filter="interactive">
+                互动装置
+                <span class="nav-dot"></span>
+            </a>
+            <a href="#" class="nav-item" data-filter="space">
+                空间
+                <span class="nav-dot"></span>
+            </a>
+            <a href="0086-services.html" class="nav-item" data-filter="exhibition">
+                展览
+                <span class="nav-dot"></span>
+            </a>
+            <a href="case-mazu-ip.html" class="nav-item" data-filter="ip">
+                IP设计
+                <span class="nav-dot"></span>
+            </a>
+        </nav>
+
+<div class="header-right">
+<a class="header-back" href="javascript:history.back()">
+                <img src="assets/icons/icon2.svg" alt="back">
+                <span>BACK</span>
+            </a>
+<img id="header-icon-img" class="header-icon-img" src="assets/top-icons.png" alt="icons">
+            <canvas id="header-icon-canvas" class="header-icon-canvas" aria-hidden="true"></canvas>
+        </div>
+    </header>
+
+  <main>
+    <section class="hero" id="top">
+      <div>
+        <div class="mono"><span class="dot"></span>OPEN RESOURCE</div>
+        <h1 class="hero-title">0086 Studios
+        Free Game</h1>
+        <p class="hero-sub">一份面向创意团队的公开资源：从 AI 互动装置到文化策展，把我们的方法论拆解成可复制的步骤。</p>
+        <div class="hero-meta mono">SHENZHEN · 2008—2026</div>
+      </div>
+      <div class="hero-media">
+        <img src="https://images.unsplash.com/photo-1600277173363-b5506d4442d3?w=1400&q=80" alt="Hero" />
+      </div>
+    </section>
+
+    <section class="section" id="intro">
+      <div class="section-title mono"><span class="dot"></span>INTRODUCTION</div>
+      <div class="intro">
+        0086 Studios 以 AI 作为生产力核心，融合艺术、商业与技术。以下是我们在真实项目中反复验证的关键流程与方法，作为公开资源提供给创作者与品牌团队。
+      </div>
+    </section>
+
+    <section class="section" id="toolkit">
+      <div class="section-title mono"><span class="dot"></span>TOOLKIT</div>
+      <div class="grid">
+        <div class="card">
+          <div class="mono">STEP 01</div>
+          <h3>如何命名一个数字项目</h3>
+          <p>将概念、体验与传播整合成一个可被记住的短语结构。</p>
+        </div>
+        <div class="card">
+          <div class="mono">STEP 02</div>
+          <h3>如何定义 AI 互动机制</h3>
+          <p>从输入、反馈到情绪叙事，建立可执行的互动规则。</p>
+        </div>
+        <div class="card">
+          <div class="mono">STEP 03</div>
+          <h3>如何制作一套可展示的原型</h3>
+          <p>用最少的资产完成最清晰的体验呈现。</p>
+        </div>
+        <div class="card">
+          <div class="mono">STEP 04</div>
+          <h3>如何把文化内容商业化</h3>
+          <p>将文化叙事转化为品牌可理解的商业指标。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="archive">
+      <div class="section-title mono"><span class="dot"></span>ARCHIVE</div>
+      <div class="list">
+        <div class="list-item">
+          <div class="list-num">01</div>
+          <div>
+            <div class="mono">AI INSTALLATION</div>
+            <h3>AI情绪思想盒</h3>
+            <p>观众肖像实时转化为四种情绪艺术影像</p>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="list-num">02</div>
+          <div>
+            <div class="mono">EXHIBITION</div>
+            <h3>teamLab 数字艺术展</h3>
+            <p>中国艺术商业展览票房纪录</p>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="list-num">03</div>
+          <div>
+            <div class="mono">AI TECHNOLOGY</div>
+            <h3>AI Agent 解决方案</h3>
+            <p>全站式AIGC系统设计与开发</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="contact">
+    <div>contact@0086studios.com</div>
+    <div>© 0086 Studios 2026 · Shenzhen, China</div>
+  </footer>
+
+    
+
+
+    <div class="corner-icons" aria-hidden="true">
+        <div class="corner-icon-mask">
+            <img src="assets/icons/icon4.svg" alt="">
+        </div>
+    </div>
+
+
+    <script>
+        (function () {
+            const icon = document.querySelector('.corner-icons');
+            if (!icon) return;
+            const loop = () => {
+                icon.classList.remove('is-typing');
+                void icon.offsetWidth;
+                icon.classList.add('is-typing');
+                const delay = 800 + Math.random() * 1200;
+                const duration = 1400;
+                setTimeout(loop, delay + duration);
+            };
+            loop();
+        })();
+    </script>
+
+<script>
+    (function () {
+      const nav = document.querySelector('.header-nav');
+      if (!nav) return;
+      nav.addEventListener('click', (event) => {
+        const link = event.target.closest('.nav-item');
+        if (!link) return;
+        nav.querySelectorAll('.nav-item').forEach((el) => el.classList.remove('is-active'));
+        link.classList.add('is-active');
+      });
+    })();
+  </script>
+</body>
+</html>

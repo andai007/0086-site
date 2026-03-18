@@ -1,0 +1,1148 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Airspace Memory — 3D Flight Visual</title>
+  <style>
+    html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000; }
+    canvas { display:block; }
+    .hud{
+      position:fixed; left:14px; top:12px; z-index:10;
+      color:rgba(235,245,255,.75);
+      font:12px/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      user-select:none; pointer-events:none;
+      text-shadow:0 0 16px rgba(255,255,255,.06);
+      max-width: 560px;
+    }
+    .hud b{ color:rgba(255,255,255,.92); font-weight:600; }
+    .hint{
+      position:fixed; right:14px; top:12px; z-index:10;
+      color:rgba(235,245,255,.55);
+      font:12px/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      user-select:none; pointer-events:none;
+      text-align:right;
+      text-shadow:0 0 16px rgba(255,255,255,.06);
+    }
+    .badge{
+      position:fixed; left:14px; bottom:12px; z-index:10;
+      color:rgba(235,245,255,.45);
+      font:12px/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      user-select:none; pointer-events:none;
+    }
+  
+        /* ========== 0086 Banner Sync ========== */
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --red: #ff0000;
+            --gray-light: #f0f0f0;
+            --gray-mid: #e0e0e0;
+            --gray-dark: #999999;
+            --logo-red-filter: brightness(0) saturate(100%) invert(10%) sepia(95%) saturate(7000%) hue-rotate(0deg) brightness(85%) contrast(120%);
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            height: 51px;
+            padding: 0 24px;
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-mid);
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 12px;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 0.2px;
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .logo-tm {
+            font-size: 9px;
+            font-weight: 700;
+            vertical-align: super;
+        }
+
+        .logo-type {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            width: auto;
+            border-right: none;
+            animation: none;
+        }
+
+        .logo-img {
+            height: 51px;
+            display: block;
+            transform: scale(0.5);
+            transform-origin: left center;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            margin-right: 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            padding: 0 24px;
+            min-width: 180px;
+            background: var(--gray-light);
+            border-right: 1px solid var(--gray-mid);
+            text-decoration: none;
+            color: var(--black);
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            transition: background 0.35s, transform 0.2s, box-shadow 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #e8e8e8;
+            transform: translateY(1px);
+            box-shadow: inset 0 2px 0 rgba(0,0,0,0.15);
+        }
+
+        .nav-dot {
+            width: 28px;
+            height: 28px;
+            background: var(--white);
+            border-radius: 50%;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .nav-dot::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--red);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+
+        .header-right {
+            margin-left: auto;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .header-icon {
+            font-size: 18px;
+            color: var(--red);
+            cursor: pointer;
+        }
+
+        .header-icon-img {
+            height: 51px;
+            display: block;
+            opacity: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .header-icon-canvas {
+            height: 51px;
+            display: block;
+        }
+
+        main {
+            padding-top: 56px;
+        }
+
+        @media (max-width: 1024px) {
+            .nav-item {
+                min-width: 140px;
+                padding: 0 16px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                height: 51px;
+                padding: 0 16px;
+            }
+            .header-nav {
+                display: none;
+            }
+            main {
+                padding-top: 48px;
+            }
+        }
+            
+    
+        .corner-icons {
+            position: fixed;
+            right: 10px;
+            bottom: 0;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+        }
+
+        .corner-icon-mask {
+            display: inline-block;
+            overflow: hidden;
+            width: 0;
+        }
+
+        .corner-icon-mask img {
+            height: 51px;
+            width: auto;
+            display: block;
+        }
+
+        @keyframes cornerType {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+
+        .corner-icons.is-typing .corner-icon-mask {
+            animation: cornerType 1.4s steps(18, end) both;
+        }
+
+    
+
+        
+        
+        
+        
+        
+        /* nav dot override to ensure perfect circle */
+
+
+        .nav-item:hover .nav-dot::after {
+            opacity: 1;
+        }
+
+
+        .header-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--black);
+            letter-spacing: 0.2px;
+            margin-top: 8px;
+            margin-right: -16px;
+            padding-right: 24px;
+            transform: translate(130px, 20px);
+        }
+
+        .header-back img {
+            height: 18px;
+            width: auto;
+            display: block;
+        }
+
+
+        .header-back:active img {
+            filter: brightness(0) saturate(100%) invert(12%) sepia(90%) saturate(4500%) hue-rotate(350deg) brightness(95%) contrast(120%);
+        }
+
+
+        .header-back {
+            position: relative;
+        }
+
+        .header-back::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 18px;
+            height: 18px;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #ff2b2b 0%, #ff7a00 100%);
+            -webkit-mask: url('assets/icons/icon2.svg') no-repeat center / contain;
+            mask: url('assets/icons/icon2.svg') no-repeat center / contain;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .header-back:active::before {
+            opacity: 1;
+        }
+
+        .header-back:active img {
+            opacity: 0;
+        }
+
+
+        .nav-item.is-active {
+            background: #cfcfcf;
+            box-shadow: inset 0 2px 0 rgba(0,0,0,0.15);
+        }
+
+        .nav-item.is-active .nav-dot::after {
+            opacity: 1;
+        }
+</style>
+</head>
+<body>
+    <header>
+        <div class="header-logo">
+            <a href="0086-studios-virgil-strict.html" class="logo-text"><img class="logo-img" src="assets/0086-logo.png" alt="0086 logo"></a>
+        </div>
+
+        <nav class="header-nav">
+            <a href="0086-about.html" class="nav-item">
+                about us
+                <span class="nav-dot"></span>
+            </a>
+            <a href="0086-service-ai-installation.html" class="nav-item" data-filter="interactive">
+                互动装置
+                <span class="nav-dot"></span>
+            </a>
+            <a href="#" class="nav-item" data-filter="space">
+                空间
+                <span class="nav-dot"></span>
+            </a>
+            <a href="0086-services.html" class="nav-item" data-filter="exhibition">
+                展览
+                <span class="nav-dot"></span>
+            </a>
+            <a href="case-mazu-ip.html" class="nav-item" data-filter="ip">
+                IP设计
+                <span class="nav-dot"></span>
+            </a>
+        </nav>
+
+<div class="header-right">
+<a class="header-back" href="javascript:history.back()">
+                <img src="assets/icons/icon2.svg" alt="back">
+                <span>BACK</span>
+            </a>
+<img id="header-icon-img" class="header-icon-img" src="assets/top-icons.png" alt="icons">
+            <canvas id="header-icon-canvas" class="header-icon-canvas" aria-hidden="true"></canvas>
+        </div>
+    </header>
+  <div class="hud" id="hud"></div>
+  <div class="hint">
+    鼠标拖拽：旋转<br/>
+    滚轮：缩放<br/>
+    双击：重置视角
+  </div>
+  <div class="badge">Airspace Memory • single-file demo (WebGL)</div>
+
+  <!-- Three.js (CDN) -->
+  <script type="module">
+    import * as THREE from "https://unpkg.com/three@0.161.0/build/three.module.js";
+    import { OrbitControls } from "https://unpkg.com/three@0.161.0/examples/jsm/controls/OrbitControls.js";
+
+    // ----------------------------
+    // 0) 基础场景
+    // ----------------------------
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x000000, 1);
+    document.body.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x000000, 0.035); // “黑的厚度”——稍微雾化吃光
+
+    const camera = new THREE.PerspectiveCamera(55, window.innerWidth/window.innerHeight, 0.1, 200);
+    camera.position.set(0, 2.5, 9);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.rotateSpeed = 0.35;
+    controls.zoomSpeed = 0.9;
+    controls.minDistance = 3.2;
+    controls.maxDistance = 20;
+
+    const resetCam = () => {
+      camera.position.set(0, 2.5, 9);
+      controls.target.set(0, 0.6, 0);
+      controls.update();
+    };
+    resetCam();
+    window.addEventListener("dblclick", resetCam);
+
+    // ----------------------------
+    // 1) 简单噪声工具
+    // ----------------------------
+    const TAU = Math.PI * 2;
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+    const lerp = (a,b,t)=>a+(b-a)*t;
+
+    function hash(n){ return (Math.sin(n)*43758.5453123)%1; }
+    function hash2(x,y){ return hash(x*127.1 + y*311.7); }
+
+    // 2D value noise（轻量够用）
+    function vnoise(x,y){
+      const xi = Math.floor(x), yi = Math.floor(y);
+      const xf = x - xi, yf = y - yi;
+      const u = xf*xf*(3-2*xf);
+      const v = yf*yf*(3-2*yf);
+      const a = hash2(xi, yi);
+      const b = hash2(xi+1, yi);
+      const c = hash2(xi, yi+1);
+      const d = hash2(xi+1, yi+1);
+      return lerp(lerp(a,b,u), lerp(c,d,u), v);
+    }
+
+    // ----------------------------
+    // 2) “暗绿幕布”层（宏观流向/走廊）
+    // ----------------------------
+    const curtainGroup = new THREE.Group();
+    curtainGroup.position.set(0, 0.2, -3.5);
+    scene.add(curtainGroup);
+
+    const curtainCount = 22;
+    for(let i=0;i<curtainCount;i++){
+      const w = lerp(0.12, 0.55, Math.random());
+      const h = lerp(5.5, 9.5, Math.random());
+      const geo = new THREE.PlaneGeometry(w, h, 1, 1);
+
+      // 暗绿半透明，靠 shader 做轻微呼吸纹理
+      const mat = new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        uniforms: {
+          uTime: { value: 0 },
+          uAlpha: { value: lerp(0.06, 0.18, Math.random()) },
+          uSeed: { value: Math.random()*1000 },
+        },
+        vertexShader: `
+          uniform float uTime;
+          uniform float uSeed;
+          varying vec2 vUv;
+          varying float vWobble;
+          void main(){
+            vUv = uv;
+            vec3 p = position;
+            float t = uTime*0.25;
+            float wob = sin((p.y*0.7 + uSeed)*1.2 + t) * 0.06;
+            p.x += wob;
+            vWobble = wob;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(p,1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform float uTime;
+          uniform float uAlpha;
+          uniform float uSeed;
+          varying vec2 vUv;
+          varying float vWobble;
+
+          float hash(float n){ return fract(sin(n)*43758.5453123); }
+          float noise(vec2 x){
+            vec2 i = floor(x);
+            vec2 f = fract(x);
+            f = f*f*(3.0-2.0*f);
+            float a = hash(i.x + i.y*57.0);
+            float b = hash(i.x+1.0 + i.y*57.0);
+            float c = hash(i.x + (i.y+1.0)*57.0);
+            float d = hash(i.x+1.0 + (i.y+1.0)*57.0);
+            return mix(mix(a,b,f.x), mix(c,d,f.x), f.y);
+          }
+
+          void main(){
+            // 暗绿：别太亮，主要做“深度帷幕”
+            vec3 base = vec3(0.05, 0.20, 0.12);
+
+            float t = uTime*0.35;
+            float n = noise(vUv*vec2(2.0, 7.0) + vec2(uSeed, t));
+            float bands = smoothstep(0.1, 0.95, n);
+            float edge = smoothstep(0.0, 0.2, vUv.x) * (1.0 - smoothstep(0.8, 1.0, vUv.x));
+            float breathe = 0.6 + 0.4*sin(uTime*0.55 + uSeed);
+
+            float a = uAlpha * edge * (0.35 + 0.65*bands) * breathe;
+            // 上下渐隐，像远处的风幕
+            a *= smoothstep(0.0, 0.35, vUv.y) * (1.0 - smoothstep(0.65, 1.0, vUv.y));
+            gl_FragColor = vec4(base, a);
+          }
+        `
+      });
+
+      const m = new THREE.Mesh(geo, mat);
+      // 轻微旋转，让幕布不是完全竖直同向
+      m.rotation.y = lerp(-0.22, 0.22, Math.random());
+      m.position.x = lerp(-5.2, 5.2, i/(curtainCount-1));
+      m.position.y = lerp(0.8, 1.3, Math.random());
+      m.position.z = lerp(-1.2, 1.2, Math.random());
+      curtainGroup.add(m);
+    }
+
+    // ----------------------------
+    // 3) “荧光簇”层（密度热区）
+    // ----------------------------
+    const clusterGroup = new THREE.Group();
+    clusterGroup.position.set(0, 0.2, -0.8);
+    scene.add(clusterGroup);
+
+    const clusterCount = 14;
+    const clusterGeo = new THREE.PlaneGeometry(1.2, 1.2, 1, 1);
+
+    function makeClusterMaterial(){
+      return new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        uniforms: {
+          uTime: { value: 0 },
+          uCenter: { value: new THREE.Vector2(0,0) },
+          uIntensity: { value: 1.0 },
+          uSeed: { value: Math.random()*1000 },
+        },
+        vertexShader: `
+          uniform vec2 uCenter;
+          varying vec2 vUv;
+          varying vec2 vPos;
+          void main(){
+            vUv = uv;
+            vec3 p = position;
+            // billboard：始终朝向相机
+            // three.js 的 Plane 默认已经面向相机（在我们不用旋转的情况下）
+            vPos = (p.xy);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(p,1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform float uTime;
+          uniform float uIntensity;
+          uniform float uSeed;
+          varying vec2 vUv;
+          varying vec2 vPos;
+
+          float hash(float n){ return fract(sin(n)*43758.5453123); }
+          float noise(vec2 x){
+            vec2 i = floor(x);
+            vec2 f = fract(x);
+            f = f*f*(3.0-2.0*f);
+            float a = hash(i.x + i.y*57.0);
+            float b = hash(i.x+1.0 + i.y*57.0);
+            float c = hash(i.x + (i.y+1.0)*57.0);
+            float d = hash(i.x+1.0 + (i.y+1.0)*57.0);
+            return mix(mix(a,b,f.x), mix(c,d,f.x), f.y);
+          }
+
+          void main(){
+            // 中心发光 + 结晶毛边（噪声）
+            vec2 uv = vUv*2.0-1.0;
+            float r = length(uv);
+
+            float t = uTime*0.8;
+            float n = noise(uv*3.8 + vec2(uSeed, t));
+            float crystal = smoothstep(0.15, 0.95, n);
+
+            float core = exp(-r*r*2.6);
+            float rim  = exp(-pow(r*1.4, 2.0)) * (0.35 + 0.65*crystal);
+
+            float flick = 0.65 + 0.35*sin(uTime*(0.8+uSeed*0.002) + uSeed);
+            float a = (core*0.65 + rim*0.9) * uIntensity * flick;
+
+            // 青绿偏冷的荧光
+            vec3 col = vec3(0.12, 0.95, 0.86);
+            col *= (0.6 + 0.8*crystal);
+
+            // 外缘衰减
+            a *= smoothstep(1.0, 0.15, r);
+            gl_FragColor = vec4(col, a*0.35);
+          }
+        `
+      });
+    }
+
+    const clusters = [];
+    for(let i=0;i<clusterCount;i++){
+      const mat = makeClusterMaterial();
+      const mesh = new THREE.Mesh(clusterGeo, mat);
+      mesh.position.set(lerp(-4.2,4.2, Math.random()), lerp(0.4, 2.2, Math.random()), lerp(-0.6,0.6, Math.random()));
+      const s = lerp(0.55, 1.9, Math.random());
+      mesh.scale.setScalar(s);
+      clusterGroup.add(mesh);
+
+      clusters.push({
+        mesh,
+        baseIntensity: lerp(0.4, 1.6, Math.random()),
+        flickRate: lerp(0.6, 1.8, Math.random()),
+        seed: Math.random()*1000
+      });
+    }
+
+    // ----------------------------
+    // 4) 白色“手写轨迹”（航迹）
+    //    - 长弧 / 回环 / 断裂 / 抖动
+    // ----------------------------
+    const trailGroup = new THREE.Group();
+    trailGroup.position.set(0, 0.4, 0.0);
+    scene.add(trailGroup);
+
+    function buildFlightPath(opts){
+      // opts: longHaul, holding, gapChance, jitter
+      const pts = [];
+      const steps = opts.steps ?? 280;
+
+      let x = lerp(-4.8, 4.8, Math.random());
+      let y = lerp(0.2, 2.6, Math.random());
+      let z = lerp(-0.4, 0.8, Math.random());
+
+      // 方向与曲率
+      let ang = lerp(-0.8, 0.8, Math.random());
+      let curv = lerp(0.002, 0.02, Math.random()) * (opts.longHaul ? 0.65 : 1.2);
+
+      // 模拟“巡航稳定”：越稳定越平滑
+      const smooth = opts.longHaul ? 0.85 : 0.55;
+
+      let vx = Math.cos(ang) * lerp(0.03, 0.06, Math.random());
+      let vy = lerp(-0.01, 0.01, Math.random());
+      let vz = Math.sin(ang) * lerp(0.03, 0.06, Math.random());
+
+      let holdCenter = new THREE.Vector3(lerp(-2.2,2.2,Math.random()), lerp(0.6,2.4,Math.random()), lerp(-0.2,0.6,Math.random()));
+      let holdPhase = Math.random()*TAU;
+
+      for(let i=0;i<steps;i++){
+        const t = i/(steps-1);
+
+        // 缓慢弯折（长弧线）
+        ang += (Math.random()-0.5) * curv;
+        const tx = Math.cos(ang);
+        const tz2 = Math.sin(ang);
+
+        // 平滑混合
+        vx = lerp(vx, tx*0.06, 1.0-smooth);
+        vz = lerp(vz, tz2*0.06, 1.0-smooth);
+
+        // 回环（holding）在某个区段触发
+        if(opts.holding && t>0.55 && t<0.85){
+          const r = 0.55 + 0.35*Math.sin(t*12.0);
+          holdPhase += 0.22 + 0.06*Math.sin(i*0.07);
+          x = lerp(x, holdCenter.x + Math.cos(holdPhase)*r, 0.25);
+          z = lerp(z, holdCenter.z + Math.sin(holdPhase)*r, 0.25);
+          y = lerp(y, holdCenter.y + 0.12*Math.sin(holdPhase*2.0), 0.22);
+        } else {
+          x += vx;
+          z += vz;
+          y += vy;
+        }
+
+        // 边界回拉
+        if(x<-5.2||x>5.2) vx*=-1;
+        if(z<-1.5||z>1.5) vz*=-1;
+
+        // 抖动（湍流/波动）
+        const j = opts.jitter * 0.12;
+        const jx = (vnoise(x*1.7 + i*0.02, z*1.6) - 0.5) * j;
+        const jz = (vnoise(z*1.7 + i*0.02, x*1.6) - 0.5) * j;
+        const jy = (vnoise(x*1.2, i*0.02) - 0.5) * j * 0.6;
+
+        pts.push(new THREE.Vector3(x + jx, y + jy, z + jz));
+      }
+      return pts;
+    }
+
+    function makeTrailMesh(points, params){
+      // 用 TubeGeometry 做“有体积的手写线”
+      const curve = new THREE.CatmullRomCurve3(points);
+      const tubularSegments = Math.min(1200, Math.max(220, Math.floor(points.length*2.2)));
+      const radius = params.radius ?? 0.012;
+      const radialSegments = 6;
+
+      const geo = new THREE.TubeGeometry(curve, tubularSegments, radius, radialSegments, false);
+
+      const mat = new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        uniforms: {
+          uTime: { value: 0 },
+          uClean: { value: params.clean ?? 1.0 },   // 越典型越干净
+          uBreaky:{ value: params.breaky ?? 0.0 },  // 断裂倾向
+          uSeed:  { value: Math.random()*1000 },
+          uBaseA: { value: params.alpha ?? 0.75 },
+        },
+        vertexShader: `
+          uniform float uTime;
+          uniform float uClean;
+          uniform float uSeed;
+          varying float vAlong;
+          varying float vNoise;
+          varying vec3 vPos;
+
+          float hash(float n){ return fract(sin(n)*43758.5453123); }
+          float noise(vec3 x){
+            vec3 p = floor(x);
+            vec3 f = fract(x);
+            f = f*f*(3.0-2.0*f);
+            float n = p.x + p.y*57.0 + p.z*113.0;
+            float a = hash(n+0.0);
+            float b = hash(n+1.0);
+            float c = hash(n+57.0);
+            float d = hash(n+58.0);
+            float e = hash(n+113.0);
+            float f2= hash(n+114.0);
+            float g = hash(n+170.0);
+            float h = hash(n+171.0);
+            float x1 = mix(a,b,f.x);
+            float x2 = mix(c,d,f.x);
+            float x3 = mix(e,f2,f.x);
+            float x4 = mix(g,h,f.x);
+            float y1 = mix(x1,x2,f.y);
+            float y2 = mix(x3,x4,f.y);
+            return mix(y1,y2,f.z);
+          }
+
+          void main(){
+            vPos = position;
+            // TubeGeometry 的 uv.x 近似沿线方向
+            vAlong = uv.x;
+
+            float t = uTime*0.6;
+            // 轻微“手写边缘电噪声”
+            float n = noise(vec3(position*2.4 + uSeed, t));
+            vNoise = n;
+
+            // 越干净越少扰动
+            vec3 p = position;
+            float amp = (1.0-uClean) * 0.03;
+            p += normal * ((n-0.5) * amp);
+
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(p,1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform float uTime;
+          uniform float uClean;
+          uniform float uBreaky;
+          uniform float uSeed;
+          uniform float uBaseA;
+          varying float vAlong;
+          varying float vNoise;
+
+          float hash(float n){ return fract(sin(n)*43758.5453123); }
+
+          void main(){
+            // 白线不是纯白，略冷
+            vec3 white = vec3(0.91, 0.95, 0.98);
+
+            // 沿线渐隐（像记忆）
+            float fadeHead = smoothstep(0.0, 0.06, vAlong);
+            float fadeTail = 1.0 - smoothstep(0.78, 1.0, vAlong);
+            float fade = fadeHead * fadeTail;
+
+            // “典型航班”更细更干净：alpha 更稳定
+            float cleanGlow = mix(0.55, 0.95, uClean);
+            float a = uBaseA * fade * cleanGlow;
+
+            // 断裂：用沿线的门控制造空洞
+            // uBreaky 越高 -> 断裂越多
+            float gate = 1.0;
+            float p = vAlong*38.0 + uSeed*0.1;
+            float rnd = hash(floor(p));
+            float seg = fract(p);
+            float hole = step(0.55 + 0.35*(1.0-uBreaky), rnd) * smoothstep(0.15, 0.0, abs(seg-0.5));
+            gate = 1.0 - hole;
+
+            // 微闪烁（局部，不要全屏同步）
+            float flick = 0.92 + 0.08*sin(uTime*1.2 + uSeed + vAlong*10.0);
+            a *= gate * flick;
+
+            // 边缘颗粒：让线“有电噪感”
+            a *= (0.88 + 0.22*(vNoise));
+
+            if(a < 0.02) discard;
+            gl_FragColor = vec4(white, a);
+          }
+        `
+      });
+
+      const mesh = new THREE.Mesh(geo, mat);
+      return mesh;
+    }
+
+    // 生成一批“假航班”
+    const trails = [];
+    const trailCount = 34;
+
+    for(let i=0;i<trailCount;i++){
+      const longHaul = Math.random() < 0.55;
+      const holding  = Math.random() < 0.22;
+      const breaky   = Math.random() < 0.28;
+
+      const jitter = longHaul ? lerp(0.1, 0.6, Math.random()) : lerp(0.3, 1.0, Math.random());
+      const clean  = longHaul ? lerp(0.75, 1.0, Math.random()) : lerp(0.35, 0.85, Math.random());
+
+      const pts = buildFlightPath({
+        longHaul,
+        holding,
+        jitter,
+        steps: longHaul ? 360 : 260
+      });
+
+      const mesh = makeTrailMesh(pts, {
+        radius: longHaul ? lerp(0.008,0.013,Math.random()) : lerp(0.010,0.016,Math.random()),
+        clean,
+        breaky: breaky ? lerp(0.55, 1.0, Math.random()) : lerp(0.0, 0.25, Math.random()),
+        alpha: longHaul ? lerp(0.55, 0.85, Math.random()) : lerp(0.35, 0.7, Math.random()),
+      });
+
+      // 让“主白线”更靠前一点
+      mesh.position.z += longHaul ? 0.25 : 0.0;
+      trailGroup.add(mesh);
+
+      trails.push({
+        mesh,
+        longHaul,
+        holding,
+        breaky,
+        jitter,
+        clean,
+        seed: Math.random()*1000
+      });
+    }
+
+    // ----------------------------
+    // 5) 彩色事件碎片（橙/红/黄/蓝）
+    // ----------------------------
+    const eventGroup = new THREE.Group();
+    eventGroup.position.set(0, 0.35, 2.2);
+    scene.add(eventGroup);
+
+    const eventGeo = new THREE.PlaneGeometry(0.12, 0.12, 1, 1);
+
+    function makeEventMaterial(){
+      return new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        uniforms:{
+          uTime:{ value:0 },
+          uColor:{ value: new THREE.Color(1,1,1) },
+          uAlpha:{ value: 1.0 },
+          uSeed:{ value: Math.random()*1000 },
+        },
+        vertexShader: `
+          uniform float uTime;
+          uniform float uSeed;
+          varying vec2 vUv;
+          void main(){
+            vUv = uv;
+            vec3 p = position;
+
+            // 轻微漂浮
+            float t = uTime*0.9;
+            p.y += sin(t + uSeed)*0.02;
+            p.x += cos(t*0.7 + uSeed)*0.01;
+
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(p,1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform float uTime;
+          uniform vec3 uColor;
+          uniform float uAlpha;
+          uniform float uSeed;
+          varying vec2 vUv;
+
+          float hash(float n){ return fract(sin(n)*43758.5453123); }
+
+          void main(){
+            vec2 uv = vUv*2.0-1.0;
+            float r = length(uv);
+
+            // 让碎片像“标签碎块”，不是圆点：用菱形/矩形混合边缘
+            float box = max(abs(uv.x), abs(uv.y));
+            float diamond = abs(uv.x) + abs(uv.y);
+            float shape = mix(box, diamond, 0.55);
+
+            float edge = smoothstep(0.85, 0.25, shape);
+            float grain = 0.75 + 0.25*hash(floor((uv.x+uv.y+uSeed)*80.0));
+            float flick = 0.75 + 0.25*sin(uTime*(1.2+uSeed*0.002) + uSeed);
+
+            float a = edge * grain * flick * uAlpha;
+            if(a < 0.03) discard;
+
+            gl_FragColor = vec4(uColor, a);
+          }
+        `
+      });
+    }
+
+    const events = [];
+    const eventCount = 120;
+
+    function spawnEvent(type){
+      // type: "emergency"|"delay"|"info"
+      const mesh = new THREE.Mesh(eventGeo, makeEventMaterial());
+      // 随机出现在某些“热点”附近
+      const cx = lerp(-4.2, 4.2, Math.random());
+      const cy = lerp(0.4, 2.4, Math.random());
+      const cz = lerp(-0.4, 0.6, Math.random());
+
+      mesh.position.set(cx, cy, cz);
+      mesh.rotation.z = lerp(-Math.PI, Math.PI, Math.random());
+      mesh.scale.setScalar(lerp(0.7, 1.6, Math.random()));
+
+      let col = new THREE.Color(0.20, 0.55, 1.0); // 冷蓝：默认“信息碎”
+      let alpha = lerp(0.12, 0.28, Math.random());
+
+      if(type === "delay"){
+        col = new THREE.Color(1.0, 0.88, 0.22); // 黄：中等注意
+        alpha = lerp(0.20, 0.42, Math.random());
+        mesh.scale.multiplyScalar(lerp(0.9, 1.5, Math.random()));
+        mesh.position.z += 0.35;
+      }
+      if(type === "emergency"){
+        col = new THREE.Color(1.0, 0.35, 0.10); // 橙红：异常
+        alpha = lerp(0.35, 0.85, Math.random());
+        mesh.scale.multiplyScalar(lerp(1.2, 2.2, Math.random()));
+        mesh.position.z += 0.65;
+      }
+
+      mesh.material.uniforms.uColor.value.copy(col);
+      mesh.material.uniforms.uAlpha.value = alpha;
+
+      eventGroup.add(mesh);
+      events.push({
+        mesh,
+        type,
+        life: 0,
+        ttl: type==="emergency" ? lerp(2.5, 4.2, Math.random()) : lerp(1.2, 2.8, Math.random()),
+        drift: new THREE.Vector3(lerp(-0.08,0.08,Math.random()), lerp(0.02,0.12,Math.random()), lerp(-0.02,0.06,Math.random()))
+      });
+    }
+
+    // 初始化一些“冷信息碎片”，少量黄/红
+    for(let i=0;i<eventCount;i++){
+      const r = Math.random();
+      if(r < 0.06) spawnEvent("emergency");
+      else if(r < 0.22) spawnEvent("delay");
+      else spawnEvent("info");
+    }
+
+    // ----------------------------
+    // 6) 全局“数据态”模拟（之后替换成真实航空数据即可）
+    // ----------------------------
+    const state = {
+      activeFlights: 0,
+      avgDelay: 0,
+      globalWeatherSeverity: 0,
+      dataCompleteness: 1,
+      // 变化率（呼吸驱动）
+      dActiveFlightsDt: 0,
+      spawnRate: 0,
+      eventRate: 0,
+      tPrev: performance.now()/1000,
+      flightsPrev: 0
+    };
+
+    function simulateGlobalState(t){
+      // 让 activeFlights 像真实世界一样缓慢起伏
+      const base = 4200 + 900*Math.sin(t*0.12) + 380*Math.sin(t*0.037 + 1.2);
+      const jitter = 120*(vnoise(t*0.35, 1.7)-0.5);
+      const flights = Math.max(800, Math.floor(base + jitter));
+
+      // 平均延误
+      const delay = 8 + 10*(0.5+0.5*Math.sin(t*0.09+0.6)) + 6*(vnoise(t*0.2, 9.3)-0.5);
+      // 天气扰动
+      const weather = clamp(0.35 + 0.35*Math.sin(t*0.07+2.1) + 0.25*(vnoise(t*0.22, 4.4)-0.5), 0, 1);
+      // 数据完整性（偶尔抖一下）
+      const completeness = clamp(0.92 + 0.08*Math.sin(t*0.18+3.0) - 0.12*Math.max(0, weather-0.55), 0.65, 1);
+
+      // 变化率
+      const dt = t - state.tPrev;
+      const dFlights = (flights - state.flightsPrev) / Math.max(0.016, dt);
+
+      state.activeFlights = flights;
+      state.avgDelay = delay;
+      state.globalWeatherSeverity = weather;
+      state.dataCompleteness = completeness;
+      state.dActiveFlightsDt = dFlights;
+
+      // “进入率/事件率”也让它随天气和延误稍微耦合
+      state.spawnRate = clamp(0.25 + 0.45*(0.5+0.5*Math.sin(t*0.22)) + 0.4*weather, 0, 1);
+      state.eventRate = clamp(0.15 + 0.55*weather + 0.35*Math.max(0, (delay-12)/16), 0, 1);
+
+      state.tPrev = t;
+      state.flightsPrev = flights;
+    }
+
+    const hud = document.getElementById("hud");
+
+    // ----------------------------
+    // 7) 动画循环（“局部呼吸”）
+    // ----------------------------
+    const clock = new THREE.Clock();
+
+    function animate(){
+      requestAnimationFrame(animate);
+      const t = clock.getElapsedTime();
+
+      simulateGlobalState(t);
+
+      // 黑的厚度：不确定/天气/缺失越多 -> 雾更“吃光”
+      const uncertainty = (1 - state.dataCompleteness)*0.9 + state.globalWeatherSeverity*0.35 + clamp(state.activeFlights/8000,0,1)*0.18;
+      scene.fog.density = lerp(0.028, 0.055, clamp(uncertainty,0,1));
+
+      // 暗绿幕布呼吸（宏观风场）
+      curtainGroup.children.forEach(m=>{
+        m.material.uniforms.uTime.value = t;
+        // 天气越强，幕布越“厚”
+        m.material.uniforms.uAlpha.value = lerp(0.05, 0.22, clamp(state.globalWeatherSeverity,0,1)) * lerp(0.7,1.1, vnoise(t*0.08, m.position.x*0.1));
+      });
+
+      // 荧光簇：密度（activeFlights）和变化率（呼吸）影响亮度
+      const breath = clamp(Math.abs(state.dActiveFlightsDt)/220, 0, 1) * 0.6 + state.eventRate*0.55;
+      clusters.forEach((c, idx)=>{
+        const m = c.mesh.material;
+        m.uniforms.uTime.value = t * c.flickRate;
+        // 局部呼吸：每个簇的相位不同（别全屏同步）
+        const local = 0.65 + 0.35*Math.sin(t*(0.9+c.flickRate*0.4) + c.seed + idx);
+        const densityLike = clamp(state.activeFlights/6500, 0, 1);
+        m.uniforms.uIntensity.value = c.baseIntensity * (0.55 + 0.65*densityLike) * (0.75 + 0.55*breath*local);
+      });
+
+      // 白色航迹：典型/稳定更干净；天气/缺失更破碎更抖
+      trails.forEach((tr, idx)=>{
+        const m = tr.mesh.material;
+        m.uniforms.uTime.value = t;
+
+        // 用全局态影响“断裂/抖动倾向”
+        const gapLike = clamp((1 - state.dataCompleteness) + state.globalWeatherSeverity*0.4, 0, 1);
+        const breakBias = tr.breaky ? 1.0 : 0.0;
+        m.uniforms.uBreaky.value = clamp(lerp(tr.breaky, tr.breaky + gapLike*0.65, 0.7), 0, 1);
+
+        // “典型航班更干净”
+        const typical = tr.longHaul ? 1.0 : 0.7;
+        m.uniforms.uClean.value = clamp(tr.clean * typical * (1.0 - gapLike*0.25), 0, 1);
+
+        // 轻微层内漂移：让画面“活”
+        tr.mesh.position.x += Math.sin(t*0.08 + tr.seed)*0.0006;
+        tr.mesh.position.y += Math.cos(t*0.06 + tr.seed)*0.0005;
+      });
+
+      // 彩色事件碎片：事件率决定“喷溅频率”，emergency 更靠前更亮
+      // 随机生成新的碎片（模拟 spawn/despawn 与事件）
+      if(Math.random() < 0.05*state.spawnRate){
+        spawnEvent("info");
+      }
+      if(Math.random() < 0.018*state.eventRate){
+        spawnEvent(Math.random()<0.22 ? "emergency" : "delay");
+      }
+
+      // 更新/淘汰事件碎片
+      for(let i=events.length-1;i>=0;i--){
+        const e = events[i];
+        e.life += 1/60;
+        e.mesh.position.addScaledVector(e.drift, 0.016);
+        e.mesh.material.uniforms.uTime.value = t;
+
+        // 呼吸：只让局部事件亮，不要全屏亮
+        const localPulse = 0.7 + 0.3*Math.sin(t*2.2 + e.mesh.position.x*0.9 + e.mesh.position.y*1.1);
+        const baseA = e.mesh.material.uniforms.uAlpha.value;
+        e.mesh.material.uniforms.uAlpha.value = baseA * (0.85 + 0.55*breath*localPulse);
+
+        // 生命末期淡出
+        if(e.life > e.ttl){
+          const k = 1 - (e.life - e.ttl)/0.8;
+          e.mesh.material.uniforms.uAlpha.value *= clamp(k, 0, 1);
+          e.mesh.scale.multiplyScalar(0.992);
+          if(k <= 0.01){
+            eventGroup.remove(e.mesh);
+            e.mesh.geometry.dispose();
+            e.mesh.material.dispose();
+            events.splice(i,1);
+          }
+        }
+      }
+
+      // HUD
+      hud.innerHTML =
+        `<b>activeFlights</b>: ${state.activeFlights.toLocaleString()}<br/>`+
+        `<b>avgDelay</b>: ${state.avgDelay.toFixed(1)} min<br/>`+
+        `<b>globalWeatherSeverity</b>: ${state.globalWeatherSeverity.toFixed(2)}<br/>`+
+        `<b>dataCompleteness</b>: ${(state.dataCompleteness*100).toFixed(1)}%<br/>`+
+        `<b>breath</b>: ${breath.toFixed(2)}  (局部呼吸强度)`;
+
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // ----------------------------
+    // 8) 自适应
+    // ----------------------------
+    window.addEventListener("resize", ()=>{
+      camera.aspect = window.innerWidth/window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+  </script>
+
+    
+
+
+    <div class="corner-icons" aria-hidden="true">
+        <div class="corner-icon-mask">
+            <img src="assets/icons/icon4.svg" alt="">
+        </div>
+    </div>
+
+
+    <script>
+        (function () {
+            const icon = document.querySelector('.corner-icons');
+            if (!icon) return;
+            const loop = () => {
+                icon.classList.remove('is-typing');
+                void icon.offsetWidth;
+                icon.classList.add('is-typing');
+                const delay = 800 + Math.random() * 1200;
+                const duration = 1400;
+                setTimeout(loop, delay + duration);
+            };
+            loop();
+        })();
+    </script>
+
+<script>
+    (function () {
+      const nav = document.querySelector('.header-nav');
+      if (!nav) return;
+      nav.addEventListener('click', (event) => {
+        const link = event.target.closest('.nav-item');
+        if (!link) return;
+        nav.querySelectorAll('.nav-item').forEach((el) => el.classList.remove('is-active'));
+        link.classList.add('is-active');
+      });
+    })();
+  </script>
+</body>
+</html>

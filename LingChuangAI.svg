@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920" height="2160" viewBox="0 0 1920 2160" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-size: 48px; font-weight: bold; font-family: monospace; }
+      .subtitle { font-size: 12px; fill: #999999; letter-spacing: 2px; }
+      .label { font-size: 18px; font-weight: bold; }
+      .text-sm { font-size: 12px; }
+      .text-xs { font-size: 10px; fill: #999999; }
+      .border { stroke: #000000; stroke-width: 1; fill: none; }
+      .bg-black { fill: #000000; }
+      .bg-white { fill: #FFFFFF; }
+      .bg-gray { fill: #F8F8F8; }
+      .text-white { fill: #FFFFFF; }
+      .text-black { fill: #000000; }
+      .text-red { fill: #FF0000; }
+    </style>
+  </defs>
+
+  <!-- PAGE 1: LOGIN PAGE -->
+  <g id="page-login">
+    <!-- Background -->
+    <rect width="1920" height="1080" class="bg-white"/>
+    
+    <!-- Grid Pattern -->
+    <defs>
+      <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+        <path d="M 50 0 L 0 0 0 50" class="border" opacity="0.05"/>
+      </pattern>
+    </defs>
+    <rect width="1920" height="1080" fill="url(#grid)"/>
+
+    <!-- Login Card Container -->
+    <rect x="660" y="240" width="600" height="600" class="border bg-white"/>
+
+    <!-- Title Section -->
+    <text x="960" y="300" class="title text-black" text-anchor="middle">灵创智能</text>
+    <text x="960" y="370" class="subtitle" text-anchor="middle">LINGCHUANG AI PLATFORM</text>
+
+    <!-- QR Section Label -->
+    <text x="960" y="450" class="label text-black" text-anchor="middle">扫码登录</text>
+    <text x="960" y="475" class="text-sm text-xs" text-anchor="middle">使用手机扫描二维码快速登录</text>
+
+    <!-- QR Code Box -->
+    <rect x="728" y="500" width="264" height="264" class="border bg-white"/>
+    
+    <!-- QR Pattern (simple representation) -->
+    <g opacity="0.3">
+      <rect x="748" y="520" width="20" height="20" fill="#000000"/>
+      <rect x="828" y="520" width="20" height="20" fill="#000000"/>
+      <rect x="228" y="520" width="20" height="20" fill="#000000"/>
+      <rect x="748" y="720" width="20" height="20" fill="#000000"/>
+      <rect x="228" y="720" width="20" height="20" fill="#000000"/>
+    </g>
+
+    <!-- Login Button -->
+    <rect x="720" y="800" width="480" height="50" class="border bg-white"/>
+    <text x="960" y="835" class="label text-black" text-anchor="middle">演示登录</text>
+
+    <!-- Footer -->
+    <text x="960" y="920" class="text-sm text-xs" text-anchor="middle">© 2026 灵创智能 · POWERED BY AI</text>
+
+    <!-- Mouse Follower Circles -->
+    <circle cx="960" cy="540" r="24" class="border text-red" opacity="0.6"/>
+    <circle cx="960" cy="540" r="16" class="border text-red" opacity="0.4"/>
+    <circle cx="960" cy="540" r="6" fill="#FF0000"/>
+  </g>
+
+  <!-- PAGE 2: DASHBOARD PAGE (offset by 1080 height) -->
+  <g id="page-dashboard" transform="translate(0, 1080)">
+    <!-- Background -->
+    <rect width="1920" height="1080" class="bg-white"/>
+
+    <!-- HEADER -->
+    <rect width="1920" height="70" class="border bg-white" stroke-position="bottom"/>
+    
+    <!-- Logo -->
+    <text x="50" y="45" class="text-black" font-size="20">✨</text>
+    <text x="90" y="35" class="label text-black">灵创智能</text>
+    <text x="90" y="55" class="text-xs">LINGCHUANG AI</text>
+
+    <!-- Search Bar -->
+    <rect x="1200" y="20" width="280" height="30" class="border bg-white"/>
+    <text x="1220" y="40" class="text-sm text-xs">🔍 搜索...</text>
+
+    <!-- Notification Button -->
+    <rect x="1530" y="20" width="30" height="30" class="border bg-white"/>
+    <text x="1545" y="40" class="text-black" text-anchor="middle" font-size="16">🔔</text>
+
+    <!-- User Avatar -->
+    <rect x="1600" y="20" width="40" height="40" class="border bg-white"/>
+    <text x="1620" y="45" class="label text-black" text-anchor="middle">张</text>
+
+    <!-- SIDEBAR -->
+    <rect x="0" y="70" width="256" height="1010" class="border bg-white"/>
+
+    <!-- Menu Item 1 (Active) -->
+    <rect x="0" y="100" width="256" height="50" class="bg-black"/>
+    <text x="44" y="135" class="text-white" font-size="16">💬</text>
+    <text x="74" y="125" class="text-sm text-white">战略交流</text>
+
+    <!-- Menu Item 2 -->
+    <rect x="0" y="160" width="256" height="50" class="bg-white border"/>
+    <text x="44" y="195" class="text-black" font-size="16">📄</text>
+    <text x="74" y="185" class="text-sm text-black">培训文件</text>
+
+    <!-- Menu Item 3 -->
+    <rect x="0" y="220" width="256" height="50" class="bg-white border"/>
+    <text x="44" y="255" class="text-black" font-size="16">📱</text>
+    <text x="74" y="245" class="text-sm text-black">社交媒体</text>
+
+    <!-- Workspace Section -->
+    <rect x="0" y="800" width="256" height="100" class="border bg-white" stroke-position="top"/>
+    <text x="24" y="820" class="text-xs">工作空间</text>
+    <text x="24" y="845" class="label text-black" font-size="14">生产环境</text>
+    <text x="24" y="865" class="text-xs">最后更新: 2分钟前</text>
+
+    <!-- Logout Button -->
+    <rect x="12" y="920" width="232" height="40" class="border bg-white"/>
+    <text x="128" y="945" class="label text-black" text-anchor="middle" font-size="12">退出登录</text>
+
+    <!-- CHAT AREA HEADER -->
+    <rect x="256" y="70" width="1664" height="80" class="border bg-gray" stroke-position="bottom"/>
+    
+    <rect x="280" y="90" width="40" height="40" class="bg-white border" fill="#FF0000"/>
+    <text x="300" y="115" class="text-white" text-anchor="middle" font-size="20">✨</text>
+    
+    <text x="330" y="110" class="label text-black">战略分析助手</text>
+    <text x="330" y="130" class="text-xs">AI 智能助手 · 在线</text>
+
+    <!-- MESSAGES AREA -->
+    <rect x="256" y="150" width="1664" height="710" class="bg-white"/>
+
+    <!-- AI Message 1 -->
+    <rect x="280" y="180" width="800" height="100" class="border bg-white"/>
+    <text x="290" y="200" class="text-sm text-black" font-family="monospace">
+      <tspan x="290" dy="0">您好!我是战略分析助手。</tspan>
+      <tspan x="290" dy="16">我可以帮助您进行市场分析、</tspan>
+      <tspan x="290" dy="16">竞争策略规划、商业模式设计等。</tspan>
+      <tspan x="290" dy="16">请告诉我您的需求。</tspan>
+    </text>
+    <text x="290" y="275" class="text-xs">14:32</text>
+
+    <!-- User Message 1 -->
+    <rect x="1080" y="310" width="600" height="80" class="border bg-black"/>
+    <text x="1090" y="330" class="text-sm text-white" font-family="monospace">
+      <tspan x="1090" dy="0">我需要为我的新产品制定</tspan>
+      <tspan x="1090" dy="16">市场进入策略,目标市场是</tspan>
+      <tspan x="1090" dy="16">亚太地区。</tspan>
+    </text>
+    <text x="1090" y="385" class="text-xs" fill="#CCCCCC">14:33</text>
+
+    <!-- AI Message 2 -->
+    <rect x="280" y="420" width="800" height="140" class="border bg-white"/>
+    <text x="290" y="440" class="text-sm text-black" font-family="monospace">
+      <tspan x="290" dy="0">很好的问题!针对亚太地区的</tspan>
+      <tspan x="290" dy="16">市场进入策略,我建议从以下</tspan>
+      <tspan x="290" dy="16">几个维度进行分析:</tspan>
+      <tspan x="290" dy="16">1. 市场定位分析</tspan>
+      <tspan x="290" dy="16">2. 竞争对手研究</tspan>
+      <tspan x="290" dy="16">3. 核心竞争力评估</tspan>
+      <tspan x="290" dy="16">4. 增长机会识别</tspan>
+      <tspan x="290" dy="16">您希望深入探讨哪个方面?</tspan>
+    </text>
+    <text x="290" y="555" class="text-xs">14:34</text>
+
+    <!-- INPUT AREA -->
+    <rect x="256" y="860" width="1664" height="220" class="border bg-gray" stroke-position="top"/>
+
+    <!-- Input Field -->
+    <rect x="280" y="880" width="1380" height="50" class="border bg-white"/>
+    <text x="290" y="905" class="text-sm text-xs">请描述您的战略需求...</text>
+
+    <!-- Send Button -->
+    <rect x="1680" y="880" width="50" height="50" class="border bg-white"/>
+    <text x="1705" y="905" class="text-black" text-anchor="middle" font-size="20">📤</text>
+
+    <!-- Help Text -->
+    <text x="280" y="960" class="text-sm text-xs">按 Enter 发送 · Shift + Enter 换行</text>
+  </g>
+</svg>

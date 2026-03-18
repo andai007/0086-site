@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Autoband — 0086 Studios</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;600;800&display=swap');
+    :root { --black:#000; --white:#fff; --gray-mid:#e0e0e0; --gray-dark:#999; }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Inter',sans-serif;background:#fff;color:#000;min-height:100vh;}
+    body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#d8d8d8 8px,transparent 8px);background-size:100px 100px;background-position:50px 50px;pointer-events:none;z-index:0;}
+    a,a:visited{color:#000;}
+    header{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--gray-mid);z-index:10;}
+    .topbar{display:flex;align-items:center;gap:16px;height:56px;padding:0 24px;}
+    .logo{display:flex;align-items:center;gap:10px;}
+    .logo img{height:28px;display:block;}
+    main{position:relative;z-index:1;padding:24px 24px 40px;}
+    .hero{display:grid;grid-template-columns: 2fr 1fr;gap:24px;align-items:start;}
+    .hero-img{width:100%;height:320px;object-fit:cover;background:#f4f4f4;display:block;}
+    .title{font-family:'Playfair Display',serif;font-size:44px;font-weight:700;line-height:1.1;}
+    .meta{font-size:12px;color:var(--gray-dark);text-transform:uppercase;letter-spacing:0.6px;margin:8px 0 12px;}
+    .desc{font-size:16px;line-height:1.5;color:#111;}
+    .info{border-top:1px solid var(--gray-mid);margin-top:16px;padding-top:12px;font-size:13px;color:#555;display:grid;gap:6px;}
+    .section{margin-top:26px;border-top:1px solid var(--gray-mid);padding-top:16px;}
+    .section h3{font-size:14px;text-transform:uppercase;color:var(--gray-dark);margin-bottom:10px;}
+    .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+    .gallery img{width:100%;height:140px;object-fit:cover;background:#f4f4f4;display:block;}
+    .case-video{margin-top:16px;}
+    .case-video video{width:100%;height:360px;object-fit:cover;background:#000;display:block;}
+    .back{margin-top:18px;display:inline-block;text-decoration:underline;font-size:13px;}
+    @media(max-width:900px){.hero{grid-template-columns:1fr;} .hero-img{height:240px;} .gallery{grid-template-columns:repeat(2,1fr);} }
+  
+    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:none;align-items:center;justify-content:center;z-index:9999;}
+    .lightbox.open{display:flex;}
+    .lightbox img{max-width:90vw;max-height:90vh;object-fit:contain;box-shadow:0 10px 30px rgba(0,0,0,0.4);}
+    .lightbox-close,.lightbox-prev,.lightbox-next{position:absolute;background:rgba(255,255,255,0.12);color:#fff;border:none;padding:10px 14px;font-size:20px;cursor:pointer;}
+    .lightbox-close{top:20px;right:20px;font-size:26px;}
+    .lightbox-prev{left:20px;}
+    .lightbox-next{right:20px;}
+    .lightbox-btn:focus{outline:2px solid #fff;}
+
+  
+
+    /* Nothing-inspired typography */
+    :root { --type-title: clamp(30px, 4.2vw, 58px); --type-h2: clamp(18px, 2.2vw, 28px); --type-body: 15px; --track-wide: 1.6px; }
+    body{font-size:var(--type-body);line-height:1.75;letter-spacing:0.1px;}
+    h1,.title,.hero-title{font-family:'Playfair Display',serif;font-size:var(--type-title);line-height:1.05;letter-spacing:-0.6px;}
+    h2{font-size:var(--type-h2);line-height:1.25;letter-spacing:-0.2px;}
+    h3,.section-title{font-size:12px;letter-spacing:var(--track-wide);text-transform:uppercase;font-weight:600;}
+    p,.summary,.desc,.text,.content,.hero-desc{font-size:15px;line-height:1.8;}
+    .meta,.info,.meta-line{font-size:12px;letter-spacing:0.6px;}
+    main{padding:32px 24px 80px;}
+    .hero{gap:28px;}
+    .gallery{gap:12px;}
+    .videos{gap:16px;}
+
+  
+    /* Font override: Microsoft YaHei */
+    body{font-family:"Microsoft YaHei", "PingFang SC", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif;}
+    h1,.title,.hero-title,h2,h3,.section-title{font-family:"Microsoft YaHei", "PingFang SC", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif;}
+
+  
+    /* Hero stretch fill */
+    .hero{align-items:stretch;}
+    .hero-img{height:100%;}
+    .hero-media{height:100%;}
+    .hero-media img{height:100%;object-fit:cover;}
+
+  
+        /* ========== 0086 Banner Sync ========== */
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --red: #ff0000;
+            --gray-light: #f0f0f0;
+            --gray-mid: #e0e0e0;
+            --gray-dark: #999999;
+            --logo-red-filter: brightness(0) saturate(100%) invert(10%) sepia(95%) saturate(7000%) hue-rotate(0deg) brightness(85%) contrast(120%);
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            height: 51px;
+            padding: 0 24px;
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-mid);
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 12px;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 0.2px;
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .logo-tm {
+            font-size: 9px;
+            font-weight: 700;
+            vertical-align: super;
+        }
+
+        .logo-type {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            width: auto;
+            border-right: none;
+            animation: none;
+        }
+
+        .logo-img {
+            height: 51px;
+            display: block;
+            transform: scale(0.5);
+            transform-origin: left center;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            margin-right: 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            padding: 0 24px;
+            min-width: 180px;
+            background: var(--gray-light);
+            border-right: 1px solid var(--gray-mid);
+            text-decoration: none;
+            color: var(--black);
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            transition: background 0.35s, transform 0.2s, box-shadow 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #e8e8e8;
+            transform: translateY(1px);
+            box-shadow: inset 0 2px 0 rgba(0,0,0,0.15);
+        }
+
+        .nav-dot {
+            width: 28px;
+            height: 28px;
+            background: var(--white);
+            border-radius: 50%;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .nav-dot::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--red);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+
+        .header-right {
+            margin-left: auto;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .header-icon {
+            font-size: 18px;
+            color: var(--red);
+            cursor: pointer;
+        }
+
+        .header-icon-img {
+            height: 51px;
+            display: block;
+            opacity: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .header-icon-canvas {
+            height: 51px;
+            display: block;
+        }
+
+        main {
+            padding-top: 56px;
+        }
+
+        @media (max-width: 1024px) {
+            .nav-item {
+                min-width: 140px;
+                padding: 0 16px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                height: 51px;
+                padding: 0 16px;
+            }
+            .header-nav {
+                display: none;
+            }
+            main {
+                padding-top: 48px;
+            }
+        }
+            
+    
+        .corner-icons {
+            position: fixed;
+            right: 10px;
+            bottom: 0;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+        }
+
+        .corner-icon-mask {
+            display: inline-block;
+            overflow: hidden;
+            width: 0;
+        }
+
+        .corner-icon-mask img {
+            height: 51px;
+            width: auto;
+            display: block;
+        }
+
+        @keyframes cornerType {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+
+        .corner-icons.is-typing .corner-icon-mask {
+            animation: cornerType 1.4s steps(18, end) both;
+        }
+
+    
+
+        
+        
+        
+        
+        
+        /* nav dot override to ensure perfect circle */
+
+
+        .nav-item:hover .nav-dot::after {
+            opacity: 1;
+        }
+
+
+        .header-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--black);
+            letter-spacing: 0.2px;
+            margin-top: 8px;
+            margin-right: -16px;
+            padding-right: 24px;
+            transform: translate(130px, 20px);
+        }
+
+        .header-back img {
+            height: 18px;
+            width: auto;
+            display: block;
+        }
+
+
+        .header-back:active img {
+            filter: brightness(0) saturate(100%) invert(12%) sepia(90%) saturate(4500%) hue-rotate(350deg) brightness(95%) contrast(120%);
+        }
+
+
+        .header-back {
+            position: relative;
+        }
+
+        .header-back::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 18px;
+            height: 18px;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #ff2b2b 0%, #ff7a00 100%);
+            -webkit-mask: url('assets/icons/icon2.svg') no-repeat center / contain;
+            mask: url('assets/icons/icon2.svg') no-repeat center / contain;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .header-back:active::before {
+            opacity: 1;
+        }
+
+        .header-back:active img {
+            opacity: 0;
+        }
+
+
+        .nav-item.is-active {
+            background: #cfcfcf;
+            box-shadow: inset 0 2px 0 rgba(0,0,0,0.15);
+        }
+
+        .nav-item.is-active .nav-dot::after {
+            opacity: 1;
+        }
+</style>
+</head>
+<body>
+  <header>
+        <div class="header-logo">
+            <a href="0086-studios-virgil-strict.html" class="logo-text"><img class="logo-img" src="assets/0086-logo.png" alt="0086 logo"></a>
+        </div>
+
+        <nav class="header-nav">
+            <a href="0086-about.html" class="nav-item">
+                about us
+                <span class="nav-dot"></span>
+            </a>
+            <a href="0086-service-ai-installation.html" class="nav-item" data-filter="interactive">
+                互动装置
+                <span class="nav-dot"></span>
+            </a>
+            <a href="#" class="nav-item" data-filter="space">
+                空间
+                <span class="nav-dot"></span>
+            </a>
+            <a href="0086-services.html" class="nav-item" data-filter="exhibition">
+                展览
+                <span class="nav-dot"></span>
+            </a>
+            <a href="case-mazu-ip.html" class="nav-item" data-filter="ip">
+                IP设计
+                <span class="nav-dot"></span>
+            </a>
+        </nav>
+
+<div class="header-right">
+<a class="header-back" href="javascript:history.back()">
+                <img src="assets/icons/icon2.svg" alt="back">
+                <span>BACK</span>
+            </a>
+<img id="header-icon-img" class="header-icon-img" src="assets/top-icons.png" alt="icons">
+            <canvas id="header-icon-canvas" class="header-icon-canvas" aria-hidden="true"></canvas>
+        </div>
+    </header>
+  <main>
+    <div class="hero">
+      <img class="hero-img" data-external-src="assets/autoband/autoband-01.jpg" alt="Autoband">
+      <div>
+        <div class="title">Autoband</div>
+        <div class="meta">多媒体&AI音乐装置 · 2024 · Beijing</div>
+        <div class="desc">作品概述：<br>Autoband是一项集音乐创作与舞蹈互动于一体的创新AI艺术装置，致力于探索人机协作的艺术潜力。它将人类的创意与AI的计算能力结合，打造出一个让人惊艳的音乐与舞蹈共创体验。作品由杨星星、王红瑞共同制作。在这里，用户可以通过简单的拍手或人声节拍触发创作，AI系统随即响应，并通过先进的机器学习算法生成独特的音乐片段。</div>
+        <div class="info">
+          <div><strong>Location:</strong> Beijing</div>
+          <div><strong>Year:</strong> 2024</div>
+          <div><strong>Category:</strong> 多媒体&AI音乐装置</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Gallery</h3>
+      <div class="gallery">
+        <img src="assets/autoband/autoband-02.jpg" alt="Autoband gallery 1">
+        <img data-external-src="assets/autoband/autoband-03.jpg" alt="Autoband gallery 2">
+        <img src="assets/autoband/autoband-04.jpg" alt="Autoband gallery 3">
+      </div>
+      <div class="case-video">
+        <video controls preload="metadata" data-external-src="assets/autoband/autoband.mov"></video>
+      </div>
+    </div>
+
+    <a class="back" href="0086-selected-works.html">BACK to Works</a>
+  </main>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox-close" id="lightbox-close" aria-label="Close">×</button>
+    <button class="lightbox-prev" id="lightbox-prev" aria-label="Previous">‹</button>
+    <img id="lightbox-img" alt="Preview">
+    <button class="lightbox-next" id="lightbox-next" aria-label="Next">›</button>
+  </div>
+
+
+  
+
+
+    <div class="corner-icons" aria-hidden="true">
+        <div class="corner-icon-mask">
+            <img src="assets/icons/icon4.svg" alt="">
+        </div>
+    </div>
+
+
+    <script>
+        (function () {
+            const icon = document.querySelector('.corner-icons');
+            if (!icon) return;
+            const loop = () => {
+                icon.classList.remove('is-typing');
+                void icon.offsetWidth;
+                icon.classList.add('is-typing');
+                const delay = 800 + Math.random() * 1200;
+                const duration = 1400;
+                setTimeout(loop, delay + duration);
+            };
+            loop();
+        })();
+    </script>
+
+<script>
+    (function () {
+      const nav = document.querySelector('.header-nav');
+      if (!nav) return;
+      nav.addEventListener('click', (event) => {
+        const link = event.target.closest('.nav-item');
+        if (!link) return;
+        nav.querySelectorAll('.nav-item').forEach((el) => el.classList.remove('is-active'));
+        link.classList.add('is-active');
+      });
+    })();
+  </script>
+  <script src="assets/external-media-config.js"></script>
+  <script src="assets/external-media-loader.js"></script>
+</body>
+</html>
