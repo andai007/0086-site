@@ -1,0 +1,79 @@
+name: Verify return control v11
+on:
+  push:
+    branches: [fix/preview-return-v11]
+    paths: [.github/workflows/return-home-v11-check.yml]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Prepare browser
+        run: |
+          pip install playwright -q
+          python -m playwright install chromium --with-deps >/dev/null
+      - name: Verify only the return-control change against live preview assets
+        run: |
+          mkdir -p /tmp/return-v11
+          python - <<'PY'
+          import json,urllib.request,pathlib,time
+          from playwright.sync_api import sync_playwright
+          out=pathlib.Path('/tmp/return-v11');report={'scope':'staged shell using live unchanged assets','checks':[]}
+          staged='https://raw.githubusercontent.com/andai007/0086-site/a8cc2fd415b88425a64a852a4380aaa07dc53597/preview-0086.html'
+          html=urllib.request.urlopen(staged,timeout=20).read().decode()
+          with sync_playwright() as p:
+            browser=p.chromium.launch();page=browser.new_page(viewport={'width':1440,'height':960})
+            errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
+            page.route('**/preview-0086.html*',lambda r:r.fulfill(status=200,content_type='text/html; charset=utf-8',body=html))
+            page.goto('https://andai007.github.io/0086-site/preview-0086.html?return-check=11#/works',wait_until='domcontentloaded')
+            page.wait_for_function("document.documentElement.dataset.designRevision==='clean-return-v11' && window.__0086Music && window.__0086?.projects.length===23",timeout=30000)
+            page.evaluate('document.fonts.ready')
+            try:
+              for width in [320,390,560,768,1024,1440,1920]:
+                page.set_viewport_size({'width':width,'height':900})
+                for lang in ['zh','en']:
+                  page.locator('[data-language='+lang+']').click()
+                  result=page.evaluate('''()=>{const b=document.querySelector('.return-home'),s=getComputedStyle(b),r=b.getBoundingClientRect(),a=document.querySelector('#site-music').getBoundingClientRect(),l=document.querySelector('.site-language').getBoundingClientRect();const overlaps=x=>Math.min(r.right,x.right)>Math.max(r.left,x.left)&&Math.min(r.bottom,x.bottom)>Math.max(r.top,x.top);return {width:innerWidth,lang:document.documentElement.lang,text:b.textContent,aria:b.getAttribute('aria-label'),border:s.borderTopWidth,background:s.backgroundColor,font:s.fontFamily,fontSize:s.fontSize,box:{x:r.x,y:r.y,width:r.width,height:r.height},musicCenter:a.y+a.height/2,returnCenter:r.y+r.height/2,musicOverlap:overlaps(a),languageOverlap:overlaps(l),overflow:document.documentElement.scrollWidth>innerWidth}}''')
+                  report['checks'].append(result)
+                  assert result['text']==('HOME' if lang=='en' else '首页'),result
+                  assert result['border']=='0px' and result['background']=='rgba(0, 0, 0, 0)',result
+                  assert result['fontSize']=='10.56px',result
+                  assert not result['musicOverlap'] and not result['languageOverlap'] and not result['overflow'],result
+                  assert abs(result['musicCenter']-result['returnCenter'])<1,result
+              page.set_viewport_size({'width':1440,'height':960});page.locator('[data-language=zh]').click()
+              page.mouse.move(500,400);page.wait_for_timeout(250)
+              page.screenshot(path=str(out/'works-desktop.png'))
+              page.screenshot(path=str(out/'header-desktop.png'),clip={'x':880,'y':0,'width':560,'height':64})
+              page.locator('#sound-toggle').click()
+              try:
+                page.wait_for_function('__0086Music.playing && __0086Music.audioTime>1',timeout=25000)
+                report['audio_started']=True
+              except Exception:report['audio_started']=False
+              before=page.evaluate('__0086Music.audioTime');page.evaluate('window.__originalAudio=document.querySelector("audio")')
+              page.locator('.return-home').focus();page.keyboard.press('Enter')
+              page.wait_for_function("location.hash==='#/home' && !document.getElementById('landing').hidden")
+              assert page.locator('.return-home').is_hidden()
+              assert page.evaluate('window.__originalAudio===document.querySelector("audio")')
+              page.wait_for_timeout(900)
+              report['audio_continues']=page.evaluate('__0086Music.playing && __0086Music.audioTime')>before if report['audio_started'] else None
+              if report['audio_started']:assert report['audio_continues']
+              page.locator('.entry-utility a[href="#/works"]').click()
+              page.wait_for_function("location.hash==='#/works' && !document.querySelector('.return-home').hidden")
+              assert page.locator('.return-home').inner_text()=='首页'
+              page.set_viewport_size({'width':390,'height':844});page.mouse.move(200,400)
+              page.screenshot(path=str(out/'works-mobile.png'),full_page=False)
+              page.screenshot(path=str(out/'header-mobile.png'),clip={'x':0,'y':0,'width':390,'height':60})
+              page.locator('.return-home').click();page.wait_for_function("location.hash==='#/home'")
+              report.update(keyboard_home=True,mobile_tap_home=True,hidden_on_home=True,same_audio_element=True,project_count=23,errors=errors)
+              assert not errors,errors
+            finally:
+              (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False,indent=2));browser.close()
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: return-v11-verified
+          path: /tmp/return-v11
+          retention-days: 3
