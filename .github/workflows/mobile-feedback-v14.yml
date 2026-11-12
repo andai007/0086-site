@@ -1,0 +1,139 @@
+name: Verify mobile feedback v14
+on:
+  push:
+    branches: [fix/mobile-real-feedback-v14]
+    paths: [.github/workflows/mobile-feedback-v14.yml, scripts/patch_mobile_feedback_v14.py]
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/mobile-real-feedback-v14
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /scripts/patch_mobile_feedback_v14.py
+            /preview-0086.html
+            /preview-0086-source.html
+            /index.html
+            /assets/preview-0086-field-v13.js
+            /assets/preview-0086-music-v6.js
+            /assets/preview-0086-layout-v4.css
+            /assets/preview-0086-light-v6.css
+            /assets/preview-catalogue-v10.json
+            /assets/preview-catalogue-v10.css
+            /assets/0086-logo.png
+            /assets/external-media-config.js
+      - name: Prepare candidate and browsers
+        run: |
+          python scripts/patch_mobile_feedback_v14.py
+          node --check assets/preview-0086-field-v14.js
+          pip install playwright pillow numpy -q
+          python -m playwright install chromium webkit --with-deps >/dev/null
+      - name: Verify actual rendered feedback
+        run: |
+          mkdir -p /tmp/mobile-v14
+          cat > /tmp/check-v14.py <<'PY'
+          import pathlib,threading,http.server,json,hashlib,io
+          from playwright.sync_api import sync_playwright
+          from PIL import Image
+          import numpy as np
+          out=pathlib.Path('/tmp/mobile-v14');report={'scope':'Browser engines with mobile input emulation; no physical phone access','errors':[]}
+          class Quiet(http.server.SimpleHTTPRequestHandler):
+            def log_message(self,*args):pass
+          server=http.server.ThreadingHTTPServer(('127.0.0.1',8123),Quiet)
+          threading.Thread(target=server.serve_forever,daemon=True).start()
+          root='http://127.0.0.1:8123/'
+          for version in [13,14]:
+            pathlib.Path('__field-probe-v'+str(version)+'.html').write_text('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;background:#000}canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}</style><body data-view="home"><canvas id="field"></canvas><script src="assets/preview-0086-field-v'+str(version)+'.js"></script>')
+          def metrics(before,after):
+            a=np.asarray(Image.open(io.BytesIO(before)).convert('RGB'),dtype=np.int16)
+            b=np.asarray(Image.open(io.BytesIO(after)).convert('RGB'),dtype=np.int16)
+            delta=np.abs(a-b)
+            return {'changed_pixels':int(np.count_nonzero(delta.max(axis=2)>5)), 'mean_delta':float(delta.mean()),'max_delta':int(delta.max())}
+          def state(page):return page.evaluate('({renderer:__0086Field.renderer,reason:__0086Field.rendererIssue,frames:__0086Field.frames,version:__0086Field.version,camera:__0086Field.camera,touch:__0086Field.touch,reduced:__0086Field.reducedMotion,viewport:__0086Field.viewport,source:__0086Field.inputSource})')
+          try:
+            with sync_playwright() as p:
+              b=p.chromium.launch()
+              # Reproduce the old failure without the radio or changing animation contaminating the image comparison.
+              for version in [13,14]:
+                ctx=b.new_context(viewport={'width':390,'height':844},device_scale_factor=1,is_mobile=True,has_touch=True,reduced_motion='reduce')
+                page=ctx.new_page();page.on('pageerror',lambda e:report['errors'].append(str(e)))
+                page.goto(root+'__field-probe-v'+str(version)+'.html',wait_until='load');page.wait_for_function('window.__0086Field')
+                before=page.screenshot();page.touchscreen.tap(210,420);page.wait_for_timeout(100);after=page.screenshot()
+                diff=metrics(before,after);report['reduced_v'+str(version)]={'pixels':diff,'state':state(page)}
+                (out/('reduced-v'+str(version)+'-before.png')).write_bytes(before);(out/('reduced-v'+str(version)+'-after.png')).write_bytes(after)
+                if version==13:assert diff['changed_pixels']==0, 'Expected to reproduce old reduced-motion input freeze'
+                else:assert diff['changed_pixels']>1000 and page.evaluate('__0086Field.camera.x===0 && __0086Field.camera.y===0'), 'Reduced motion must respond locally without camera animation'
+                ctx.close()
+              # Normal native mobile input on the actual UI, not a synthetic DOM event.
+              ctx=b.new_context(viewport={'width':390,'height':844},is_mobile=True,has_touch=True)
+              page=ctx.new_page();page.on('pageerror',lambda e:report['errors'].append(str(e)))
+              page.goto(root+'preview-mobile-v14.html',wait_until='domcontentloaded');page.wait_for_function('window.__0086Field?.version===14')
+              cd=ctx.new_cdp_session(page)
+              def touch(kind,x=None,y=None):cd.send('Input.dispatchTouchEvent',{'type':kind,'touchPoints':[] if x is None else [{'x':x,'y':y,'id':1}]})
+              touch('touchStart',55,400)
+              for i in range(1,17):touch('touchMove',55+i*17,400);page.wait_for_timeout(18)
+              touch('touchEnd');page.wait_for_timeout(650)
+              report['home_drag']=state(page)
+              assert page.evaluate("document.body.dataset.view==='home'") and report['home_drag']['touch']['moves']>=10 and report['home_drag']['camera']['x']>.4
+              page.screenshot(path=str(out/'home-mobile.png'))
+              page.evaluate("location.hash='#/works'");page.wait_for_function("document.querySelectorAll('#projects>.project').length===23")
+              touch('touchStart',200,720)
+              for i in range(1,13):touch('touchMove',200,720-i*30);page.wait_for_timeout(20)
+              touch('touchEnd');page.wait_for_timeout(250)
+              report['native_scroll']=page.evaluate('scrollY');assert report['native_scroll']>50
+              report['catalogue']=page.evaluate('({count:__0086Catalogue.projects.length,green:getComputedStyle(document.querySelector(".nav a.active")).backgroundColor,overflow:document.documentElement.scrollWidth>innerWidth})')
+              assert report['catalogue']['green']=='rgb(204, 255, 0)' and not report['catalogue']['overflow']
+              page.screenshot(path=str(out/'works-mobile.png'))
+              # Context-loss recovery is also tested, not just context creation failure.
+              has=page.evaluate("(()=>{const g=document.querySelector('#field').getContext('webgl');const e=g&&g.getExtension('WEBGL_lose_context');if(e){e.loseContext();return true;}return false;})()")
+              if has:
+                page.wait_for_function("__0086Field.renderer==='canvas-fallback'",timeout=5000);report['context_loss']=state(page)
+              ctx.close();b.close()
+              wk=p.webkit.launch()
+              report['webkit']=[]
+              for quiet,fail in [(False,False),(True,False),(True,True)]:
+                ctx=wk.new_context(**p.devices['iPhone 13'],reduced_motion='reduce' if quiet else 'no-preference')
+                if fail:ctx.add_init_script("const get=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){if(type==='webgl')return null;return get.call(this,type,...args)}")
+                page=ctx.new_page();page.on('pageerror',lambda e:report['errors'].append(str(e)))
+                page.goto(root+'__field-probe-v14.html',wait_until='load');page.wait_for_function('window.__0086Field?.version===14')
+                before=page.screenshot();page.touchscreen.tap(225,350);page.wait_for_timeout(350);after=page.screenshot()
+                item={'quiet':quiet,'forced_no_webgl':fail,'pixels':metrics(before,after),'state':state(page)}
+                assert item['pixels']['changed_pixels']>100 and item['state']['touch']['taps']>=1
+                if fail:assert item['state']['renderer']=='canvas-fallback'
+                if quiet:assert item['state']['camera']=={'x':0,'y':0}
+                report['webkit'].append(item)
+                (out/('webkit-'+str(quiet)+'-'+str(fail)+'.png')).write_bytes(after)
+                ctx.close()
+              wk.close()
+            original=json.loads(pathlib.Path('/tmp/mobile-v14-preserved.json').read_text())
+            report['unchanged']={f:hashlib.sha256(pathlib.Path(f).read_bytes()).hexdigest()==h for f,h in original.items()}
+            assert all(report['unchanged'].values()) and not report['errors']
+            report['passed']=True
+          finally:
+            (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False,indent=2));server.shutdown()
+          PY
+          python /tmp/check-v14.py
+      - name: Commit passing candidate to review branch only
+        run: |
+          git config user.name '0086 preview checks'
+          git config user.email '90237714+andai007@users.noreply.github.com'
+          git add --sparse assets/preview-0086-field-v14.js preview-0086.html preview-mobile-v14.html
+          git commit -m 'Fix real mobile feedback paths: reduced motion, captured touch, viewport alignment and GPU fallback'
+          git push origin HEAD:fix/mobile-real-feedback-v14
+          git log -1 --format='%H %T'
+          git ls-tree HEAD assets/preview-0086-field-v14.js preview-0086.html preview-mobile-v14.html
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-feedback-v14-check
+          path: |
+            /tmp/mobile-v14
+            assets/preview-0086-field-v14.js
+            preview-0086.html
+            preview-mobile-v14.html
+          retention-days: 3
