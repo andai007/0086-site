@@ -1,0 +1,90 @@
+name: Verify EVA light preview v7
+on:
+  push:
+    branches: [design/flat-weather-20261112]
+    paths: [.github/workflows/preview-v7-check.yml]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Prepare browser
+        run: |
+          pip install playwright -q
+          python -m playwright install chromium --with-deps >/dev/null
+      - name: Check staged preview against live assets
+        run: |
+          mkdir -p /tmp/0086-eva-v7/source/assets
+          cat > /tmp/0086-eva-v7/check.py <<'PY'
+          import json,pathlib,urllib.request,urllib.parse,time
+          from concurrent.futures import ThreadPoolExecutor
+          from playwright.sync_api import sync_playwright
+          out=pathlib.Path('/tmp/0086-eva-v7');ref='9ff68c0f3ef9ca3e52554297f2154e5fa6c78541'
+          paths=['preview-0086-v7-shell.html','assets/preview-0086-field-v6.js','assets/preview-0086-light-v6.css','assets/preview-0086-music-v6.js','assets/preview-0086-eva-v7.js','assets/preview-0086-eva-v7.css']
+          def get(path):
+            data=urllib.request.urlopen('https://raw.githubusercontent.com/andai007/0086-site/'+ref+'/'+path,timeout=25).read();(out/'source'/path).write_bytes(data);return path,data
+          data=dict(ThreadPoolExecutor(max_workers=6).map(get,paths))
+          report={'candidate_commit':ref};errors=[];console=[]
+          with sync_playwright() as p:
+            browser=p.chromium.launch(args=['--use-angle=swiftshader','--enable-unsafe-swiftshader'])
+            def install(page):
+              def serve(r):
+                path=urllib.parse.urlparse(r.request.url).path.split('/0086-site/',1)[-1]
+                key='preview-0086-v7-shell.html' if path=='preview-0086.html' else path
+                if key in data:r.fulfill(status=200,content_type='text/html' if key.endswith('.html') else 'text/css' if key.endswith('.css') else 'application/javascript',body=data[key])
+                else:r.continue_()
+              page.route('https://andai007.github.io/0086-site/**',serve)
+            page=browser.new_page(viewport={'width':1440,'height':900},device_scale_factor=1)
+            install(page);page.on('pageerror',lambda e:errors.append(str(e)));page.on('console',lambda m:console.append(m.text) if m.type in ['error','warning'] else None)
+            try:
+              page.goto('https://andai007.github.io/0086-site/preview-0086.html?v=7#/home',wait_until='domcontentloaded')
+              page.wait_for_function('window.__0086EVA && window.__0086Field && window.__0086Music',timeout=30000)
+              page.evaluate('document.fonts.ready');page.wait_for_timeout(1400)
+              report['initial']=page.evaluate('({renderer:__0086Field.renderer,frames:__0086Field.frames,mode:__0086Music.mode,silent:!__0086Music.playing,canvasError:document.querySelector("#field").dataset.renderError||null,revision:document.documentElement.dataset.designRevision})')
+              page.screenshot(path=str(out/'home-1440.png'))
+              page.mouse.move(80,700,steps=12);page.wait_for_timeout(500);camera1=page.evaluate('__0086Field.camera')
+              page.mouse.move(1330,280,steps=12);page.wait_for_timeout(650);camera2=page.evaluate('__0086Field.camera');report['camera_moves']=abs(camera2['x']-camera1['x'])>.5
+              page.locator('.entry-link').first.click()
+              page.wait_for_function('__0086Music.playing && __0086Music.audioTime>2',timeout=35000)
+              for x,y in [(180,280),(1150,720),(700,180),(1300,450)]:
+                page.mouse.move(x,y,steps=18);page.wait_for_timeout(430)
+              report['audio']=page.evaluate('({playing:__0086Music.playing,time:__0086Music.audioTime,beats:__0086Music.beats,context:__0086Music.contextState,connected:__0086Music.analysisConnected,energy:__0086Music.sampleEnergy(),pulse:__0086Field.pulseAge,meter:__0086EVA.meterLevel,src:__0086Music.stream})')
+              page.locator('.nav a[data-type=all]').click();page.wait_for_timeout(700)
+              report['type']=page.evaluate('({family:getComputedStyle(document.querySelector(".pname")).fontFamily,title:getComputedStyle(document.querySelector("#title")).fontSize,case:getComputedStyle(document.querySelector(".pname")).fontSize,nav:getComputedStyle(document.querySelector(".nav a")).fontSize,glass:getComputedStyle(document.querySelector(".main.glass")).backgroundColor,blur:getComputedStyle(document.querySelector(".main.glass")).backdropFilter})')
+              page.screenshot(path=str(out/'works-1440.png'))
+              page.locator('.project summary').first.click();page.wait_for_selector('.project[open] .source-content',timeout=20000);page.wait_for_timeout(800)
+              report['case_opens']=page.locator('.project[open] .source-content').count()==1
+              page.screenshot(path=str(out/'case-1440.png'))
+              page.locator('#sound-toggle').click();previous=page.evaluate('__0086Music.beats');page.mouse.move(500,600,steps=16);page.wait_for_timeout(450)
+              report['mute']=page.evaluate('({playing:__0086Music.playing,beats:__0086Music.beats,state:__0086Music.contextState})');report['muted_no_beats']=report['mute']['beats']==previous
+              page.locator('.nav a[data-type=all]').click()
+              sizes=[]
+              for width in [320,390,768,1024,1440]:
+                page.set_viewport_size({'width':width,'height':900 if width>1024 else 844})
+                for lang in ['zh','en']:
+                  page.locator('[data-language='+lang+']').click();page.wait_for_timeout(120)
+                  sizes.append(page.evaluate('''()=>{const a=document.querySelector('#site-music').getBoundingClientRect();let overlap=['.site-language','.return-home'].some(s=>{const b=document.querySelector(s).getBoundingClientRect();return Math.min(a.right,b.right)>Math.max(a.left,b.left)&&Math.min(a.bottom,b.bottom)>Math.max(a.top,b.top)});return {width:innerWidth,lang:document.documentElement.lang,overflow:document.documentElement.scrollWidth>innerWidth,overlap};}'''))
+                if width==390:
+                  page.locator('[data-language=zh]').click();page.screenshot(path=str(out/'works-390.png'),full_page=True)
+              report['sizes']=sizes
+              ctx=browser.new_context(viewport={'width':390,'height':844},reduced_motion='reduce');rp=ctx.new_page();install(rp)
+              rp.goto('https://andai007.github.io/0086-site/preview-0086.html?v=7#/home',wait_until='domcontentloaded');rp.wait_for_function('window.__0086Field && window.__0086EVA');f1=rp.evaluate('__0086Field.frames');rp.wait_for_timeout(700);f2=rp.evaluate('__0086Field.frames');report['reduced_motion_static']=f1==f2
+              report['errors']=errors;report['console']=console[-20:]
+              assert report['initial']['renderer']=='webgl-additive' and report['initial']['silent'] and report['camera_moves']
+              assert report['audio']['playing'] and report['audio']['beats']>=2 and report['audio']['connected'] and report['audio']['energy']>0
+              assert report['case_opens'] and report['muted_no_beats'] and not report['mute']['playing'] and report['reduced_motion_static']
+              assert not errors and not any(s['overflow'] or s['overlap'] for s in sizes)
+            except Exception as e:
+              report['failure']=str(e);report['errors']=errors;report['console']=console[-20:];page.screenshot(path=str(out/'failure.png'));raise
+            finally:
+              (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False,indent=2));browser.close()
+          PY
+          python /tmp/0086-eva-v7/check.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 0086-eva-v7-verified
+          path: /tmp/0086-eva-v7
+          retention-days: 2
