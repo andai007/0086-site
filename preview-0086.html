@@ -23,11 +23,10 @@
       // A separate preview document uses the original site assets. Production index.html is untouched.
       const config={contentBase:root.href,weatherEndpoint:weather,weatherProvider:'open-meteo'};
       const open='<scr'+'ipt>',close='</scr'+'ipt>';
-      const head='<base href="'+root.href+'"><meta name="robots" content="noindex,nofollow">'+open+'window.SITE_CONFIG='+JSON.stringify(config)+';'+close;
+      // Do not add a <base> pointing to the folder: fragment links must stay on this preview URL.
+      const head='<meta name="robots" content="noindex,nofollow">'+open+'window.SITE_CONFIG='+JSON.stringify(config)+';'+close;
       html=html.replace('<head>','<head>'+head);
-      // Retain current media mapping; load the isolated soundtrack runtime only in this preview.
       html=html.replace('</body>','<scr'+'ipt src="assets/preview-0086-music.js" defer>'+close+'</body>');
-      // Keep focus when expanding a project and preserve position within the content panel.
       const fixes=open+`document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.project summary')){e.preventDefault();e.target.click();}});`+close;
       html=html.replace('</body>',fixes+'</body>');
       clearTimeout(timeout);document.open();document.write(html);document.close();
