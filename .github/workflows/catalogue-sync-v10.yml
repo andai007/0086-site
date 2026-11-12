@@ -1,0 +1,57 @@
+name: Build current preview catalogue v10
+on:
+  push:
+    branches: [content/current-catalogue-v10]
+    paths: [.github/workflows/catalogue-sync-v10.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: content/current-catalogue-v10
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /scripts/
+            /preview-0086.html
+            /preview-0086-source.html
+            /index.html
+            /assets/preview-0086-layout-v4.css
+            /assets/preview-0086-light-v6.css
+            /assets/preview-0086-field-v6.js
+            /assets/preview-0086-music-v6.js
+            /assets/0086-logo.png
+            /assets/external-media-config.js
+      - name: Install test dependencies
+        run: |
+          pip install requests beautifulsoup4 playwright -q
+          python -m playwright install chromium --with-deps >/dev/null
+      - name: Build latest official case snapshots
+        run: python scripts/sync_preview_catalogue_v10.py
+      - name: Verify full catalogue and preserved experience
+        run: python scripts/check_preview_catalogue_v10.py
+      - name: Commit verified content on review branch only
+        run: |
+          git config user.name '0086 content sync'
+          git config user.email '90237714+andai007@users.noreply.github.com'
+          git add --sparse preview-0086.html preview-0086-source.html assets/preview-catalogue-v10.json assets/preview-catalogue-v10.css
+          git commit -m 'Sync all 23 official cases, current details and metadata; preserve approved music and visual design'
+          git push origin HEAD:content/current-catalogue-v10
+          git log -1 --format='%H %T'
+          git diff-tree --no-commit-id --name-only -r HEAD
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: catalogue-v10-verified
+          path: |
+            catalogue-v10-check/
+            catalogue-v10-report.json
+            preview-0086.html
+            preview-0086-source.html
+            assets/preview-catalogue-v10.json
+            assets/preview-catalogue-v10.css
+          retention-days: 3
