@@ -42,7 +42,7 @@ function interfaceSetup(){
   document.querySelectorAll('[data-language]').forEach(b=>b.addEventListener('click',()=>setLanguage(b.dataset.language)));
   let language='zh';try{language=localStorage.getItem('0086-language')||'zh'}catch{}setLanguage(language);
   document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.project summary')){e.preventDefault();e.target.click()}});
-  document.documentElement.dataset.designRevision='eva-luminous-v7';
+  document.documentElement.dataset.designRevision='clean-luminous-v8';
 }
 const config={contentBase:root.href,weatherEndpoint:weather,weatherProvider:'open-meteo'};
 document.getElementById('retry').onclick=()=>location.reload();
@@ -52,7 +52,7 @@ fetch(new URL('preview-0086-source.html',root),{signal:controller.signal,cache:'
 .then(html=>{
   if(!html.includes('SOURCE_ROWS')||!html.includes('state=readRoute();const works'))throw new Error('Preview source mismatch');
   html=html.replace('<head>','<head><meta name="robots" content="noindex,nofollow"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=Noto+Sans+SC:wght@400&display=swap" rel="stylesheet">'+open+'window.SITE_CONFIG='+JSON.stringify(config)+';'+close);
-  html=html.replace('</head>','<link rel="stylesheet" href="assets/preview-0086-layout-v4.css?v=4"><link rel="stylesheet" href="assets/preview-0086-light-v6.css?v=7"><link rel="stylesheet" href="assets/preview-0086-eva-v7.css?v=7"></head>');
+  html=html.replace('</head>','<link rel="stylesheet" href="assets/preview-0086-layout-v4.css?v=4"><link rel="stylesheet" href="assets/preview-0086-light-v6.css?v=7"></head>');
   html=html.replace(/<button\b[^>]*\bdata-motion\b[^>]*>[\s\S]*?<\/button>/g,'');
   html=html.replace('<body>','<body data-view="home">');
   html=html.replace('<div class="shell">',landing+'<div class="shell" hidden>');
@@ -67,7 +67,7 @@ fetch(new URL('preview-0086-source.html',root),{signal:controller.signal,cache:'
   html=html.slice(0,graphicsStart)+html.slice(graphicsEnd);
   html=html.replace('resize();run();route();','route();');
   html=html.replace('current:{...current}','current:{...(window.__0086Field?.weather||current)}');
-  html=html.replace('</body>',open+'('+interfaceSetup.toString()+')();'+close+'<scr'+'ipt src="assets/preview-0086-field-v6.js?v=7" defer>'+close+'<scr'+'ipt src="assets/preview-0086-music-v6.js?v=7" defer>'+close+'<scr'+'ipt src="assets/preview-0086-eva-v7.js?v=7" defer>'+close+'</body>');
+  html=html.replace('</body>',open+'('+interfaceSetup.toString()+')();'+close+'<scr'+'ipt src="assets/preview-0086-field-v6.js?v=7" defer>'+close+'<scr'+'ipt src="assets/preview-0086-music-v6.js?v=7" defer>'+close+'</body>');
   clearTimeout(timeout);document.open();document.write(html);document.close();
 }).catch(error=>{clearTimeout(timeout);const line=document.querySelector('.line');if(line)line.hidden=true;const message=document.getElementById('message');if(message){message.textContent='页面暂时未能载入，请重试。';message.hidden=false;document.getElementById('retry').hidden=false}console.error(error)});
 })();
