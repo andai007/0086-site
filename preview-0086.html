@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#000000">
+<title>0086 Studios™</title>
+<style>html,body{margin:0;min-height:100%;background:#000;color:#fff;font:14px/1.6 monospace}#boot{position:fixed;inset:0;display:grid;place-content:center;gap:20px;text-align:center}#boot img{width:220px;height:auto;filter:invert(1);margin:auto}.line{height:1px;width:220px;background:#333;overflow:hidden}.line:after{content:'';display:block;height:1px;width:40%;background:#9999ff;animation:move 1s ease-in-out infinite alternate}button{background:none;border:1px solid #555;color:inherit;padding:9px 20px;font:inherit;cursor:pointer}@keyframes move{to{transform:translateX(150%)}}@media(prefers-reduced-motion:reduce){.line:after{animation:none}}</style>
+</head>
+<body>
+<main id="boot"><img src="assets/0086-logo.png" alt="0086 Studios"><div class="line" role="status" aria-label="正在打开网站"></div><p id="message" hidden></p><button id="retry" hidden>重新打开</button></main>
+<script>
+(() => {
+'use strict';
+const root=new URL('./',location.href);
+const open='<scr'+'ipt>',close='</scr'+'ipt>';
+const weather='https://api.open-meteo.com/v1/forecast?latitude=22.5431&longitude=114.0579&current=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,is_day,wind_speed_10m,wind_direction_10m,wind_gusts_10m&wind_speed_unit=ms&timezone=Asia%2FShanghai';
+// Verified reference: Geist Mono 400, landing 18px/.08em; panel white .05, border white .14, blur 6px.
+// Noto Sans SC supplies Chinese glyphs only; Geist Mono remains the Latin/number face.
+const style=`
+:root{--mono:'Geist Mono','Noto Sans SC',ui-monospace,monospace;--glass:rgba(255,255,255,.05);--line:rgba(255,255,255,.14);--lime:#ccff00;--pink:#ff9999;--blue:#9999ff;--dim:#b7b7c6}
+body{font-family:var(--mono),'PingFang SC','Microsoft YaHei',sans-serif;font-weight:400}
+.glass{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+body[data-view=home]{background:#000}body[data-view=home]>.shell{display:none!important}
+.entry{position:fixed;inset:0;z-index:2;display:flex;align-items:center;justify-content:center;overflow:auto;padding:70px 24px 58px}
+.entry-content{position:relative;isolation:isolate;width:min(512px,100%);flex:none;text-align:center;transform:translateY(8px)}
+.entry-content:before{content:'';position:absolute;z-index:-1;pointer-events:none;left:50%;top:50%;transform:translate(-50%,-50%);width:min(820px,100vw);height:min(720px,96vh);background:radial-gradient(ellipse at center,rgba(0,0,0,.65),rgba(0,0,0,.3) 46%,transparent 78%)}
+.entry-logo{display:block;width:min(360px,78vw);height:auto;margin:0 auto;filter:invert(1)}
+.entry-description{font-family:var(--mono);font-size:14px;font-weight:400;line-height:20px;letter-spacing:.14em;text-transform:uppercase;color:#ccc;margin:32px 0}
+.entry-menu{display:flex;flex-direction:column;gap:12px;width:min(448px,100%);margin:auto}
+.entry-link{position:relative;display:flex;min-height:60px;align-items:center;justify-content:center;padding:16px 28px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);box-shadow:inset 0 2px 4px rgba(255,255,255,.05);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);font:400 18px/28px var(--mono),'PingFang SC','Microsoft YaHei',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#fff;text-decoration:none;transition:background .3s,border-color .3s,transform .2s;overflow:hidden}
+.entry-link:before{content:'';position:absolute;inset:0;background:rgba(153,153,255,.15);transform:scaleX(0);transform-origin:left;transition:transform .45s;pointer-events:none}
+.entry-link:hover{border-color:rgba(255,255,255,.75);background:rgba(255,255,255,.12);transform:translateY(-1px)}
+.entry-link:hover:before{transform:scaleX(1)}.entry-link:active{background:rgba(153,153,255,.25);transform:translateY(0)}
+.entry-link.about-entry{margin-top:24px}.entry-utility{display:flex;justify-content:center;gap:24px;position:absolute;left:0;right:0;top:calc(100% + 24px);font:400 10px/16px var(--mono);letter-spacing:.08em;color:#999;text-transform:uppercase}.entry-utility a:hover{color:#fff}
+.site-language{position:fixed;top:12px;left:12px;z-index:8;display:flex;border:1px solid rgba(153,153,255,.5);background:rgba(0,0,0,.42)}
+.site-language button{border:0;background:transparent;color:white;font:400 10px/15px var(--mono);letter-spacing:.08em;padding:6px 10px;min-height:28px}
+.site-language button[aria-pressed=true]{background:#9999ff;color:#000}
+.return-home{position:fixed;z-index:7;top:16px;right:2.1vw;background:rgba(0,0,0,.42);border:1px solid rgba(153,153,255,.5);padding:8px 14px;font:400 10.56px/16px var(--mono);letter-spacing:.1em;text-transform:uppercase}.return-home:hover{background:rgba(153,153,255,.16)}
+.entry-pause{position:fixed;left:24px;bottom:22px;z-index:7;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.03);width:32px;height:30px;padding:0;line-height:1;font-size:15px}
+body[data-view=inside] .entry-pause{display:none}
+.side-panel .brand{display:none}.side-heading{font:400 22px/30px var(--mono);letter-spacing:.14em;text-transform:uppercase;margin:0 0 22px}
+.nav a{font-family:var(--mono),'PingFang SC','Microsoft YaHei',sans-serif;font-weight:400;font-size:14px;letter-spacing:.09em;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.22);min-height:46px;text-transform:uppercase}
+.secondary{grid-template-columns:repeat(3,minmax(0,1fr));border-color:rgba(255,255,255,.12)}.secondary a:last-child{grid-column:auto}.secondary a{font-size:11px;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.22)}
+h1{font:400 clamp(19px,1.65vw,24px)/1.4 var(--mono),'PingFang SC','Microsoft YaHei',sans-serif;letter-spacing:.14em;text-transform:uppercase}
+.subhead{font-size:10px;letter-spacing:.14em}.year{background:rgba(255,255,255,.045);border-color:rgba(255,255,255,.14);font-family:var(--mono)}
+.year .year-number{font-size:18px;font-weight:400}.year .year-count{letter-spacing:.12em}
+.project{background:rgba(0,0,0,.28);border-color:rgba(255,255,255,.12);border-left-color:var(--project-accent)}
+.project:hover,.project[open]{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.3);border-left-color:var(--project-accent)}
+.project summary:hover,.project[open] summary{background:transparent}
+.ptype{display:block;font:400 10px/1.35 var(--mono);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+.pname{font-family:var(--mono),'PingFang SC','Microsoft YaHei',sans-serif;font-size:clamp(14px,1.22vw,18px);font-weight:400;line-height:1.35;letter-spacing:0}
+.pyear{font-family:var(--mono);font-size:12px;line-height:1.45;color:#ccc}.list-meta{letter-spacing:.14em}.source-content{font-family:'Roboto','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;font-size:15px;line-height:1.65;letter-spacing:0}
+.source-content .title,.source-content .meta,.source-content .info,.source-content h1,.source-content h2,.source-content h3{font-family:var(--mono),'PingFang SC','Microsoft YaHei',sans-serif;font-weight:400}
+body[data-view=home] #site-music{left:auto!important;right:24px;bottom:22px!important;top:auto!important}body[data-view=home] #site-music .music-panel{left:auto;right:0;top:auto;bottom:calc(100% + 9px)}
+@media(max-height:760px) and (min-width:721px){.entry{padding-top:50px;padding-bottom:50px}.entry-logo{width:270px}.entry-description{margin:20px 0;font-size:12px}.entry-menu{gap:9px}.entry-link{min-height:48px;padding:10px 24px;font-size:16px;line-height:26px}.entry-link.about-entry{margin-top:16px}}
+@media(max-width:720px){.entry{padding:58px 22px 72px}.entry-content{transform:none}.entry-logo{width:min(280px,72vw)}.entry-description{font-size:10px;line-height:17px;letter-spacing:.12em;margin:28px 0}.entry-menu{width:min(448px,100%);gap:10px}.entry-link{min-height:52px;padding:13px 14px;font-size:15px;line-height:24px}.entry-link.about-entry{margin-top:18px}.entry-utility{gap:20px;top:calc(100% + 20px);font-size:9px}.entry-pause{left:18px;bottom:18px}.site-language{top:10px;left:12px}.return-home{top:10px;right:12px;padding:6px 10px;font-size:10px}body[data-view=inside] .shell{padding-top:54px}.side-heading{font-size:16px;line-height:24px;margin-bottom:12px}.side-panel{position:relative;padding:12px}.secondary{top:12px;right:12px;gap:13px}.secondary a{background:none;border:0;font-size:9px}.side .nav{padding-top:22px!important}.nav a{font-size:11px;min-height:40px}.year .year-number{font-size:14px}.ptype{font-size:9px}.pname{font-size:13px}.pyear{font-size:10px}#site-music{top:99px!important;right:25px!important;left:auto!important}.source-content{font-size:13px}body[data-view=home] #site-music{top:auto!important;bottom:18px!important;right:18px!important}.entry-content:before{width:100vw;height:90vh}}
+@media(max-height:670px) and (max-width:720px){.entry{align-items:flex-start}.entry-logo{width:210px}.entry-description{margin:17px 0}.entry-menu{gap:8px}.entry-link{min-height:44px;padding:9px 14px}.entry-link.about-entry{margin-top:12px}.entry-utility{position:static;margin-top:18px}}
+@media(prefers-reduced-motion:reduce){.entry-link,.entry-link:before{transition:none}}
+`;
+const landing=`
+<nav id="site-language" class="site-language" aria-label="Language"><button type="button" data-language="zh" aria-pressed="true">中文</button><button type="button" data-language="en" aria-pressed="false">EN</button></nav>
+<a class="return-home" href="#/home" hidden>← BACK</a>
+<main class="entry" id="landing" aria-label="0086 Studios"><div class="entry-content">
+<img class="entry-logo" src="assets/0086-logo.png" width="604" height="211" alt="0086 Studios">
+<p class="entry-description">AI-DRIVEN CREATIVE LAB<br>SHENZHEN, CHINA</p>
+<nav class="entry-menu" aria-label="进入网站">
+<a class="entry-link" href="#/works?type=interactive" data-home-label="interactive">互动装置</a>
+<a class="entry-link" href="#/works?type=space" data-home-label="space">空间</a>
+<a class="entry-link" href="#/works?type=exhibition" data-home-label="exhibition">展览</a>
+<a class="entry-link" href="#/works?type=ip" data-home-label="ip">IP设计</a>
+<a class="entry-link about-entry" href="#/about" data-home-label="about">about us</a>
+</nav><nav class="entry-utility" aria-label="更多"><a href="#/works">Selected Works</a><a href="#/ai">AI</a><a href="mailto:contact@0086studios.com">Contact ↗</a></nav>
+</div></main><button type="button" class="entry-pause" data-motion aria-label="暂停背景动画" aria-pressed="false">Ⅱ</button>
+`;
+function resizeField(){
+  w=innerWidth;h=innerHeight;const d=Math.min(devicePixelRatio||1,1.6);
+  canvas.width=Math.round(w*d);canvas.height=Math.round(h*d);ctx.setTransform(d,0,0,d,0,0);
+  let seed=86;const rnd=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
+  points=Array.from({length:w<720?4200:11000},()=>({a:rnd()*Math.PI*2,b:Math.acos(2*rnd()-1),r:rnd(),size:.28+rnd()*.95,phase:rnd()*6.28,ox:0,oy:0}));
+  drawFrame(0);
+}
+function drawField(dt){
+  if(!ctx)return;
+  time+=dt*(.13+current.power*.6);const ease=1-Math.exp(-dt/20);
+  for(const k in current)current[k]+=(target[k]-current[k])*ease;
+  const home=state.view==='home';ctx.fillStyle=home?'#000000':'#03030d';ctx.fillRect(0,0,w,h);
+  const cx=w*.5,cy=h*(home?.55:.49),R=Math.min(w*.43,h*.43),rain=current.rain;
+  if(!home){
+    for(let n=0;n<3;n++){
+      const gx=w*(.36+.18*n)+Math.sin(time*.22+n)*R*.25,gy=h*(.26+.23*n)+Math.cos(time*.19+n)*R*.15;
+      const g=ctx.createRadialGradient(gx,gy,0,gx,gy,R*(.45+.12*n));
+      g.addColorStop(0,`rgba(137,147,247,${.19+current.cloud*.22})`);g.addColorStop(.4,'rgba(105,115,214,.13)');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+    }
+  }
+  const ca=Math.cos(time*.13),sa=Math.sin(time*.13),cb=Math.cos(.3+time*.07),sb=Math.sin(.3+time*.07);
+  for(const p of points){
+    const a=p.a+time*.12,b=p.b,st=Math.sin(b),ct=Math.cos(b);
+    const skin=p.r>.36;
+    const rr=skin?(.76+.25*Math.pow((p.r-.36)/.64,.65)):(.07+.48*Math.pow(p.r/.36,.55));
+    const deform=1+.1*Math.sin(a*3+time*.6)*st+.055*Math.cos(b*5-time*.4);
+    let x=st*Math.cos(a)*rr*deform,y=ct*rr*deform,z=st*Math.sin(a)*rr;
+    const u=x*ca-z*sa;z=x*sa+z*ca;x=u;const v=y*cb-z*sb;z=y*sb+z*cb;y=v;
+    const projection=2.8/(2.8-z*.55),swirl=Math.sin(time*.3+p.phase)*current.gust*R*.06;
+    let px=cx+x*R*projection*(1+.07*Math.sin(time*.17))+current.windX*Math.sin(time*.35)*R*.045+swirl;
+    let py=cy+y*R*projection+current.windY*Math.sin(time*.35)*R*.035;
+    const fall=((p.phase/6.28+time*.19)%1)*h;
+    px=px*(1-rain*.66)+(p.a/6.28*w+current.windX*fall*.16)*rain*.66;py=py*(1-rain*.66)+fall*rain*.66;
+    const dx=px-mouse.x,dy=py-mouse.y,dist=Math.hypot(dx,dy);let tx=0,ty=0;
+    if(dist<130&&dist>1){const f=(1-dist/130)*(mouse.down?-40:32);tx=dx/dist*f;ty=dy/dist*f}
+    if(pulse){const pd=Math.hypot(px-pulse.x,py-pulse.y),age=(performance.now()-pulse.at)/1000,front=age*260;
+      const f=Math.exp(-Math.pow((pd-front)/45,2))*26*Math.max(0,1-age/2);tx+=(px-pulse.x)/Math.max(pd,1)*f;ty+=(py-pulse.y)/Math.max(pd,1)*f;if(age>2)pulse=null}
+    const k=dt?1-Math.exp(-dt*6):1;p.ox+=(tx-p.ox)*k;p.oy+=(ty-p.oy)*k;px+=p.ox;py+=p.oy;
+    const alpha=clamp((skin?.44:.24)+z*.24+.11*Math.sin(p.phase+time*.2),.08,.88);
+    ctx.fillStyle=home?`rgba(235,235,242,${alpha})`:`rgba(151,160,255,${alpha*.95})`;
+    const size=p.size*projection*(skin?1.05:.65);
+    if(rain>.12)ctx.fillRect(px,py,size*.8,.8+rain*(2+p.size*3));else{ctx.beginPath();ctx.arc(px,py,size,0,6.283);ctx.fill()}
+  }
+}
+function interfaceSetup(){
+  const copies={zh:{all:'Selected Works',interactive:'互动装置',space:'空间',exhibition:'展览',ip:'IP设计',other:'',about:'about us'},en:{all:'Selected Works',interactive:'Interactive Installations',space:'Space',exhibition:'Exhibitions',ip:'IP Design',other:'',about:'About us'}};
+  const setLanguage=lang=>{
+    const copy=copies[lang]||copies.zh;document.documentElement.lang=lang==='en'?'en':'zh-CN';
+    Object.assign(LABELS,copy);
+    document.querySelectorAll('[data-home-label]').forEach(el=>el.textContent=copy[el.dataset.homeLabel]);
+    document.querySelectorAll('.nav a[data-type]').forEach(el=>{const text=copy[el.dataset.type];if(el.firstChild.nodeType===Node.TEXT_NODE)el.firstChild.textContent=text+' '});
+    document.querySelectorAll('[data-language]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.language===lang)));
+    try{localStorage.setItem('0086-language',lang)}catch{}route();if(paused)drawFrame(0);
+  };
+  document.querySelectorAll('[data-language]').forEach(b=>b.addEventListener('click',()=>setLanguage(b.dataset.language)));
+  let language='zh';try{language=localStorage.getItem('0086-language')||'zh'}catch{}setLanguage(language);
+  document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.project summary')){e.preventDefault();e.target.click()}});
+  document.addEventListener('pointercancel',()=>{mouse.down=false});
+  window.addEventListener('hashchange',()=>{if(paused)drawFrame(0)});
+  document.documentElement.dataset.designRevision='entrance-geist-glass-v3';
+}
+const config={contentBase:root.href,weatherEndpoint:weather,weatherProvider:'open-meteo'};
+document.getElementById('retry').onclick=()=>location.reload();
+const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),15000);
+fetch(new URL('preview-0086-source.html',root),{signal:controller.signal,cache:'no-cache'})
+.then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.text()})
+.then(html=>{
+  if(!html.includes('SOURCE_ROWS')||!html.includes('state=readRoute();const works'))throw new Error('Preview source mismatch');
+  html=html.replace('<head>','<head><meta name="robots" content="noindex,nofollow"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=Noto+Sans+SC:wght@400&display=swap" rel="stylesheet">'+open+'window.SITE_CONFIG='+JSON.stringify(config)+';'+close);
+  html=html.replace('</head>','<style>'+style+'</style></head>');
+  html=html.replace('<body>','<body data-view="home">');
+  html=html.replace('<div class="shell">',landing+'<div class="shell" hidden>');
+  html=html.replace('<nav class="nav" aria-label="作品分类">','<div class="side-heading">Selected Works</div><nav class="nav" aria-label="作品分类">');
+  html=html.replace('class="brand" href="#/works"','class="brand" href="#/home"').replace('href="#/works" aria-label="0086 Studios 首页"','href="#/home" aria-label="0086 Studios 首页"');
+  html=html.replace("location.hash.slice(1)||'/works'","location.hash.slice(1)||'/home'");
+  html=html.replace("view:['/about','/ai'].includes(path)","view:['/home','/about','/ai'].includes(path)");
+  html=html.replace('state=readRoute();const works',`state=readRoute();const home=state.view==='home';document.body.dataset.view=home?'home':'inside';$('#landing').hidden=!home;$('.shell').hidden=home;$('.return-home').hidden=home;if(home){document.title='0086 Studios™';return;}const works`);
+  html=html.replace(/function resize\(\)\{[\s\S]*?\nfunction drawFrame/,resizeField.toString().replace('resizeField','resize')+'\nfunction drawFrame');
+  html=html.replace(/function drawFrame\(dt\)\{[\s\S]*?\nfunction loop\(now\)/,drawField.toString().replace('drawField','drawFrame')+'\nfunction loop(now)');
+  html=html.replace('</body>',open+'('+interfaceSetup.toString()+')();'+close+'<scr'+'ipt src="assets/preview-0086-music.js" defer>'+close+'</body>');
+  clearTimeout(timeout);document.open();document.write(html);document.close();
+}).catch(error=>{clearTimeout(timeout);const line=document.querySelector('.line');if(line)line.hidden=true;const message=document.getElementById('message');if(message){message.textContent='页面暂时未能载入，请重试。';message.hidden=false;document.getElementById('retry').hidden=false}console.error(error)});
+})();
+</script>
+</body></html>
