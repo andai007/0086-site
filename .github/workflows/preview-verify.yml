@@ -1,0 +1,95 @@
+name: Verify corrected preview
+on:
+  push:
+    branches: [design/flat-weather-20261112]
+    paths: [.github/workflows/preview-verify.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - run: pip install playwright -q
+      - name: Verify and capture
+        run: |
+          python - <<'PY'
+          import json,shutil,os,urllib.request
+          from pathlib import Path
+          from urllib.parse import urlsplit
+          from playwright.sync_api import sync_playwright
+          out=Path('/tmp/0086-verified');out.mkdir(exist_ok=True)
+          raw='https://raw.githubusercontent.com/andai007/0086-site/1491bd9d85f10e1a6e28dbc7dd86d8e05afe55ce/'
+          site='https://andai007.github.io/0086-site/'
+          files={}
+          for name in ['preview-0086.html','preview-0086-source.html','assets/0086-logo.png']:
+            data=urllib.request.urlopen(raw+name,timeout=30).read();files[name]=data
+            path=out/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)
+          errors=[];checks={};screens=[]
+          with sync_playwright() as p:
+            exe=shutil.which('google-chrome') or shutil.which('chromium') or shutil.which('chromium-browser')
+            if not exe: os.system('python -m playwright install chromium --with-deps > /dev/null 2>&1')
+            browser=p.chromium.launch(executable_path=exe,headless=True,args=['--no-sandbox'])
+            page=browser.new_page(viewport={'width':1468,'height':1024},device_scale_factor=1)
+            page.on('pageerror',lambda e:errors.append(str(e)))
+            def serve(route):
+              key=urlsplit(route.request.url).path.lstrip('/')
+              if key in files:
+                route.fulfill(status=200,body=files[key],content_type='image/png' if key.endswith('.png') else 'text/html; charset=utf-8')
+              else:
+                try: route.fulfill(response=route.fetch(url=site+key,timeout=30000))
+                except Exception: route.abort()
+            page.route('http://0086.test/**',serve)
+            page.goto('http://0086.test/preview-0086.html',wait_until='domcontentloaded',timeout=60000)
+            page.wait_for_selector('html[data-design-revision]',timeout=20000)
+            page.wait_for_timeout(2000)
+            page.evaluate('document.fonts.ready')
+            checks['default_home']=page.locator('#landing').is_visible() and not page.locator('.shell').is_visible()
+            checks['font_loaded']=page.evaluate('document.fonts.check(\'18px "Geist Mono"\')')
+            checks['home_buttons']=page.locator('.entry-link').count()
+            checks['home_font']=page.locator('.entry-link').first.evaluate('(e)=>getComputedStyle(e).fontFamily')
+            checks['logo_loaded']=page.locator('.entry-logo').evaluate('(e)=>e.complete&&e.naturalWidth>0')
+            page.screenshot(path=str(out/'0086-home-desktop.png'))
+            page.locator('[data-language=en]').click()
+            checks['english_control']=page.locator('[data-home-label=interactive]').inner_text()=='Interactive Installations'
+            page.screenshot(path=str(out/'0086-home-en.png'))
+            page.locator('[data-home-label=interactive]').click()
+            page.wait_for_selector('.shell:visible')
+            checks['inner_route']=page.evaluate('location.hash')
+            checks['interactive_count']=page.locator('.project').count()
+            checks['glass']=page.locator('.main.glass').evaluate('(e)=>({background:getComputedStyle(e).backgroundColor,blur:getComputedStyle(e).backdropFilter,font:getComputedStyle(e).fontFamily})')
+            page.screenshot(path=str(out/'0086-inside-desktop.png'))
+            page.locator('[data-language=zh]').click()
+            page.locator('.nav [data-type=all]').click()
+            checks['all_count']=page.locator('.project').count()
+            page.locator('.project summary').first.click()
+            page.wait_for_selector('.project[open] .source-content',timeout=20000)
+            checks['project_opens']=page.locator('.project[open]').count()==1
+            page.screenshot(path=str(out/'0086-project-desktop.png'))
+            page.locator('.return-home').click()
+            checks['back_home']=page.locator('#landing').is_visible()
+            page.go_back();page.wait_for_selector('.shell:visible')
+            checks['history_back']=page.locator('.project[open]').count()==1
+            page.locator('.return-home').click()
+            page.set_viewport_size({'width':390,'height':844});page.wait_for_timeout(500)
+            checks['mobile_overflow']=page.evaluate('document.documentElement.scrollWidth>innerWidth')
+            page.screenshot(path=str(out/'0086-home-mobile.png'))
+            page.locator('[data-home-label=interactive]').click();page.wait_for_selector('.shell:visible')
+            page.screenshot(path=str(out/'0086-inside-mobile.png'))
+            checks['mobile_elements']=page.evaluate('''()=>['.side-heading','.secondary','#site-music','.nav','.main'].map(s=>{const e=document.querySelector(s),r=e?.getBoundingClientRect();return {selector:s,x:r?.x,y:r?.y,w:r?.width,h:r?.height}})''')
+            checks['weather_source']=page.evaluate('window.__0086?.weather?.source')
+            checks['errors']=errors
+            print('VERIFICATION',json.dumps(checks,ensure_ascii=False))
+            (out/'verification.json').write_text(json.dumps(checks,ensure_ascii=False,indent=2))
+            browser.close()
+            assert checks['default_home'] and checks['font_loaded'] and checks['logo_loaded']
+            assert checks['interactive_count']==7 and checks['all_count']==21 and checks['project_opens'] and checks['back_home'] and checks['history_back']
+            assert not checks['mobile_overflow'] and not errors
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 0086-preview-verified
+          path: /tmp/0086-verified/
+          retention-days: 2
