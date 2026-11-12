@@ -56,7 +56,7 @@ function interfaceSetup(){
   document.querySelectorAll('[data-language]').forEach(b=>b.addEventListener('click',()=>setLanguage(b.dataset.language)));
   let language='zh';try{language=localStorage.getItem('0086-language')||'zh'}catch{}setLanguage(language);
   document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.project > summary')){e.preventDefault();e.target.click()}});
-  document.documentElement.dataset.designRevision='clean-touch-v12';
+  document.documentElement.dataset.designRevision='clean-perspective-v13';
 }
 const config={contentBase:root.href,weatherEndpoint:weather,weatherProvider:'open-meteo'};
 document.getElementById('retry').onclick=()=>location.reload();
@@ -85,7 +85,7 @@ Promise.all([
   html=html.slice(0,graphicsStart)+html.slice(graphicsEnd);
   html=html.replace('resize();run();route();','route();');
   html=html.replace('current:{...current}','current:{...(window.__0086Field?.weather||current)}');
-  html=html.replace('</body>',open+'('+interfaceSetup.toString()+')();'+close+'<scr'+'ipt src="assets/preview-0086-field-v6.js?v=12" defer>'+close+'<scr'+'ipt src="assets/preview-0086-music-v6.js?v=12" defer>'+close+'</body>');
+  html=html.replace('</body>',open+'('+interfaceSetup.toString()+')();'+close+'<scr'+'ipt src="assets/preview-0086-field-v13.js?v=13" defer>'+close+'<scr'+'ipt src="assets/preview-0086-music-v6.js?v=12" defer>'+close+'</body>');
   clearTimeout(timeout);document.open();document.write(html);document.close();
 }).catch(error=>{clearTimeout(timeout);const line=document.querySelector('.line');if(line)line.hidden=true;const message=document.getElementById('message');if(message){message.textContent='页面暂时未能载入，请重试。';message.hidden=false;document.getElementById('retry').hidden=false}console.error(error)});
 })();

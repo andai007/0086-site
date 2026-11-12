@@ -92,7 +92,7 @@ function setup(){
  for(const n of ['Resolution','Pose','Pointer','Wind','Weather','Hit','Time','Dpr','PointerOn','Level','Home','Touch','TouchPoint'])loc[n]=gl.getUniformLocation(program,'u'+n);
  gl.disable(gl.DEPTH_TEST);gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE);gl.clearColor(.001,.002,.006,1);
 }
-let fallback=null,stars=[];
+let fallback=null,stars=[],viewAt=0;
 const touchPoint={x:999,y:999,z:0};
 const touchRayTarget={x:999,y:999,z:0};
 function resize(){
@@ -108,10 +108,11 @@ function draw(dt){
  clock+=dt*(.6+weather.power*.65);
  const target=window.__0086?.weather?.target;
  if(target){const k=1-Math.exp(-dt/20);for(const key in weather)if(Number.isFinite(target[key]))weather[key]+=(target[key]-weather[key])*k;}
- const follow=1-Math.exp(-dt*(touchMode?3.08:5.8));pose.x+=(pointer.nx-pose.x)*follow;pose.y+=(pointer.ny-pose.y)*follow;
+ const now=performance.now(),viewDt=touchMode&&viewAt?Math.min(.5,Math.max(0,(now-viewAt)/1000)):dt;viewAt=now;
+ const follow=1-Math.exp(-viewDt*(touchMode?3.08:5.8));pose.x+=(pointer.nx-pose.x)*follow;pose.y+=(pointer.ny-pose.y)*follow;
  if(touchMode&&pointer.active){
   projectTouchToWorld();
-  const k=1-Math.exp(-dt*6.3);
+  const k=1-Math.exp(-viewDt*6.3);
   if(touchPoint.x===999){touchPoint.x=touchRayTarget.x;touchPoint.y=touchRayTarget.y;}
   else{touchPoint.x+=(touchRayTarget.x-touchPoint.x)*k;touchPoint.y+=(touchRayTarget.y-touchPoint.y)*k;}
  }
@@ -147,7 +148,7 @@ function draw(dt){
 }
 function frame(now){raf=0;if(document.hidden||reduced.matches||lost)return;const dt=last?Math.min(.05,(now-last)/1000):.016;last=now;draw(dt);raf=requestAnimationFrame(frame);}
 function schedule(){if(!raf&&!document.hidden&&!reduced.matches&&!lost){last=0;raf=requestAnimationFrame(frame);}}
-function halt(){cancelAnimationFrame(raf);raf=0;last=0;}
+function halt(){cancelAnimationFrame(raf);raf=0;last=0;viewAt=0;}
 try{if(gl)setup();else fallback=canvas.getContext('2d',{alpha:false});}catch(e){console.warn('0086 particle shader:',e.message);canvas.dataset.renderError=e.message;return;}
 let touchMode=coarse.matches?1:0,touchId=null,touchMoves=0,touchTaps=0;
 const touchBlocked=el=>el instanceof Element&&!!el.closest('#site-music,#site-language,.return-home,dialog,video,input,textarea,select,[contenteditable="true"]');
