@@ -8,6 +8,7 @@ server=http.server.ThreadingHTTPServer(('127.0.0.1',8765),functools.partial(Quie
 threading.Thread(target=server.serve_forever,daemon=True).start()
 BASE=os.environ.get('PREVIEW_BASE','http://127.0.0.1:8765/')
 def wait(page,expr):page.wait_for_function(expr,timeout=15000)
+def selected(page):wait(page,"getComputedStyle(document.querySelector('.side .nav a.active')).backgroundColor==='rgb(204, 255, 0)'")
 def openpage(page,hash='/home'):
  page.on('pageerror',lambda e:report['errors'].append(str(e)))
  page.goto(BASE+'preview-0086.html?v=12&check='+str(time.time())+'#'+hash,wait_until='domcontentloaded')
@@ -49,11 +50,11 @@ try:
   page.locator('.entry-link').first.tap();wait(page,"__0086.state.view==='works'")
   checks=[]
   for cat in ['all','interactive','space','exhibition','ip']:
-   page.locator('.nav a[data-type='+cat+']').tap();wait(page,"__0086.state.type==='"+cat+"'")
+   page.locator('.nav a[data-type='+cat+']').tap();wait(page,"__0086.state.type==='"+cat+"'");selected(page)
    checks.append(page.evaluate("({category:__0086.state.type,color:getComputedStyle(document.querySelector('.side .nav a.active')).backgroundColor,year:getComputedStyle(document.querySelector('.year.active')).backgroundColor,overflow:document.documentElement.scrollWidth>innerWidth})"))
   report['selected_states']=checks
   assert all(c['color']==c['year']=='rgb(204, 255, 0)' and not c['overflow'] for c in checks)
-  page.locator('.nav a[data-type=all]').tap();wait(page,"__0086.state.type==='all'")
+  page.locator('.nav a[data-type=all]').tap();wait(page,"__0086.state.type==='all'");selected(page)
   assert page.locator('#projects > .project').count()==23
   page.screenshot(path=str(OUT/'mobile-green.png'),full_page=True)
   page.evaluate('window.scrollTo(0,0)');page.wait_for_timeout(100)
@@ -63,7 +64,7 @@ try:
   ctx.close()
 
   desktop=chromium.new_context(viewport={'width':1440,'height':900});dp=desktop.new_page();openpage(dp)
-  dp.locator('.entry-link').first.click();wait(dp,"__0086.state.view==='works'")
+  dp.locator('.entry-link').first.click();wait(dp,"__0086.state.view==='works'");selected(dp)
   wait(dp,"__0086Music.contextState==='running'")
   try:dp.wait_for_function('__0086Music.playing&&__0086Music.audioTime>1',timeout=30000);report['real_radio_playback']=True
   except Exception:report['real_radio_playback']=False
@@ -86,8 +87,7 @@ try:
   ip.touchscreen.tap(46,160);wait(ip,"__0086Field.touch.taps>=1 && __0086Music.contextState==='running' && __0086Music.beats>=1")
   report['webkit_first_tap']=ip.evaluate('({touch:__0086Field.touch,context:__0086Music.contextState,beats:__0086Music.beats,mode:__0086Music.mode,renderer:__0086Field.renderer})')
   ip.locator('#sound-toggle').tap();ip.touchscreen.tap(55,180);assert ip.evaluate("__0086Music.status==='off'")
-  ip.locator('.entry-link').first.tap();wait(ip,"__0086.state.view==='works'")
-  assert ip.evaluate("getComputedStyle(document.querySelector('.nav a.active')).backgroundColor==='rgb(204, 255, 0)'")
+  ip.locator('.entry-link').first.tap();wait(ip,"__0086.state.view==='works'");selected(ip)
   ip.screenshot(path=str(OUT/'iphone-green.png'));ios.close();wk.close()
  assert report['silent_on_load'] and not report['errors'],report['errors']
  report['passed']=True
