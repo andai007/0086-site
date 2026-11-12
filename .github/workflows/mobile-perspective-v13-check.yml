@@ -1,0 +1,113 @@
+name: Verify perspective touch v13
+on:
+  push:
+    branches: [fix/mobile-touch-green-v12]
+    paths: [.github/workflows/mobile-perspective-v13-check.yml]
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/mobile-touch-green-v12
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /preview-0086.html
+            /preview-0086-source.html
+            /assets/preview-0086-field-v13.js
+            /assets/preview-0086-field-v6.js
+            /assets/preview-0086-music-v6.js
+            /assets/preview-0086-layout-v4.css
+            /assets/preview-0086-light-v6.css
+            /assets/preview-catalogue-v10.json
+            /assets/preview-catalogue-v10.css
+            /assets/0086-logo.png
+            /assets/external-media-config.js
+      - name: Prepare browser engines and candidate
+        run: |
+          pip install playwright -q
+          python -m playwright install chromium webkit --with-deps >/dev/null
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          preserved=['assets/preview-0086-music-v6.js','assets/preview-0086-field-v6.js','preview-0086-source.html','assets/preview-catalogue-v10.json','assets/preview-0086-layout-v4.css','assets/preview-0086-light-v6.css']
+          Path('/tmp/preserved.json').write_text(json.dumps({f:hashlib.sha256(Path(f).read_bytes()).hexdigest() for f in preserved}))
+          p=Path('preview-0086.html');s=p.read_text();assert 'clean-touch-v12' in s
+          s=s.replace('clean-touch-v12','clean-perspective-v13').replace('assets/preview-0086-field-v6.js?v=12','assets/preview-0086-field-v13.js?v=13')
+          assert 'field-v13.js?v=13' in s;p.write_text(s)
+          PY
+          node --check assets/preview-0086-field-v13.js
+      - name: Verify actual gesture behavior
+        run: |
+          mkdir -p /tmp/v13-check
+          cat > /tmp/check.py <<'PY'
+          import json,time,threading,http.server,functools,pathlib,hashlib,math
+          from playwright.sync_api import sync_playwright
+          out=pathlib.Path('/tmp/v13-check');report={'scope':'Chromium Android and WebKit iPhone emulation, not physical devices','errors':[]}
+          class Quiet(http.server.SimpleHTTPRequestHandler):
+            def log_message(self,*a):pass
+          server=http.server.ThreadingHTTPServer(('127.0.0.1',8123),functools.partial(Quiet,directory=str(pathlib.Path.cwd())))
+          threading.Thread(target=server.serve_forever,daemon=True).start()
+          url='http://127.0.0.1:8123/preview-0086.html#/home'
+          def state(page):return page.evaluate('({cam:__0086Field.camera,target:__0086Field.targetCamera,touch:__0086Field.touch,mode:__0086Field.interaction,point:__0086Field.touchPoint,overlay:!!document.getElementById("field-touch-feedback"),beats:__0086Music.beats})')
+          try:
+            with sync_playwright() as p:
+              b=p.chromium.launch();ctx=b.new_context(viewport={'width':390,'height':844},device_scale_factor=2,is_mobile=True,has_touch=True,record_video_dir=str(out/'video'),record_video_size={'width':390,'height':844})
+              page=ctx.new_page();page.on('pageerror',lambda e:report['errors'].append(str(e)))
+              page.goto(url,wait_until='domcontentloaded');page.wait_for_function('window.__0086Field?.frames>5',timeout=25000)
+              report['initial']=state(page);page.screenshot(path=str(out/'home-mobile.png'))
+              cd=ctx.new_cdp_session(page)
+              def touch(kind,x=None,y=None):cd.send('Input.dispatchTouchEvent',{'type':kind,'touchPoints':[] if x is None else [{'x':x,'y':y,'id':1}]})
+              touch('touchStart',55,235);page.wait_for_timeout(450);page.screenshot(path=str(out/'touch-left.png'));touch('touchEnd')
+              page.wait_for_function('__0086Music.beats>0',timeout=10000)
+              touch('touchStart',75,405)
+              for i in range(1,19):touch('touchMove',75+14*i,405);page.wait_for_timeout(22)
+              report['release']=state(page);touch('touchEnd');page.wait_for_timeout(220);report['after_220ms']=state(page)
+              page.screenshot(path=str(out/'touch-right.png'));page.wait_for_timeout(1500);report['settled']=state(page)
+              page.screenshot(path=str(out/'released.png'))
+              t=report['release']['target']['x'];assert t>.6
+              assert abs(report['after_220ms']['cam']['x']-t)<abs(report['release']['cam']['x']-t)
+              assert abs(report['settled']['cam']['x']-t)<.03 and report['settled']['cam']['x']>.6
+              assert not report['settled']['overlay'] and report['settled']['touch']['ripples']==0
+              page.evaluate("location.hash='#/works'");page.wait_for_function("document.querySelectorAll('#projects>.project').length===23")
+              assert abs(page.evaluate('__0086Field.targetCamera.x')-t)<.001
+              page.wait_for_timeout(400);page.screenshot(path=str(out/'works-mobile.png'))
+              touch('touchStart',200,720)
+              for i in range(1,14):touch('touchMove',200,720-i*30);page.wait_for_timeout(22)
+              touch('touchEnd');page.wait_for_timeout(400);report['scrollY']=page.evaluate('scrollY');assert report['scrollY']>50
+              report['catalogue']=page.evaluate('({count:__0086Catalogue.projects.length,green:getComputedStyle(document.querySelector(".nav a.active")).backgroundColor,overflow:document.documentElement.scrollWidth>innerWidth})')
+              assert report['catalogue']['green']=='rgb(204, 255, 0)' and not report['catalogue']['overflow']
+              report['audio']=page.evaluate('({title:__0086Music.title,playing:__0086Music.playing,time:__0086Music.audioTime,beats:__0086Music.beats})')
+              page.locator('#sound-toggle').click();beat=page.evaluate('__0086Music.beats');page.touchscreen.tap(40,500);page.wait_for_timeout(300)
+              assert page.evaluate('__0086Music.beats')==beat and page.evaluate('__0086Music.status')=='off'
+              ctx.close();b.close()
+              desk=p.chromium.launch();page=desk.new_page(viewport={'width':1440,'height':900});page.goto(url,wait_until='domcontentloaded');page.wait_for_function('window.__0086Field?.frames>3')
+              page.mouse.move(1100,700);page.wait_for_timeout(300);report['desktop']=state(page);assert report['desktop']['mode']=='desktop-pointer'
+              page.screenshot(path=str(out/'desktop-unchanged.png'));desk.close()
+              wk=p.webkit.launch();ic=wk.new_context(**p.devices['iPhone 13']);ip=ic.new_page();ip.on('pageerror',lambda e:report['errors'].append(str(e)));ip.goto(url,wait_until='domcontentloaded');ip.wait_for_function('window.__0086Field?.frames>3',timeout=25000)
+              ip.touchscreen.tap(320,235);ip.wait_for_timeout(1200);report['iphone']=state(ip);assert report['iphone']['mode']=='perspective-touch' and report['iphone']['cam']['x']>.5 and not report['iphone']['overlay']
+              ip.screenshot(path=str(out/'iphone-touch.png'));ic.close();wk.close()
+              rb=p.chromium.launch();rp=rb.new_page(viewport={'width':390,'height':844},is_mobile=True,has_touch=True,reduced_motion='reduce');rp.goto(url,wait_until='domcontentloaded');rp.wait_for_function('window.__0086Field');f=rp.evaluate('__0086Field.frames');rp.touchscreen.tap(320,220);rp.wait_for_timeout(300);assert rp.evaluate('__0086Field.frames')==f;rb.close()
+            original=json.loads(pathlib.Path('/tmp/preserved.json').read_text());report['preserved']={f:hashlib.sha256(pathlib.Path(f).read_bytes()).hexdigest()==h for f,h in original.items()};assert all(report['preserved'].values())
+            assert not report['errors'];report['passed']=True
+          finally:
+            (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False,indent=2));server.shutdown()
+          PY
+          python /tmp/check.py
+      - name: Save verified candidate only
+        run: |
+          git config user.name '0086 preview checks'
+          git config user.email '90237714+andai007@users.noreply.github.com'
+          git add --sparse preview-0086.html
+          git commit -m 'Use verified mobile perspective renderer; preserve approved music and desktop layout'
+          git push origin HEAD:fix/mobile-touch-green-v12
+          git ls-tree HEAD preview-0086.html assets/preview-0086-field-v13.js
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-perspective-v13-verified
+          path: /tmp/v13-check
+          retention-days: 3
