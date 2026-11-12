@@ -14,9 +14,20 @@
 const root=new URL('./',location.href);
 const open='<scr'+'ipt>',close='</scr'+'ipt>';
 const weather='https://api.open-meteo.com/v1/forecast?latitude=22.5431&longitude=114.0579&current=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,is_day,wind_speed_10m,wind_direction_10m,wind_gusts_10m&wind_speed_unit=ms&timezone=Asia%2FShanghai';
+const returnStyles=`
+/* Only the return control: preserve existing typography, layout and audio. */
+.return-home{display:inline-flex;align-items:center;justify-content:center;gap:7px;top:13px;right:24px;height:28px;min-width:0;width:auto;padding:6px 0;border:0;background:transparent;box-shadow:none;color:#b7b7c6;font:400 10.56px/15.84px var(--mono);letter-spacing:.06em;text-decoration:none;white-space:nowrap;text-transform:none;transition:color .15s}
+.return-home svg{display:block;flex:0 0 12px;width:12px;height:12px;pointer-events:none}
+.return-home .return-label{display:block;white-space:nowrap}
+.return-home::before{content:'';position:absolute;inset:-8px 0}
+.return-home:hover,.return-home:active{color:#fff;background:transparent;border:0;box-shadow:none}
+.return-home:focus-visible{outline:1px solid rgba(255,255,255,.7);outline-offset:5px}
+@media(max-width:560px){.return-home{right:16px}}
+@media(prefers-reduced-motion:reduce){.return-home{transition:none}}
+`;
 const landing=`
 <nav id="site-language" class="site-language" aria-label="Language"><button type="button" data-language="zh" aria-pressed="true">中文</button><button type="button" data-language="en" aria-pressed="false">EN</button></nav>
-<a class="return-home" href="#/home" hidden>← BACK</a>
+<a class="return-home" href="#/home" aria-label="返回首页" hidden><svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><path d="M13 8H3m5-5L3 8l5 5" stroke="currentColor" stroke-width="1.35" stroke-linecap="square" stroke-linejoin="miter"/></svg><span class="return-label">首页</span></a>
 <main class="entry" id="landing" aria-label="0086 Studios"><div class="entry-content">
 <img class="entry-logo" src="assets/0086-logo.png" width="604" height="211" alt="0086 Studios">
 <p class="entry-description">AI-DRIVEN CREATIVE LAB<br>SHENZHEN, CHINA</p>
@@ -34,6 +45,9 @@ function interfaceSetup(){
   const setLanguage=lang=>{
     const copy=copies[lang]||copies.zh;document.documentElement.lang=lang==='en'?'en':'zh-CN';
     Object.assign(LABELS,copy);
+    const homeLink=document.querySelector('.return-home');
+    homeLink.querySelector('.return-label').textContent=lang==='en'?'HOME':'首页';
+    homeLink.setAttribute('aria-label',lang==='en'?'Back to home':'返回首页');
     document.querySelectorAll('[data-home-label]').forEach(el=>el.textContent=copy[el.dataset.homeLabel]);
     document.querySelectorAll('.nav a[data-type]').forEach(el=>{const text=copy[el.dataset.type];if(el.firstChild.nodeType===Node.TEXT_NODE)el.firstChild.textContent=text+' '});
     document.querySelectorAll('[data-language]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.language===lang)));
@@ -42,7 +56,7 @@ function interfaceSetup(){
   document.querySelectorAll('[data-language]').forEach(b=>b.addEventListener('click',()=>setLanguage(b.dataset.language)));
   let language='zh';try{language=localStorage.getItem('0086-language')||'zh'}catch{}setLanguage(language);
   document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.project > summary')){e.preventDefault();e.target.click()}});
-  document.documentElement.dataset.designRevision='clean-catalogue-v10';
+  document.documentElement.dataset.designRevision='clean-return-v11';
 }
 const config={contentBase:root.href,weatherEndpoint:weather,weatherProvider:'open-meteo'};
 document.getElementById('retry').onclick=()=>location.reload();
@@ -56,6 +70,7 @@ Promise.all([
   html=html.replace('<head>','<head><meta name="robots" content="noindex,nofollow"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=Noto+Sans+SC:wght@400&display=swap" rel="stylesheet">'+open+'window.SITE_CONFIG='+JSON.stringify(config)+';window.__0086Catalogue='+JSON.stringify(catalogue).replace(/</g,'\\u003c')+';'+close);
   html=html.replace('</head>','<link rel="stylesheet" href="assets/preview-catalogue-v10.css?v=10"></head>');
   html=html.replace('</head>','<link rel="stylesheet" href="assets/preview-0086-layout-v4.css?v=4"><link rel="stylesheet" href="assets/preview-0086-light-v6.css?v=7"><style id="language-neutral">.site-language{border-color:rgba(255,255,255,.25)}.site-language button[aria-pressed=true]{background:rgba(255,255,255,.1);color:#fff}</style></head>');
+  html=html.replace('</head>','<style id="return-home-clean">'+returnStyles+'</style></head>');
   html=html.replace(/<button\b[^>]*\bdata-motion\b[^>]*>[\s\S]*?<\/button>/g,'');
   html=html.replace('<body>','<body data-view="home">');
   html=html.replace('<div class="shell">',landing+'<div class="shell" hidden>');
