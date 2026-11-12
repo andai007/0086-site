@@ -1,0 +1,94 @@
+name: Verify clean preview v8
+on:
+  push:
+    branches: [design/flat-weather-20261112]
+    paths: [.github/workflows/preview-clean-v8-check.yml]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Prepare browser
+        run: |
+          pip install playwright -q
+          python -m playwright install chromium --with-deps >/dev/null
+      - name: Verify published clean layout and preserved interactions
+        run: |
+          mkdir -p /tmp/0086-clean-v8
+          python - <<'PY'
+          import json,time,pathlib,urllib.request
+          from playwright.sync_api import sync_playwright
+          out=pathlib.Path('/tmp/0086-clean-v8');report={}
+          base='https://andai007.github.io/0086-site/'
+          deadline=time.monotonic()+250
+          while True:
+            try:
+              text=urllib.request.urlopen(base+'preview-0086.html?check='+str(time.time()),timeout=12).read().decode()
+              if 'clean-luminous-v8' in text:break
+            except Exception as e:print(str(e),flush=True)
+            if time.monotonic()>deadline:raise RuntimeError('Updated preview not yet published')
+            time.sleep(10)
+          try:
+            with sync_playwright() as p:
+              browser=p.chromium.launch()
+              page=browser.new_page(viewport={'width':1440,'height':900},device_scale_factor=1)
+              errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
+              page.goto(base+'preview-0086.html?v=8&check='+str(time.time())+'#/home',wait_until='domcontentloaded')
+              page.wait_for_function("document.documentElement.dataset.designRevision==='clean-luminous-v8' && window.__0086Field && window.__0086Music",timeout=30000)
+              page.evaluate('document.fonts.ready')
+              report['no_eva_home']=page.evaluate("!window.__0086EVA && !document.querySelector('#eva-overlay,.eva-scan,[data-eva-index]') && !Array.from(document.querySelectorAll('script,link')).some(e=>(e.src||e.href||'').includes('eva-v7'))")
+              report['retained_scripts']=page.evaluate("Array.from(document.scripts).map(e=>e.src).filter(s=>/field-v6|music-v6/.test(s))")
+              report['quiet_on_load']=page.evaluate('!__0086Music.playing')
+              page.mouse.move(80,400);page.wait_for_timeout(700)
+              camera1=page.evaluate('window.__0086Field.camera')
+              page.mouse.move(1350,500);page.wait_for_timeout(700)
+              camera2=page.evaluate('window.__0086Field.camera')
+              report['pointer_camera_changes']=camera1!=camera2
+              page.mouse.move(720,850);page.wait_for_timeout(500)
+              page.screenshot(path=str(out/'home.png'))
+              page.locator('.entry-link').first.click()
+              page.wait_for_function("document.body.dataset.view==='inside' && document.querySelectorAll('.project').length>0",timeout=15000)
+              report['no_eva_inside']=page.evaluate("!document.querySelector('#eva-overlay,.eva-scan,[data-eva-index]')")
+              report['glass']=page.evaluate("({background:getComputedStyle(document.querySelector('.main.glass')).backgroundColor,blur:getComputedStyle(document.querySelector('.main.glass')).backdropFilter})")
+              try:
+                page.wait_for_function('__0086Music.playing && __0086Music.audioTime>2',timeout=20000)
+                report['radio_playing']=True
+              except Exception as e:
+                report['radio_playing']=False;report['radio_state']=page.evaluate('__0086Music.status')
+              beats=page.evaluate('__0086Music.beats')
+              for x,y in [(80,600),(1100,440),(180,690),(1280,570)]:
+                page.mouse.move(x,y,steps=15);page.wait_for_timeout(430)
+              report['pointer_beats']=page.evaluate('__0086Music.beats')>beats
+              t=page.evaluate('__0086Music.audioTime')
+              page.locator('.nav a[data-type=all]').click();page.wait_for_timeout(1100)
+              report['music_continues']=page.evaluate('__0086Music.playing && __0086Music.audioTime>'+str(t))
+              page.screenshot(path=str(out/'works.png'))
+              page.locator('#sound-toggle').click()
+              report['mute']=page.evaluate('!__0086Music.playing')
+              muted_beats=page.evaluate('__0086Music.beats')
+              page.mouse.move(50,550,steps=20);page.wait_for_timeout(500)
+              page.mouse.move(1250,650,steps=20);page.wait_for_timeout(500)
+              report['mute_stops_beats']=page.evaluate('__0086Music.beats')==muted_beats
+              responsive=[]
+              for width in [320,390,768,1440]:
+                page.set_viewport_size({'width':width,'height':844})
+                for language in ['zh','en']:
+                  page.locator('[data-language='+language+']').click()
+                  responsive.append(page.evaluate("({width:innerWidth,lang:document.documentElement.lang,overflow:document.documentElement.scrollWidth>innerWidth})"))
+              report['responsive']=responsive;report['errors']=errors
+              assert report['no_eva_home'] and report['no_eva_inside'] and report['pointer_camera_changes']
+              assert report['pointer_beats'] and report['mute'] and report['mute_stops_beats']
+              assert not errors and not any(x['overflow'] for x in responsive)
+              browser.close()
+          finally:
+            (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+            print(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 0086-clean-v8-verified
+          path: /tmp/0086-clean-v8
+          retention-days: 2
