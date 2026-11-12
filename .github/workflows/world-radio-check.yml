@@ -1,0 +1,66 @@
+name: Verify world radio playback
+on:
+  push:
+    branches: [design/flat-weather-20261112]
+    paths: [.github/workflows/world-radio-check.yml]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Browser setup
+        run: |
+          pip install playwright -q
+          python -m playwright install chromium --with-deps >/dev/null
+      - name: Real audio playback and navigation
+        run: |
+          mkdir -p /tmp/world-radio
+          python - <<'PY'
+          import json,urllib.request,pathlib
+          from playwright.sync_api import sync_playwright
+          out=pathlib.Path('/tmp/world-radio');report={}
+          js=urllib.request.urlopen('https://raw.githubusercontent.com/andai007/0086-site/0cbad4d0d021368179040ce17397621207e8c136/assets/preview-0086-world-radio-v5.js',timeout=20).read().decode()
+          try:
+            with sync_playwright() as p:
+              b=p.chromium.launch();page=b.new_page(viewport={'width':1440,'height':900})
+              errors=[];network=[]
+              page.on('pageerror',lambda e:errors.append(str(e)))
+              page.on('response',lambda r:network.append({'url':r.url,'status':r.status}) if ('radio-browser.info' in r.url or 'icecast.radiofrance.fr' in r.url) else None)
+              page.route('**/assets/preview-0086-music.js*',lambda r:r.fulfill(status=200,content_type='text/javascript',body=js))
+              page.goto('https://andai007.github.io/0086-site/preview-0086.html?radio-check=5#/home',wait_until='domcontentloaded')
+              page.wait_for_function("window.__0086Music?.mode==='world-radio'",timeout=30000)
+              report['silent_on_load']=page.evaluate("!document.querySelector('audio').getAttribute('src')")
+              page.locator('.entry-link').first.click()
+              page.wait_for_function('window.__0086Music.playing && __0086Music.audioTime>3',timeout=40000)
+              before=page.evaluate("({time:__0086Music.audioTime,src:__0086Music.stream})")
+              page.locator('.nav a[data-type=space]').click();page.wait_for_timeout(2000)
+              after=page.evaluate("({time:__0086Music.audioTime,src:__0086Music.stream,playing:__0086Music.playing,volume:document.querySelector('audio').volume,catalogue:__0086Music.catalogue})")
+              report['playback']=after;report['continuous']=after['time']>before['time'] and before['src']==after['src']
+              page.wait_for_function("__0086Music.catalogue!=='pending'",timeout=20000)
+              report['catalogue']=page.evaluate('__0086Music.catalogue')
+              page.locator('#sound-toggle').click();report['muted']=page.evaluate("!document.querySelector('audio').getAttribute('src') && !__0086Music.playing")
+              checks=[]
+              for width in [320,390,768,1440]:
+                page.set_viewport_size({'width':width,'height':844})
+                for lang in ['zh','en']:
+                  page.locator('[data-language='+lang+']').click()
+                  checks.append(page.evaluate('''()=>{const rect=s=>document.querySelector(s).getBoundingClientRect();const a=rect('#site-music');const overlap=['.site-language','.return-home'].some(s=>{const b=rect(s);return Math.min(a.right,b.right)>Math.max(a.left,b.left)&&Math.min(a.bottom,b.bottom)>Math.max(a.top,b.top)});return {width:innerWidth,lang:document.documentElement.lang,overlap,overflow:document.documentElement.scrollWidth>innerWidth}}'''))
+              report['layout']=checks;report['errors']=errors;report['network']=network
+              page.screenshot(path=str(out/'world-radio.png'))
+              assert report['silent_on_load'] and report['continuous'] and report['muted']
+              assert not errors and not any(x['overlap'] or x['overflow'] for x in checks)
+              b.close()
+          except Exception as e:
+            report['failure']=str(e)
+            raise
+          finally:
+            (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: world-radio-check
+          path: /tmp/world-radio
+          retention-days: 2
