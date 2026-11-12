@@ -37,6 +37,14 @@ jobs:
           python scripts/patch_touch_green_v12.py
           node --check assets/preview-0086-field-v6.js
           node --check assets/preview-0086-music-v6.js
+      - name: Add diagnostic capture for WebKit
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/check_touch_green_v12.py');s=p.read_text()
+          s=s.replace("  ip.touchscreen.tap(46,160);wait(ip,", "  ip.evaluate(\"window.__touchTrace=[]; for(const n of ['touchstart','touchend','click','pointerdown','pointerup'])document.addEventListener(n,e=>__touchTrace.push({type:e.type,trusted:e.isTrusted,target:e.target.tagName,active:navigator.userActivation?.isActive}),true)\")\n  ip.on('console',lambda m:print('WEBKIT CONSOLE',m.type,m.text,flush=True))\n  ip.touchscreen.tap(46,160);ip.wait_for_timeout(300)\n  report['webkit_diagnostic']=ip.evaluate(\"({touch:__0086Field.touch,context:__0086Music.contextState,beats:__0086Music.beats,status:__0086Music.status,events:__touchTrace,src:document.querySelector('audio').currentSrc,error:document.querySelector('audio').error?.message,gesture:navigator.userActivation?.hasBeenActive})\"); print('WEBKIT DIAGNOSTIC',report['webkit_diagnostic'],flush=True)\n  wait(ip,")
+          p.write_text(s)
+          PY
       - name: Verify Android and iPhone touch emulation and unchanged desktop
         run: python scripts/check_touch_green_v12.py
       - name: Save verified changes to review branch only
