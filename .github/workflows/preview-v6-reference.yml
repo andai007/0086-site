@@ -1,0 +1,70 @@
+name: Inspect pointer reference v6
+on:
+  push:
+    branches: [design/flat-weather-20261112]
+    paths: [.github/workflows/preview-v6-reference.yml]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Browser tools
+        run: |
+          pip install playwright -q
+          python -m playwright install chromium --with-deps >/dev/null
+      - name: Inspect reference and public audio
+        run: |
+          mkdir -p /tmp/0086-v6/source/assets /tmp/0086-v6/reference
+          python - <<'PY'
+          import json,pathlib,urllib.request,re
+          from concurrent.futures import ThreadPoolExecutor
+          from playwright.sync_api import sync_playwright
+          out=pathlib.Path('/tmp/0086-v6')
+          def download(path):
+            url='https://raw.githubusercontent.com/andai007/0086-site/main/'+path
+            data=urllib.request.urlopen(url,timeout=25).read()
+            (out/'source'/path).write_bytes(data)
+          files=['preview-0086.html','preview-0086-source.html','assets/preview-0086-layout-v4.css','assets/preview-0086-music.js','assets/0086-logo.png','assets/external-media-config.js']
+          list(ThreadPoolExecutor(max_workers=6).map(download,files))
+          report={}
+          with sync_playwright() as p:
+            browser=p.chromium.launch()
+            page=browser.new_page(viewport={'width':1440,'height':1000})
+            scripts=[]
+            def collect(r):
+              if '.js' in r.url and 'flatfestival.org' in r.url:
+                try:
+                  text=r.text();i=len(scripts);(out/'reference'/('bundle-'+str(i)+'.js')).write_text(text);scripts.append(r.url)
+                except:pass
+            page.on('response',collect)
+            page.goto('https://www.flatfestival.org/#inscripciones',wait_until='domcontentloaded',timeout=35000)
+            page.wait_for_timeout(1500)
+            report['url']=page.url
+            report['dom']=page.evaluate('''()=>({bodyCursor:getComputedStyle(document.body).cursor, canvases:[...document.querySelectorAll('canvas')].map(x=>({id:x.id,cls:x.className,width:x.width,height:x.height})), cursorElements:[...document.querySelectorAll('[class*="cursor"],[id*="cursor"]')].map(x=>({tag:x.tagName,cls:x.className,id:x.id,html:x.outerHTML.slice(0,600)}))})''')
+            page.mouse.move(300,300);page.wait_for_timeout(500);page.screenshot(path=str(out/'reference/left.png'))
+            page.mouse.move(1100,600,steps=20);page.wait_for_timeout(500);page.screenshot(path=str(out/'reference/right.png'))
+            report['scripts']=scripts
+            excerpts=[]
+            for i,url in enumerate(scripts):
+              text=(out/'reference'/('bundle-'+str(i)+'.js')).read_text()
+              for term in ['pointermove','mousemove','cursor','mousePosition','mouseX','mouseY']:
+                for m in list(re.finditer(re.escape(term),text))[:18]:
+                  excerpts.append({'url':url,'term':term,'text':text[max(0,m.start()-160):m.end()+350]})
+            report['excerpts']=excerpts
+            browser.close()
+          try:
+            req=urllib.request.Request('https://icecast.radiofrance.fr/fipelectro-midfi.mp3?id=openapi',headers={'Origin':'https://andai007.github.io'})
+            with urllib.request.urlopen(req,timeout=20) as r:
+              report['electro']={'status':r.status,'content-type':r.headers.get('Content-Type'),'cors':r.headers.get('Access-Control-Allow-Origin'),'bytes':len(r.read(2048))}
+          except Exception as e: report['electro']={'error':str(e)}
+          (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+          print(json.dumps({'dom':report.get('dom'),'electro':report.get('electro'),'excerpts':excerpts[-24:]},ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 0086-v6-reference
+          path: /tmp/0086-v6
+          retention-days: 2
