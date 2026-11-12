@@ -1,0 +1,77 @@
+name: Confirm published mobile feedback v14
+on:
+  push:
+    branches: [fix/mobile-real-feedback-v14]
+    paths: [.github/workflows/mobile-feedback-v14-live.yml]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Prepare browser
+        run: |
+          pip install playwright pillow numpy -q
+          python -m playwright install webkit --with-deps >/dev/null
+      - name: Verify published page and touch rendering
+        run: |
+          mkdir -p /tmp/mobile-v14-live
+          python - <<'PY'
+          import urllib.request,time,hashlib,json,pathlib,io
+          import numpy as np
+          from PIL import Image
+          from playwright.sync_api import sync_playwright
+          out=pathlib.Path('/tmp/mobile-v14-live');report={'scope':'Published page, WebKit mobile emulation; not a physical phone'}
+          base='https://andai007.github.io/0086-site/'
+          commit='fb02d2b309377fa426ede4f726404c510b9c3136'
+          files=['preview-mobile-v14.html','preview-0086.html','assets/preview-0086-field-v14.js']
+          def get(url):
+            req=urllib.request.Request(url,headers={'Cache-Control':'no-cache'})
+            return urllib.request.urlopen(req,timeout=15).read()
+          expected={f:hashlib.sha256(get('https://raw.githubusercontent.com/andai007/0086-site/'+commit+'/'+f)).hexdigest() for f in files}
+          deadline=time.monotonic()+260
+          while True:
+            try:
+              actual={f:hashlib.sha256(get(base+f+'?check='+str(time.time()))).hexdigest() for f in files}
+              if actual==expected:break
+            except Exception:pass
+            if time.monotonic()>deadline:raise RuntimeError('Published version has not matched verified source yet')
+            time.sleep(6)
+          report['published_files_match']=True
+          try:
+            with sync_playwright() as p:
+              b=p.webkit.launch();report['tests']=[]
+              for quiet in [False,True]:
+                ctx=b.new_context(**p.devices['iPhone 13'],reduced_motion='reduce' if quiet else 'no-preference')
+                page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
+                page.goto(base+'preview-mobile-v14.html#/home',wait_until='domcontentloaded')
+                page.wait_for_function('window.__0086Field?.version===14',timeout=25000)
+                page.wait_for_timeout(600)
+                before=page.screenshot();frames=page.evaluate('__0086Field.frames')
+                page.touchscreen.tap(380,400);page.wait_for_timeout(800)
+                after=page.screenshot()
+                a=np.asarray(Image.open(io.BytesIO(before)).convert('RGB'),dtype=np.int16)
+                z=np.asarray(Image.open(io.BytesIO(after)).convert('RGB'),dtype=np.int16)
+                # Exclude the header/audio status; compare the particle/content region.
+                scale=a.shape[1]/390;crop=slice(int(250*scale),min(a.shape[0],int(580*scale)))
+                changed=int(np.count_nonzero(np.abs(a[crop]-z[crop]).max(axis=2)>5))
+                state=page.evaluate('({frames:__0086Field.frames,camera:__0086Field.camera,taps:__0086Field.touch.taps,version:__0086Field.version,renderer:__0086Field.renderer,reduced:__0086Field.reducedMotion,revision:document.documentElement.dataset.designRevision,count:__0086Catalogue.projects.length})')
+                assert state['taps']>=1 and state['frames']>frames and changed>100 and not errors
+                if quiet:assert state['camera']=={'x':0,'y':0}
+                else:assert state['camera']['x']>.6
+                assert state['count']==23
+                report['tests'].append({'quiet':quiet,'state':state,'changed_pixels':changed,'errors':errors})
+                (out/('live-quiet-'+str(quiet)+'.png')).write_bytes(after)
+                ctx.close()
+              b.close()
+            report['passed']=True
+          finally:
+            (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-feedback-v14-live
+          path: /tmp/mobile-v14-live
+          retention-days: 3
