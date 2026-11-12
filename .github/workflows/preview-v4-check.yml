@@ -1,0 +1,83 @@
+name: Verify compact preview v4
+on:
+  push:
+    paths:
+      - .github/workflows/preview-v4-check.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Install browser inspector
+        run: |
+          pip install playwright -q
+          python -m playwright install --with-deps chromium
+      - name: Verify published preview
+        run: |
+          mkdir -p report
+          python - <<'PY'
+          import json, time, urllib.request
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          url='https://andai007.github.io/0086-site/preview-0086.html?v=4-check'
+          ready=False
+          for attempt in range(24):
+              try:
+                  with urllib.request.urlopen(url+'&t='+str(int(time.time())),timeout=20) as r: html=r.read().decode()
+                  if 'preview-0086-layout-v4.css' in html: ready=True;break
+              except Exception: pass
+              time.sleep(8)
+          assert ready, 'New preview was not published during this check'
+          with sync_playwright() as p:
+              browser=p.chromium.launch(headless=True)
+              page=browser.new_page(viewport={'width':1440,'height':900},device_scale_factor=1)
+              errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
+              page.goto(url,wait_until='domcontentloaded')
+              page.wait_for_function('document.documentElement.dataset.designRevision === "compact-flat-v4"')
+              page.wait_for_function('Boolean(window.__0086Music)')
+              page.evaluate('document.fonts.ready')
+              page.wait_for_timeout(800)
+              assert page.evaluate('document.fonts.check(\'18px "Geist Mono"\')'), 'Geist Mono not loaded'
+              assert page.locator('[data-motion]').count()==0
+              page.screenshot(path='report/home-desktop.png')
+              page.locator('.entry-link').first.click()
+              page.wait_for_function('__0086Music.playing')
+              audio=page.evaluate('({mode:__0086Music.mode,playing:__0086Music.playing,time:__0086Music.audioTime})')
+              assert audio['mode']=='original-synthesis'
+              assert page.locator('iframe').count()==0
+              page.locator('#sound-toggle').click()
+              page.wait_for_function('!__0086Music.playing')
+              page.locator('.nav [data-type="all"]').click()
+              page.wait_for_function('document.querySelectorAll(".project").length===21')
+              page.screenshot(path='report/works-desktop.png')
+              page.locator('[data-year="2023"]').click()
+              page.wait_for_function('document.querySelectorAll(".project").length===3')
+              page.locator('[data-year="all"]').click()
+              sizes=[]
+              for w,h in [(1440,900),(1200,800),(1024,768),(960,640),(768,1024),(560,800),(390,844),(320,640),(1440,480)]:
+                  page.set_viewport_size({'width':w,'height':h})
+                  page.wait_for_timeout(100)
+                  record=page.evaluate('''()=>({width:innerWidth,height:innerHeight,overflow:document.documentElement.scrollWidth>innerWidth+1,clipped:[...document.querySelectorAll('.nav a,.year,.project summary,.pname,h1,.side-panel')].filter(e=>e.getClientRects().length&&(e.scrollWidth>e.clientWidth+2||e.getBoundingClientRect().left<0||e.getBoundingClientRect().right>innerWidth+1)).map(e=>e.className),fonts:Object.fromEntries(['.entry-link','h1','.pname','.nav a','.ptype','.year-number'].map(s=>[s,getComputedStyle(document.querySelector(s)).fontSize])),yearHeight:document.querySelector('.year').getBoundingClientRect().height,inset:document.querySelector('.main-head').getBoundingClientRect().x-document.querySelector('.main').getBoundingClientRect().x+parseFloat(getComputedStyle(document.querySelector('.main-head')).paddingLeft),scrollbar:getComputedStyle(document.querySelector('.scroll')).scrollbarColor})''')
+                  assert not record['overflow'] and not record['clipped'],record
+                  assert record['fonts']=={'.entry-link':'18px','h1':'16.32px','.pname':'13.6px','.nav a':'12.48px','.ptype':'8.8px','.year-number':'9.92px'},record
+                  assert record['yearHeight']==34 and record['inset']>=16,record
+                  sizes.append(record)
+                  if w==390: page.screenshot(path='report/works-mobile.png')
+              page.locator('[data-language="en"]').click()
+              for w in [320,390,560,768,1024,1200]:
+                  page.set_viewport_size({'width':w,'height':800})
+                  check=page.evaluate('''()=>({width:innerWidth,overflow:document.documentElement.scrollWidth>innerWidth+1,clipped:[...document.querySelectorAll('.nav a,.pname,h1')].filter(e=>e.scrollWidth>e.clientWidth+2).map(e=>e.className)})''')
+                  assert not check['overflow'] and not check['clipped'],check
+              assert not errors,errors
+              Path('report/verified.json').write_text(json.dumps({'revision':'compact-flat-v4','fontLoaded':True,'audio':audio,'layouts':sizes,'errors':errors},indent=2))
+              browser.close()
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 0086-v4-verified
+          path: report/
+          retention-days: 2
