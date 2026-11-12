@@ -16,3 +16,17 @@ window.__0086ExternalMedia = {
     "assets/yidengcang/IMG_4202.MOV": "https://github.com/andai007/0086-site/releases/download/media-v1/15-6a6409ffb7365580.MOV"
   }
 };
+
+// Optional runtime for the panel-based redesign only. Existing case pages are unchanged.
+// Resolve relative to this script so subdirectory previews work without hard-coded roots.
+(() => {
+  if (!document.getElementById('field') || !document.querySelector('.main.glass')) return;
+  if (document.getElementById('site-music-script')) return;
+  const parent = document.currentScript;
+  if (!parent?.src) return;
+  const script = document.createElement('script');
+  script.id = 'site-music-script';
+  script.src = new URL('site-music.js', parent.src).href;
+  script.defer = true;
+  document.head.append(script);
+})();
