@@ -62,13 +62,13 @@ window.__0086Music=Object.freeze({title:NAME,mode:'electro-radio',provider:HOME,
 let fx=null,fxGain=null,analyser=null,spectrum=null,beatCount=0,lastBeat=-1000,pathLength=0,lastPointer=null;
 let radioConnected=false,fxPeak=0;
 function prepareFX(){
- const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+ const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return Promise.resolve(false);
  if(!fx){
   fx=new AC();const compressor=fx.createDynamicsCompressor();compressor.threshold.value=-14;compressor.knee.value=12;compressor.ratio.value=7;compressor.attack.value=.003;compressor.release.value=.14;
   fxGain=fx.createGain();fxGain.gain.value=.58;fxGain.connect(compressor);compressor.connect(fx.destination);
   try{const radio=fx.createMediaElementSource(audio);analyser=fx.createAnalyser();analyser.fftSize=1024;analyser.smoothingTimeConstant=.76;spectrum=new Uint8Array(analyser.frequencyBinCount);radio.connect(analyser);analyser.connect(fx.destination);radioConnected=true;}catch(e){console.warn('Audio analysis unavailable:',e.name);}
  }
- fx.resume().catch(()=>{});
+ return fx.resume().then(()=>fx.state==='running').catch(()=>false);
 }
 function kick(power,x,y,kind='move'){
  if(!wanted||!fx||fx.state!=='running'||document.hidden||videoActive())return false;
@@ -96,7 +96,37 @@ document.addEventListener('pointermove',e=>{
 document.addEventListener('pointerover',e=>{
  if(e.pointerType==='touch'||!wanted)return;const el=e.target.closest('.entry-link,.nav a,.year,.project summary,.return-home');if(!el||(e.relatedTarget&&el.contains(e.relatedTarget)))return;kick(.66,e.clientX,e.clientY,'hover');
 },{passive:true});
-document.addEventListener('click',e=>{if(e.target.closest('#site-music'))return;if(wanted&&e.target.closest('.entry-link,.nav a,.year,.project summary')){prepareFX();kick(.96,e.clientX||innerWidth*.5,e.clientY||innerHeight*.5,'click');}},false);
+document.addEventListener('click',e=>{if(e.target.closest('#site-music')||performance.now()-lastTouchEnd<650)return;if(wanted&&e.target.closest('.entry-link,.nav a,.year,.project summary')){prepareFX();kick(.96,e.clientX||innerWidth*.5,e.clientY||innerHeight*.5,'click');}},false);
 window.addEventListener('blur',()=>{lastPointer=null;pathLength=0;});
+
+// Mobile tap/drag percussion. Start only on a completed, intentional tap;
+// never unlock sound on a scroll, never override the visitor's mute choice.
+let finger=null,lastTouchEnd=-1000;
+const touchSoundBlocked=el=>el instanceof Element&&!!el.closest('#site-music,#site-language,.return-home,dialog,video,input,textarea,select,[contenteditable="true"]');
+document.addEventListener('touchstart',e=>{
+ if(e.touches.length!==1||touchSoundBlocked(e.target)){finger=null;return;}
+ const t=e.touches[0];finger={id:t.identifier,x:t.clientX,y:t.clientY,sx:t.clientX,sy:t.clientY,at:performance.now(),last:performance.now(),path:0,distance:0};
+},{passive:true});
+document.addEventListener('touchmove',e=>{
+ if(!finger||e.touches.length!==1){finger=null;return;}
+ const t=[...e.touches].find(t=>t.identifier===finger.id);if(!t)return;
+ const now=performance.now(),distance=Math.hypot(t.clientX-finger.x,t.clientY-finger.y),speed=distance/Math.max(8,now-finger.last)*1000;
+ finger.path+=distance;finger.distance=Math.max(finger.distance,Math.hypot(t.clientX-finger.sx,t.clientY-finger.sy));
+ finger.x=t.clientX;finger.y=t.clientY;finger.last=now;
+ if(wanted&&finger.path>100&&speed>90&&kick(Math.min(.88,.5+speed/2600),t.clientX,t.clientY,'touch-sweep'))finger.path=0;
+},{passive:true});
+document.addEventListener('touchend',e=>{
+ if(!finger)return;const t=[...e.changedTouches].find(t=>t.identifier===finger.id);if(!t)return;
+ const g=finger;finger=null;lastTouchEnd=performance.now();
+ if(e.touches.length||g.distance>14||lastTouchEnd-g.at>800)return;
+ if(!wanted&&!optedOut)start();
+ if(!wanted)return;
+ // resume() stays in the activation handler; synthesize exactly one kick
+ // after the context is running, including the first iOS gesture.
+ const ready=prepareFX();if(fx?.state==='running')kick(.96,t.clientX,t.clientY,'touch-tap');
+ else if(ready)ready.then(ok=>{if(ok&&wanted&&performance.now()-lastTouchEnd<400)kick(.96,t.clientX,t.clientY,'touch-tap');});
+},{passive:true});
+document.addEventListener('touchcancel',()=>{finger=null;},{passive:true});
+window.addEventListener('blur',()=>{finger=null;});
 reflect();resolveStation();
 })();
