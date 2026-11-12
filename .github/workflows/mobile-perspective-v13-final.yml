@@ -1,0 +1,64 @@
+name: Finalize perspective touch v13
+on:
+  push:
+    branches: [fix/mobile-touch-green-v12]
+    paths: [.github/workflows/mobile-perspective-v13-final.yml]
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/mobile-touch-green-v12
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/workflows/mobile-perspective-v13-check.yml
+            /preview-0086.html
+            /preview-0086-source.html
+            /assets/preview-0086-field-v13.js
+            /assets/preview-0086-field-v6.js
+            /assets/preview-0086-music-v6.js
+            /assets/preview-0086-layout-v4.css
+            /assets/preview-0086-light-v6.css
+            /assets/preview-catalogue-v10.json
+            /assets/preview-catalogue-v10.css
+            /assets/0086-logo.png
+            /assets/external-media-config.js
+      - name: Prepare candidate and run unchanged acceptance checks
+        run: |
+          pip install pyyaml -q
+          python - <<'PY'
+          import pathlib,subprocess,yaml
+          workflow=yaml.safe_load(pathlib.Path('.github/workflows/mobile-perspective-v13-check.yml').read_text())
+          steps=workflow['jobs']['verify']['steps']
+          def run(name):
+            script=next(s['run'] for s in steps if s.get('name')==name)
+            subprocess.run(['bash','-e','-c',script],check=True)
+          run('Prepare browser engines and candidate')
+          f=pathlib.Path('assets/preview-0086-field-v13.js');s=f.read_text()
+          s=s.replace('let fallback=null,stars=[];','let fallback=null,stars=[],viewAt=0;')
+          s=s.replace(' const follow=1-Math.exp(-dt*(touchMode?3.08:5.8));',' const now=performance.now(),viewDt=touchMode&&viewAt?Math.min(.5,Math.max(0,(now-viewAt)/1000)):dt;viewAt=now;\n const follow=1-Math.exp(-viewDt*(touchMode?3.08:5.8));')
+          s=s.replace('const k=1-Math.exp(-dt*6.3);','const k=1-Math.exp(-viewDt*6.3);')
+          s=s.replace('function halt(){cancelAnimationFrame(raf);raf=0;last=0;}','function halt(){cancelAnimationFrame(raf);raf=0;last=0;viewAt=0;}')
+          assert 'viewDt' in s;f.write_text(s)
+          subprocess.run(['node','--check',str(f)],check=True)
+          run('Verify actual gesture behavior')
+          PY
+      - name: Save verified candidate
+        run: |
+          git config user.name '0086 preview checks'
+          git config user.email '90237714+andai007@users.noreply.github.com'
+          git add --sparse preview-0086.html assets/preview-0086-field-v13.js
+          git commit -m 'Use verified perspective touch camera with consistent damping and retained viewpoint; no overlay rings'
+          git push origin HEAD:fix/mobile-touch-green-v12
+          git log -1 --format='%H %T'
+          git ls-tree HEAD preview-0086.html assets/preview-0086-field-v13.js
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-perspective-v13-final
+          path: /tmp/v13-check
+          retention-days: 3
