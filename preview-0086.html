@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#070711">
+<title>0086 Studios™</title>
+<style>html,body{margin:0;min-height:100%;background:#070711;color:#eeeef6;font:14px/1.6 ui-monospace,Menlo,monospace}main{position:fixed;inset:0;display:grid;place-content:center;gap:20px;text-align:center}img{width:220px;height:auto;filter:invert(1);margin:auto}.line{height:1px;width:220px;background:#39384d;overflow:hidden}.line:after{content:'';display:block;height:1px;width:40%;background:#d4ff00;animation:move 1s ease-in-out infinite alternate}p{font-size:12px;color:#b0adbf}button{background:none;border:1px solid #575370;color:inherit;padding:9px 20px;font:inherit;cursor:pointer}a{color:#d4ff00}@keyframes move{to{transform:translateX(150%)}}@media(prefers-reduced-motion:reduce){.line:after{animation:none}}</style>
+</head>
+<body>
+<main id="boot"><img src="assets/0086-logo.png" alt="0086 Studios"><div class="line" role="status" aria-label="正在打开网站"></div><p id="message" hidden></p><button id="retry" hidden>重新打开</button></main>
+<script>
+(() => {
+  'use strict';
+  const root=new URL('./',location.href);
+  const weather='https://api.open-meteo.com/v1/forecast?latitude=22.5431&longitude=114.0579&current=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,is_day,wind_speed_10m,wind_direction_10m,wind_gusts_10m&wind_speed_unit=ms&timezone=Asia%2FShanghai';
+  document.getElementById('retry').onclick=()=>location.reload();
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),15000);
+  fetch(new URL('preview-0086-source.html',root),{signal:controller.signal,cache:'no-cache'})
+    .then(response=>{if(!response.ok)throw new Error('HTTP '+response.status);return response.text()})
+    .then(html=>{
+      if(!html.includes('id="field"')||!html.includes('SOURCE_ROWS'))throw new Error('Invalid preview');
+      // A separate preview document uses the original site assets. Production index.html is untouched.
+      const config={contentBase:root.href,weatherEndpoint:weather,weatherProvider:'open-meteo'};
+      const open='<scr'+'ipt>',close='</scr'+'ipt>';
+      const head='<base href="'+root.href+'"><meta name="robots" content="noindex,nofollow">'+open+'window.SITE_CONFIG='+JSON.stringify(config)+';'+close;
+      html=html.replace('<head>','<head>'+head);
+      // Retain current media mapping; load the isolated soundtrack runtime only in this preview.
+      html=html.replace('</body>','<scr'+'ipt src="assets/preview-0086-music.js" defer>'+close+'</body>');
+      // Keep focus when expanding a project and preserve position within the content panel.
+      const fixes=open+`document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.project summary')){e.preventDefault();e.target.click();}});`+close;
+      html=html.replace('</body>',fixes+'</body>');
+      clearTimeout(timeout);document.open();document.write(html);document.close();
+    })
+    .catch(error=>{clearTimeout(timeout);document.querySelector('.line').hidden=true;const message=document.getElementById('message');message.textContent='页面暂时未能载入，请重试。';message.hidden=false;document.getElementById('retry').hidden=false;console.error(error)});
+})();
+</script>
+</body></html>
