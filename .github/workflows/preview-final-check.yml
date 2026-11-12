@@ -1,0 +1,78 @@
+name: Check deployed preview
+on:
+  push:
+    branches: [design/flat-weather-20261112]
+    paths: [.github/workflows/preview-final-check.yml]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - run: pip install playwright -q
+      - name: Inspect published website
+        run: |
+          python - <<'PY'
+          import json,shutil,os,time
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          out=Path('/tmp/0086-final');out.mkdir(exist_ok=True)
+          report={};errors=[]
+          with sync_playwright() as p:
+            exe=shutil.which('google-chrome') or shutil.which('chromium')
+            if not exe: os.system('python -m playwright install chromium --with-deps > /dev/null 2>&1')
+            browser=p.chromium.launch(executable_path=exe,headless=True,args=['--no-sandbox'])
+            page=browser.new_page(viewport={'width':1203,'height':1228},device_scale_factor=1)
+            for attempt in range(9):
+              page.goto('https://andai007.github.io/0086-site/preview-0086.html?v=3-'+str(int(time.time()))+'#/home',wait_until='domcontentloaded',timeout=60000)
+              try:
+                page.wait_for_selector('html[data-design-revision="entrance-geist-glass-v3"]',timeout=12000)
+                break
+              except Exception:
+                if attempt==8: raise
+                time.sleep(15)
+            page.on('pageerror',lambda e:errors.append(str(e)))
+            page.locator('[data-language=zh]').click();page.evaluate('document.fonts.ready');page.wait_for_timeout(1800)
+            report['published_revision']=page.evaluate('document.documentElement.dataset.designRevision')
+            report['default_home']=page.locator('#landing').is_visible() and not page.locator('.shell').is_visible()
+            report['latin_font_loaded']=page.evaluate('document.fonts.check(\'18px "Geist Mono"\')')
+            report['chinese_font_loaded']=page.evaluate('document.fonts.check(\'18px "Noto Sans SC"\',"互动装置空间展览")')
+            page.screenshot(path=str(out/'0086-home.png'))
+            page.locator('[data-language=en]').click()
+            report['language_switch']=page.locator('[data-home-label=interactive]').text_content()=='Interactive Installations'
+            page.screenshot(path=str(out/'0086-home-english.png'))
+            page.locator('[data-language=zh]').click()
+            page.set_viewport_size({'width':1468,'height':1024})
+            page.locator('[data-home-label=interactive]').click();page.wait_for_selector('.shell:visible')
+            report['interactive_count']=page.locator('.project').count()
+            report['glass']=page.locator('.main.glass').evaluate('(e)=>({background:getComputedStyle(e).backgroundColor,blur:getComputedStyle(e).backdropFilter})')
+            page.evaluate('document.fonts.ready');page.wait_for_timeout(600)
+            page.screenshot(path=str(out/'0086-inside.png'))
+            page.locator('.nav [data-type=all]').click();page.wait_for_function('document.querySelectorAll(".project").length===21')
+            report['all_projects']=page.locator('.project').count()
+            page.locator('.project summary').first.click();page.wait_for_selector('.project[open] .source-content',timeout=25000)
+            report['project_expands']=True
+            page.locator('.return-home').click();report['return_home']=page.locator('#landing').is_visible()
+            page.go_back();page.wait_for_selector('.shell:visible');report['history']=page.locator('.project[open]').count()==1
+            page.locator('.return-home').click();page.set_viewport_size({'width':390,'height':844});page.wait_for_timeout(300)
+            page.screenshot(path=str(out/'0086-mobile-home.png'))
+            page.locator('[data-home-label=interactive]').click();page.wait_for_selector('.shell:visible');page.evaluate('document.fonts.ready')
+            page.screenshot(path=str(out/'0086-mobile-inside.png'))
+            report['mobile_horizontal_overflow']=page.evaluate('document.documentElement.scrollWidth>innerWidth')
+            report['mobile_music_clear']=page.evaluate('''()=>{const a=document.querySelector('.secondary').getBoundingClientRect(),b=document.querySelector('#site-music').getBoundingClientRect();return b.top>=a.bottom}''')
+            report['weather']=page.evaluate('window.__0086.weather.source')
+            report['errors']=errors
+            (out/'verified.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print('FINAL_VERIFIED',json.dumps(report,ensure_ascii=False))
+            assert report['default_home'] and report['latin_font_loaded'] and report['chinese_font_loaded'] and report['language_switch']
+            assert report['interactive_count']==7 and report['all_projects']==21 and report['return_home'] and report['history']
+            assert report['glass']=={'background':'rgba(255, 255, 255, 0.05)','blur':'blur(6px)'}
+            assert not errors and not report['mobile_horizontal_overflow'] and report['mobile_music_clear']
+            browser.close()
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 0086-final-preview
+          path: /tmp/0086-final/
+          retention-days: 2
