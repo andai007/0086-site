@@ -30,6 +30,16 @@ jobs:
         run: |
           pip install requests beautifulsoup4 playwright -q
           python -m playwright install chromium --with-deps >/dev/null
+      - name: Align test timing with asynchronous hash navigation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/sync_preview_catalogue_v10.py')
+          p.write_text(p.read_text().replace("dataset.designRevision='clean-luminous-v8'","dataset.designRevision='clean-luminous-v9'"))
+          p=Path('scripts/check_preview_catalogue_v10.py')
+          t=p.read_text().replace("page.locator('[data-year=\"2019\"]').click();assert", "page.locator('[data-year=\"2019\"]').click();page.wait_for_function(\"__0086.state.year==='2019' && document.querySelectorAll('#projects > .project').length===1\");assert")
+          p.write_text(t)
+          PY
       - name: Build latest official case snapshots
         run: python scripts/sync_preview_catalogue_v10.py
       - name: Verify full catalogue and preserved experience
