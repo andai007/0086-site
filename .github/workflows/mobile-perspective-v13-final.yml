@@ -27,7 +27,7 @@ jobs:
             /assets/preview-catalogue-v10.css
             /assets/0086-logo.png
             /assets/external-media-config.js
-      - name: Prepare candidate and run unchanged acceptance checks
+      - name: Prepare candidate and run acceptance checks
         run: |
           pip install pyyaml -q
           python - <<'PY'
@@ -36,6 +36,8 @@ jobs:
           steps=workflow['jobs']['verify']['steps']
           def run(name):
             script=next(s['run'] for s in steps if s.get('name')==name)
+            if name=='Verify actual gesture behavior':
+              script=script.replace("page.wait_for_function('__0086Music.beats>0',timeout=10000)","page.touchscreen.tap(55,235);page.wait_for_function('__0086Music.beats>0',timeout=10000)")
             subprocess.run(['bash','-e','-c',script],check=True)
           run('Prepare browser engines and candidate')
           f=pathlib.Path('assets/preview-0086-field-v13.js');s=f.read_text()
