@@ -1,0 +1,16 @@
+/* Appearance only: keep the audited FLAT typography and v4 responsive layout. */
+:root{--glass:rgba(5,8,16,.12);--line:rgba(207,223,255,.19)}
+.glass{background:var(--glass);backdrop-filter:blur(1.6px);-webkit-backdrop-filter:blur(1.6px);box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}
+.side-panel.glass{background:rgba(5,8,16,.16);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+.main-head,.scroll{background:transparent}
+.project{background:rgba(1,4,12,.09);border-color:rgba(213,226,255,.17);border-left-color:var(--project-accent)}
+.project:hover,.project[open]{background:rgba(3,10,26,.19);border-color:rgba(214,231,255,.38);border-left-color:var(--project-accent)}
+.project[style*="#a2acff"]{border-left-color:#002fa7}
+.project summary:hover,.project[open] summary{background:transparent}
+.pname,.pyear,.ptype,h1,.side-heading,.list-meta,.source-content{text-shadow:0 1px 3px rgba(0,0,0,.95),0 0 9px rgba(0,0,0,.7)}
+.nav a:not(.active),.year:not(.active){background:rgba(255,255,255,.025)}
+.entry-content:before{background:radial-gradient(ellipse,rgba(0,0,0,.22),rgba(0,0,0,.08) 50%,transparent 78%)}
+.entry-link{background:rgba(10,13,20,.18);backdrop-filter:blur(1.2px);-webkit-backdrop-filter:blur(1.2px);text-shadow:0 1px 5px #000}
+.entry-link:hover{background:rgba(0,47,167,.18);border-color:rgba(225,239,255,.8)}
+#field{position:fixed;inset:0;pointer-events:none;width:100%;height:100%;z-index:0}
+@media(prefers-contrast:more){.glass,.project{background:rgba(0,0,0,.7);backdrop-filter:none}.pname,.pyear,.ptype{color:white}}
