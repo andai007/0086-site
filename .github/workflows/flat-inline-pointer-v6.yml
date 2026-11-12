@@ -1,0 +1,21 @@
+name: Read FLAT pointer handlers
+on:
+  push:
+    branches: [design/flat-weather-20261112]
+    paths: [.github/workflows/flat-inline-pointer-v6.yml]
+permissions:
+  contents: read
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - run: |
+          python - <<'PY'
+          import urllib.request,re
+          html=urllib.request.urlopen('https://www.flatfestival.org/',timeout=25).read().decode()
+          for term in ['mousemove','pointermove','mouseX','mouseY','mouse.x','mouse.y','cursor:','addEventListener(\'mouse']:
+            matches=list(re.finditer(re.escape(term),html))
+            print('\nTERM',term,'COUNT',len(matches))
+            for m in matches[:8]:print(html[max(0,m.start()-240):m.end()+650])
+          PY
