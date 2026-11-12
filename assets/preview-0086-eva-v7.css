@@ -39,6 +39,8 @@ body[data-view=inside] .eva-edge{opacity:.17;width:9px}
 .subhead,.original-link:hover{color:var(--eva-amber)}
 .source-content .card{background:rgba(0,0,0,.08);border-color:rgba(255,113,56,.2)}
 body[data-eva-hit=true] .side-panel::after,body[data-eva-hit=true] .main::after{opacity:.9}
+body[data-view=inside] .eva-corner.left{display:none}
+.site-language,.return-home{border-color:rgba(255,113,56,.4)}.site-language button[aria-pressed=true]{background:var(--eva-amber);color:#08090b}.return-home:hover{background:rgba(255,113,56,.12)}
 @media(max-width:1024px){.eva-edge{display:none}.main-head::after{left:18px;right:18px}.eva-reticle{top:45%;width:min(88vw,85vh);height:min(88vw,85vh)}body[data-view=inside] .eva-reticle{opacity:.14}}
 @media(max-width:560px){.eva-corner.left{left:16px;bottom:22px;width:24px;height:8px}.eva-corner.right{display:none}.eva-envelope{left:calc(50% - 42px);gap:2px;bottom:23px}.eva-envelope i{width:2px}.main-head::after{left:16px;right:16px}.entry-link{padding-inline:38px}.entry-link::after{left:12px}.eva-reticle{opacity:.34;width:95vw;height:95vw}}
 @media(prefers-reduced-motion:reduce){.eva-scan{display:none}.eva-reticle{will-change:auto}.entry-link{transition:none}}
