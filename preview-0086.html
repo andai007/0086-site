@@ -111,7 +111,7 @@ fetch(new URL('preview-0086-source.html',root),{signal:controller.signal,cache:'
   html=html.replace('state=readRoute();const works',`state=readRoute();const home=state.view==='home';document.body.dataset.view=home?'home':'inside';$('#landing').hidden=!home;$('.shell').hidden=home;$('.return-home').hidden=home;if(home){document.title='0086 Studios™';return;}const works`);
   html=html.replace(/function resize\(\)\{[\s\S]*?\nfunction drawFrame/,resizeField.toString().replace('resizeField','resize')+'\nfunction drawFrame');
   html=html.replace(/function drawFrame\(dt\)\{[\s\S]*?\nfunction loop\(now\)/,drawField.toString().replace('drawField','drawFrame')+'\nfunction loop(now)');
-  html=html.replace('</body>',open+'('+interfaceSetup.toString()+')();'+close+'<scr'+'ipt src="assets/preview-0086-music.js?v=4" defer>'+close+'</body>');
+  html=html.replace('</body>',open+'('+interfaceSetup.toString()+')();'+close+'<scr'+'ipt src="assets/preview-0086-music.js?v=5" defer>'+close+'</body>');
   clearTimeout(timeout);document.open();document.write(html);document.close();
 }).catch(error=>{clearTimeout(timeout);const line=document.querySelector('.line');if(line)line.hidden=true;const message=document.getElementById('message');if(message){message.textContent='页面暂时未能载入，请重试。';message.hidden=false;document.getElementById('retry').hidden=false}console.error(error)});
 })();
