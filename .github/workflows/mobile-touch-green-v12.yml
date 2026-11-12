@@ -1,0 +1,61 @@
+name: Verify mobile touch and green selection v12
+on:
+  push:
+    branches: [fix/mobile-touch-green-v12]
+    paths: [.github/workflows/mobile-touch-green-v12.yml, scripts/patch_touch_green_v12.py, scripts/check_touch_green_v12.py]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/mobile-touch-green-v12
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /scripts/
+            /preview-0086.html
+            /preview-0086-source.html
+            /index.html
+            /assets/preview-0086-layout-v4.css
+            /assets/preview-0086-light-v6.css
+            /assets/preview-0086-field-v6.js
+            /assets/preview-0086-music-v6.js
+            /assets/preview-catalogue-v10.json
+            /assets/preview-catalogue-v10.css
+            /assets/0086-logo.png
+            /assets/external-media-config.js
+      - name: Prepare browser engines
+        run: |
+          pip install playwright -q
+          python -m playwright install chromium webkit --with-deps >/dev/null
+      - name: Apply narrow changes
+        run: |
+          python scripts/patch_touch_green_v12.py
+          node --check assets/preview-0086-field-v6.js
+          node --check assets/preview-0086-music-v6.js
+      - name: Verify Android and iPhone touch emulation and unchanged desktop
+        run: python scripts/check_touch_green_v12.py
+      - name: Save verified changes to review branch only
+        run: |
+          git config user.name '0086 preview checks'
+          git config user.email '90237714+andai007@users.noreply.github.com'
+          git add --sparse preview-0086.html assets/preview-0086-field-v6.js assets/preview-0086-music-v6.js
+          git commit -m 'Enable passive mobile touch particle and beat feedback; unify selected navigation green'
+          git push origin HEAD:fix/mobile-touch-green-v12
+          git log -1 --format='%H %T'
+          git ls-tree HEAD preview-0086.html assets/preview-0086-field-v6.js assets/preview-0086-music-v6.js
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-touch-green-v12
+          path: |
+            touch-v12-check/
+            touch-v12-preserved.json
+            preview-0086.html
+            assets/preview-0086-field-v6.js
+            assets/preview-0086-music-v6.js
+          retention-days: 3
