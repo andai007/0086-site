@@ -1,0 +1,24 @@
+/* Scoped case-content adapter. Approved site chrome, audio and particles are unchanged. */
+.source-content.catalogue-content{min-width:0;overflow-wrap:anywhere;--content-gap:20px}
+.catalogue-content *, .catalogue-content *::before,.catalogue-content *::after{box-sizing:border-box;min-width:0}
+.catalogue-content figure{margin:0}.catalogue-content figcaption{font-size:10.56px;line-height:1.6;color:#b7b7c6;margin-top:7px}
+.catalogue-content img{display:block;max-width:100%;height:auto}.catalogue-content h4{font-weight:400;font-size:14px;margin:14px 0}
+.catalogue-content section{margin:24px 0 36px}.catalogue-content .case-heading{margin:20px 0}.catalogue-content .case-heading p{margin:0;color:#bbb;font-size:11px}
+.catalogue-content .case-heading h1{font:400 24px/1.45 var(--mono);letter-spacing:0}
+.catalogue-content .watermelon-intro,.catalogue-content .shanhai-opening{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.catalogue-content .watermelon-intro img{width:100%;max-height:590px;object-fit:contain;object-position:top}
+.catalogue-content .case-photo-grid,.catalogue-content .shanhai-source-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.catalogue-content .case-facts{display:grid;gap:10px;margin:20px 0}.catalogue-content .case-facts>div{display:grid;grid-template-columns:80px 1fr;gap:12px}.catalogue-content dt{color:#aaa}.catalogue-content dd{margin:0}
+.catalogue-content .exhibition-themes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:0;list-style:none}
+.catalogue-content .character-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:20px 0 28px}
+.catalogue-content .character-tabs a{font-size:11px;line-height:1.6;text-align:center;text-decoration:none}.catalogue-content .character-tabs img{width:100%;margin-bottom:5px}
+.catalogue-content .shanhai-profile{padding-top:22px;border-top:1px solid rgba(255,255,255,.2);margin:28px 0 36px;scroll-margin-top:20px}
+.catalogue-content .shanhai-role-heading h3{font-size:20px}.catalogue-content .shanhai-role-heading h3 span{font-size:12px;color:#aaa;margin-left:8px}
+.catalogue-content .shanhai-color-views{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:24px 0}
+.catalogue-content .shanhai-image-open{display:block;padding:0;border:0;background:none;width:100%;cursor:zoom-in;color:inherit}
+.catalogue-content .shanhai-image-open img{width:100%}.catalogue-content .shanhai-intro-heading{margin-top:22px}.catalogue-content .shanhai-intro-heading span{color:#aaa;font-size:10.56px}
+.catalogue-content details{margin:18px 0;border-top:1px solid rgba(255,255,255,.14);padding-top:8px}
+.catalogue-content details>summary{display:list-item;list-style:disclosure-closed;min-height:0;padding:10px 0;font-size:12px;cursor:pointer}
+.catalogue-content details[open]>summary{list-style:disclosure-open}.catalogue-content details>summary::-webkit-details-marker{display:revert}
+.catalogue-content .gallery,.catalogue-content .videos{gap:12px}.catalogue-content figure img{cursor:zoom-in}
+@media(max-width:720px){.catalogue-content .watermelon-intro,.catalogue-content .shanhai-opening,.catalogue-content .case-photo-grid,.catalogue-content .shanhai-source-grid{grid-template-columns:1fr}.catalogue-content .case-heading h1{font-size:20px}.catalogue-content .character-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}.catalogue-content .shanhai-color-views{gap:6px}.catalogue-content .case-facts>div{grid-template-columns:68px 1fr}}

@@ -24,15 +24,15 @@
 <aside class="side"><div class="side-panel glass">
 <a class="brand" href="#/works" aria-label="0086 Studios 首页"><img src="assets/0086-logo.png" alt="0086 Studios" width="604" height="211"></a>
 <nav class="nav" aria-label="作品分类">
-<a href="#/works" data-type="all">Selected Works <span class="num" data-count="all">21</span></a>
+<a href="#/works" data-type="all">Selected Works <span class="num" data-count="all">23</span></a>
 <a href="#/works?type=interactive" data-type="interactive">互动装置 <span class="num" data-count="interactive">7</span></a>
 <a href="#/works?type=space" data-type="space">空间 <span class="num" data-count="space">2</span></a>
-<a href="#/works?type=exhibition" data-type="exhibition">展览 <span class="num" data-count="exhibition">8</span></a>
-<a href="#/works?type=ip" data-type="ip">IP设计 <span class="num" data-count="ip">3</span></a>
+<a href="#/works?type=exhibition" data-type="exhibition">展览 <span class="num" data-count="exhibition">9</span></a>
+<a href="#/works?type=ip" data-type="ip">IP设计 <span class="num" data-count="ip">4</span></a>
 </nav>
 <nav class="secondary" aria-label="关于与联系"><a href="#/about" data-view="about">about us</a><a href="#/ai" data-view="ai">AI</a><a href="mailto:contact@0086studios.com">Contact ↗</a></nav>
 </div><div class="side-foot"><div class="side-foot-row"><span>0086 STUDIOS™</span><button class="motion" id="pause" data-motion type="button" aria-label="暂停背景动画" aria-pressed="false">Ⅱ</button></div><div class="rule"></div><small>SHENZHEN, CHINA</small></div></aside>
-<main class="main glass" id="content" tabindex="-1"><header class="main-head"><div class="title-row"><div><h1 id="title">Selected Works</h1><div class="subhead" id="subtitle">0086 STUDIOS™</div></div><div class="arrows" id="arrows"><button class="square mobile-motion" type="button" data-motion aria-label="暂停背景动画" aria-pressed="false">Ⅱ</button><button class="square" type="button" id="prev" aria-label="上一组年份">‹</button><button class="square" type="button" id="next" aria-label="下一组年份">›</button></div></div><nav class="years" id="years" aria-label="按年份筛选"></nav></header><section class="scroll" id="scroll"><div class="list-meta" id="list-meta"><span id="list-label">Selected Works</span><span id="total" aria-live="polite">21</span></div><div class="projects" id="projects"></div><article class="article" id="article" hidden></article></section></main>
+<main class="main glass" id="content" tabindex="-1"><header class="main-head"><div class="title-row"><div><h1 id="title">Selected Works</h1><div class="subhead" id="subtitle">0086 STUDIOS™</div></div><div class="arrows" id="arrows"><button class="square mobile-motion" type="button" data-motion aria-label="暂停背景动画" aria-pressed="false">Ⅱ</button><button class="square" type="button" id="prev" aria-label="上一组年份">‹</button><button class="square" type="button" id="next" aria-label="下一组年份">›</button></div></div><nav class="years" id="years" aria-label="按年份筛选"></nav></header><section class="scroll" id="scroll"><div class="list-meta" id="list-meta"><span id="list-label">Selected Works</span><span id="total" aria-live="polite">23</span></div><div class="projects" id="projects"></div><article class="article" id="article" hidden></article></section></main>
 </div>
 <dialog class="lightbox" id="lightbox" aria-label="作品图片"><button type="button" aria-label="关闭图片">×</button><img alt=""></dialog>
 <script src="assets/external-media-config.js"></script>
@@ -41,41 +41,182 @@
 // Source: 0086-service-ai-installation.html, Git blob 8d86f9022ebe3deba4062ff52c73911b2e4e5f4a.
 // Keep names/categories/years exactly as supplied. A source year of 0 is unknown, not a date.
 const SOURCE_ROWS=[
-['海宁回信','interactive',2025,'case-immersive-experience.html','assets/haining-reply/haining-01.png'],
-['从水中诗，到诗中潮—徐志摩在海宁','exhibition',2025,'case-xuzhimo-haining.html','assets/xuzhimo-haining/FullSizeRender 12.png'],
-['三道水-徐志摩','interactive',2025,'case-sandaoshui-xuzhimo.html','assets/cases/sandaoshui-xuzhimo.png'],
-['故纸新词-王国维在海宁','exhibition',2025,'case-wangguowei.html','assets/wangguowei/IMG_0997.png'],
-['诗的歌','interactive',2025,'case-poem-song.html','assets/poem-song/poem-01.png'],
-['AI情绪思想盒','interactive',2024,'case-ai-emotion-box.html','assets/ai-emotion-box/ai-emotion-01.png'],
-['Autoband','other',2024,'case-interactive-site.html','assets/autoband/autoband-01.jpg'],
-['亲密人机-A Heart in Thinkpad','exhibition',2024,'case-heart-in-thinkpad.html','assets/thinkpad/1DSC00798-1.jpg'],
-['GAME ON 潮流游戏展','exhibition',0,'case-game-on.html','assets/game-on/2-µÿ√Ê≤„»Îø⁄ª∫≥Â«¯ 03.jpg'],
-['神秘敦煌文化展','exhibition',2018,'https://hk.thevalue.com/articles/exhibition-mysterious-dunhuang-buddhist-statuary-and-frescoes-ar-shenzhen-future-park-2018','assets/cases/dunhuang.png'],
-['神偷奶爸大视界全球首展','exhibition',2018,'http://shenzhen.sina.cn/news/2018-12-14/detail-ihqackac8193584.d.html','assets/cases/minions-expo.png'],
-['绽放花园','space',2017,'https://jiaju.sina.cn/news/20170629/6286044594455249476.shtml','assets/cases/blooming-garden.jpg'],
-['花舞印象','space',2018,'https://www.teamlab.art/zh-hans/e/wuatc/','assets/cases/flower-impression.png'],
-['Beyond The Boundary','interactive',2024,'case-beyond-the-boundary.html','assets/beyond-the-boundary/截屏2025-06-12 19.44.40.png'],
-['衣等舱 AI换衣间','interactive',2025,'case-ai-fitting-room.html','assets/yidengcang/IMG_4266-2.png'],
-['teamLab 深圳','exhibition',0,'https://www.teamlab.art/e/shenzhen/','assets/cases/teamlab-shenzhen.png'],
-['teamLab 武汉','exhibition',0,'https://futurepark.teamlab.art/en/places/mpluswuhan/','assets/cases/teamlab-wuhan.png'],
-['Thinkpad零售门店','interactive',0,'case-narrative-installation.html','assets/thinkpad-retail/img-7773.jpg'],
-['NFT','ip',2023,'case-nft.html','assets/package-nft/red.png'],
-['湄洲妈-妈祖IP','ip',2023,'case-mazu-ip.html','assets/mazu/湄洲妈进度汇报v07170202.002.jpeg'],
-['隔火','ip',2023,'case-gehuo.html','assets/gehuo/gehuo-09.jpg']
+  [
+    "一颗，平湖西瓜",
+    "exhibition",
+    0,
+    "case-pinghu-watermelon.html",
+    "https://0086studios.xyz/assets/thumbs/pinghu-watermelon/cover.webp"
+  ],
+  [
+    "怪奇疗愈所 — 山海经 IP",
+    "ip",
+    0,
+    "case-shanhai-ip.html",
+    "https://0086studios.xyz/assets/display/shanhai-ip/cover-poster-v1.webp"
+  ],
+  [
+    "诗的歌",
+    "interactive",
+    2025,
+    "case-poem-song.html",
+    "https://0086studios.xyz/assets/display/poem-song/poem-01-display.webp"
+  ],
+  [
+    "从水中诗，到诗中潮—徐志摩在海宁",
+    "exhibition",
+    2025,
+    "case-xuzhimo-haining.html",
+    "https://0086studios.xyz/assets/display/xuzhimo-haining/FullSizeRender 12-display.webp"
+  ],
+  [
+    "三道水-徐志摩",
+    "interactive",
+    2025,
+    "case-sandaoshui-xuzhimo.html",
+    "https://0086studios.xyz/assets/thumbs/cases/sandaoshui-xuzhimo-thumb.webp"
+  ],
+  [
+    "衣等舱 AI换衣间",
+    "interactive",
+    2025,
+    "case-ai-fitting-room.html",
+    "https://0086studios.xyz/assets/display/yidengcang/IMG_4266-2-display.webp"
+  ],
+  [
+    "海宁回信",
+    "interactive",
+    2025,
+    "case-immersive-experience.html",
+    "https://0086studios.xyz/assets/display/haining-reply/haining-01-display.webp"
+  ],
+  [
+    "故纸新词-王国维在海宁",
+    "exhibition",
+    2025,
+    "case-wangguowei.html",
+    "https://0086studios.xyz/assets/display/wangguowei/IMG_0997-display.webp"
+  ],
+  [
+    "Thinkpad零售门店",
+    "interactive",
+    2025,
+    "case-narrative-installation.html",
+    "https://0086studios.xyz/assets/display/thinkpad-retail/img-7773-display.webp"
+  ],
+  [
+    "亲密人机-A Heart in Thinkpad",
+    "exhibition",
+    2024,
+    "case-heart-in-thinkpad.html",
+    "https://0086studios.xyz/assets/display/thinkpad/1DSC00798-1-display.webp"
+  ],
+  [
+    "AI情绪思想盒",
+    "interactive",
+    2024,
+    "case-ai-emotion-box.html",
+    "https://0086studios.xyz/assets/display/ai-emotion-box/ai-emotion-01-display.webp"
+  ],
+  [
+    "Autoband",
+    "other",
+    2024,
+    "case-interactive-site.html",
+    "https://0086studios.xyz/assets/thumbs/autoband/autoband-01-thumb.webp"
+  ],
+  [
+    "Beyond The Boundary",
+    "interactive",
+    2024,
+    "case-beyond-the-boundary.html",
+    "https://0086studios.xyz/assets/display/beyond-the-boundary/截屏2025-06-12 19.44.40-display.webp"
+  ],
+  [
+    "NFT",
+    "ip",
+    2023,
+    "case-nft.html",
+    "https://0086studios.xyz/assets/display/nft/red-display.webp"
+  ],
+  [
+    "湄洲妈-妈祖IP",
+    "ip",
+    2023,
+    "case-mazu-ip.html",
+    "https://0086studios.xyz/assets/display/mazu/湄洲妈进度汇报v07170202.002-display.webp"
+  ],
+  [
+    "隔火",
+    "ip",
+    2023,
+    "case-gehuo.html",
+    "https://0086studios.xyz/assets/display/gehuo/gehuo-09-display.webp"
+  ],
+  [
+    "GAME ON 潮流游戏展",
+    "exhibition",
+    2019,
+    "case-game-on.html",
+    "https://0086studios.xyz/assets/display/game-on/2-µÿ√Ê≤„»Îø⁄ª∫≥Â«¯ 03-display.webp"
+  ],
+  [
+    "神偷奶爸大视界全球首展",
+    "exhibition",
+    2018,
+    "http://shenzhen.sina.cn/news/2018-12-14/detail-ihqackac8193584.d.html",
+    "https://0086studios.xyz/assets/thumbs/cases/minions-expo-thumb.webp"
+  ],
+  [
+    "teamLab 武汉",
+    "exhibition",
+    2018,
+    "https://futurepark.teamlab.art/en/places/mpluswuhan/",
+    "https://0086studios.xyz/assets/thumbs/cases/teamlab-wuhan-thumb.webp"
+  ],
+  [
+    "神秘敦煌文化展",
+    "exhibition",
+    2017,
+    "https://hk.thevalue.com/articles/exhibition-mysterious-dunhuang-buddhist-statuary-and-frescoes-ar-shenzhen-future-park-2018",
+    "https://0086studios.xyz/assets/thumbs/cases/dunhuang-thumb.webp"
+  ],
+  [
+    "花舞印象",
+    "space",
+    2017,
+    "https://www.teamlab.art/zh-hans/e/wuatc/",
+    "https://0086studios.xyz/assets/thumbs/cases/flower-impression-thumb.webp"
+  ],
+  [
+    "teamLab 深圳",
+    "exhibition",
+    2017,
+    "https://www.teamlab.art/e/shenzhen/",
+    "https://0086studios.xyz/assets/thumbs/cases/teamlab-shenzhen-thumb.webp"
+  ],
+  [
+    "绽放花园",
+    "space",
+    2016,
+    "https://jiaju.sina.cn/news/20170629/6286044594455249476.shtml",
+    "https://0086studios.xyz/assets/thumbs/cases/blooming-garden-thumb.webp"
+  ]
 ];
-const LABELS={all:'Selected Works',interactive:'互动装置',space:'空间',exhibition:'展览',ip:'IP设计',other:''};
+const LABELS={all:'Selected Works',interactive:'互动装置',space:'空间',exhibition:'展览',ip:'IP设计',other:'创意技术'};
 const ACCENTS={interactive:'#a2acff',space:'#8ec9d4',exhibition:'#dad7e1',ip:'#ff979b',other:'#dad7e1'};
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const config=window.SITE_CONFIG||{};
 const base=new URL(config.contentBase||'./',location.href);
 const resolve=p=>new URL(p,base).href;
+const originalURL=p=>new URL(p,'https://0086studios.xyz/').href;
 let rows=SOURCE_ROWS.map(([title,category,year,href,image],id)=>({title,category,year,href,image,id}));
 let state={view:'works',type:'all',year:'all',project:null},routeTicket=0;
 const pageCache=new Map();
 function go(next,replace=false){const s={...state,...next};const q=new URLSearchParams();if(s.type!=='all')q.set('type',s.type);if(s.year!=='all')q.set('year',s.year);if(s.project)q.set('project',s.project);const hash='#/'+s.view+(q.size?'?'+q:'');if(replace){history.replaceState(null,'',hash);route()}else if(location.hash!==hash)location.hash=hash;else route()}
 function readRoute(){const raw=location.hash.slice(1)||'/works';const [path,query]=raw.split('?');const q=new URLSearchParams(query||'');return {view:['/about','/ai'].includes(path)?path.slice(1):'works',type:Object.hasOwn(LABELS,q.get('type'))?q.get('type'):'all',year:/^\d{4}$/.test(q.get('year')||'')?q.get('year'):'all',project:q.get('project')}}
-function filtered(s=state){return rows.filter(p=>(s.type==='all'||p.category===s.type)&&(s.year==='all'||String(p.year)===s.year)).sort((a,b)=>b.year-a.year||a.id-b.id)}
+function filtered(s=state){return rows.filter(p=>(s.type==='all'||p.category===s.type)&&(s.year==='all'||String(p.year)===s.year)).sort((a,b)=>a.id-b.id)}
 function yearOptions(){return ['all',...[...new Set(rows.map(p=>p.year).filter(Boolean))].sort((a,b)=>b-a).map(String)]}
 function updateYears(){const years=yearOptions();$('#years').innerHTML=years.map(y=>{const count=filtered({...state,year:y}).length;return `<button class="year ${state.year===y?'active':''}" data-year="${y}" aria-pressed="${state.year===y}"><span class="year-number">${y==='all'?'ALL':y}</span><span class="year-count">${String(count).padStart(2,'0')}</span></button>`}).join('');const i=years.indexOf(state.year);$('#prev').disabled=i<=0;$('#next').disabled=i===years.length-1}
 async function route(){const ticket=++routeTicket;const previous=state;state=readRoute();const works=state.view==='works';$$('.nav a').forEach(a=>{a.classList.toggle('active',works&&a.dataset.type===state.type);a.setAttribute('aria-current',works&&a.dataset.type===state.type?'page':'false')});$$('[data-count]').forEach(n=>n.textContent=String(rows.filter(p=>n.dataset.count==='all'||p.category===n.dataset.count).length).padStart(2,'0'));$$('[data-view]').forEach(a=>a.classList.toggle('active',a.dataset.view===state.view));$('#title').textContent=works?LABELS[state.type]:(state.view==='about'?'about us':'AI');document.title='0086 Studios™ — '+$('#title').textContent;$('#years').hidden=!works;$('#arrows').hidden=!works;$('#projects').hidden=!works;$('#list-meta').hidden=!works;$('#article').hidden=works;if(previous.view!==state.view||previous.type!==state.type||previous.year!==state.year)$('#scroll').scrollTop=0;
@@ -83,14 +224,45 @@ if(!works){$('#article').innerHTML='<span class="loading" role="status" aria-lab
 updateYears();const visible=filtered();$('#total').textContent=String(visible.length).padStart(2,'0');$('#list-label').textContent=state.year==='all'?LABELS[state.type]:state.year;
 $('#projects').innerHTML=visible.length?visible.map(p=>`<details class="project" data-id="${p.id}" style="--project-accent:${ACCENTS[p.category]||ACCENTS.other}" ${state.project===p.href?'open':''}><summary><span class="pyear">${p.year||''}</span><span><span class="ptype">${esc(LABELS[p.category]||'')}</span><span class="pname" style="display:block">${esc(p.title)}</span></span><span class="plus" aria-hidden="true">+</span></summary><div class="detail"></div></details>`).join(''):'<p class="empty">没有符合条件的作品。</p>';
 const selected=visible.find(p=>p.href===state.project);if(selected){const panel=$(`.project[data-id="${selected.id}"] .detail`);showProject(selected,panel,ticket)}}
-async function getPage(path){if(pageCache.has(path))return pageCache.get(path);const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),12000);try{const response=await fetch(resolve(path),{signal:ctrl.signal});if(!response.ok)throw new Error('HTTP '+response.status);const html=await response.text();const doc=new DOMParser().parseFromString(html,'text/html');if(!doc.querySelector('main'))throw new Error('Missing main');pageCache.set(path,doc);return doc}finally{clearTimeout(timer)}}
-async function loadContent(path){const doc=await getPage(path);const node=document.createElement('div');node.className='source-content';const source=doc.querySelector('main').cloneNode(true);source.querySelectorAll('script,style,iframe,object,embed,form,link,.back,.header-back,.corner-icons,.lightbox').forEach(n=>n.remove());for(const e of source.querySelectorAll('*')){for(const a of [...e.attributes]){if(a.name.startsWith('on')||['style','id','srcdoc'].includes(a.name))e.removeAttribute(a.name)}for(const a of ['src','href','poster']){const value=e.getAttribute(a);if(!value)continue;let u;try{u=new URL(value,resolve(path))}catch{e.removeAttribute(a);continue}if(!['https:','http:','file:','mailto:'].includes(u.protocol)){e.removeAttribute(a);continue}e.setAttribute(a,u.href)}if(e.tagName==='IMG'){e.loading='lazy';e.decoding='async';e.addEventListener('error',()=>e.hidden=true,{once:true})}if(e.matches('video,source')&&e.dataset.externalSrc){const key=e.dataset.externalSrc;const media=window.__0086ExternalMedia||{};e.src=media.overrides?.[key]||resolve(key);e.removeAttribute('data-external-src')}if(e.tagName==='VIDEO'){e.controls=true;e.playsInline=true;e.preload='none';e.removeAttribute('autoplay')}if(e.tagName==='A'){e.target='_blank';e.rel='noopener noreferrer'}}node.append(...source.childNodes);return node}
-function coverMarkup(p){return `<img class="project-cover" src="${esc(resolve(p.image))}" alt="${esc(p.title)}" loading="lazy"><a class="original-link" href="${esc(resolve(p.href))}" target="_blank" rel="noopener noreferrer">${esc(p.title)} <span>↗</span></a>`}
-async function showProject(p,panel,ticket){const external=/^https?:\/\//.test(p.href);panel.innerHTML=external?coverMarkup(p):'<span class="loading" role="status" aria-label="作品加载中"></span>';if(external){panel.querySelector('img').addEventListener('error',e=>e.target.hidden=true,{once:true});return}try{const content=await loadContent(p.href);if(ticket!==routeTicket||!panel.isConnected)return;panel.replaceChildren(content);const a=document.createElement('a');a.className='original-link';a.href=resolve(p.href);a.target='_blank';a.rel='noopener noreferrer';a.textContent='↗ '+p.title;panel.append(a)}catch{if(ticket!==routeTicket||!panel.isConnected)return;panel.innerHTML=coverMarkup(p);panel.querySelector('img').addEventListener('error',e=>e.target.hidden=true,{once:true})}}
-$('#projects').addEventListener('click',e=>{const summary=e.target.closest('summary');if(!summary)return;e.preventDefault();const p=rows.find(r=>r.id===Number(summary.parentElement.dataset.id));go({project:state.project===p.href?null:p.href})});$('#years').addEventListener('click',e=>{const b=e.target.closest('[data-year]');if(b)go({year:b.dataset.year,project:null})});$('#prev').onclick=()=>{const ys=yearOptions();go({year:ys[Math.max(0,ys.indexOf(state.year)-1)],project:null})};$('#next').onclick=()=>{const ys=yearOptions();go({year:ys[Math.min(ys.length-1,ys.indexOf(state.year)+1)],project:null})};window.addEventListener('hashchange',route);
-const dialog=$('#lightbox');$('#scroll').addEventListener('click',e=>{if(!e.target.matches('.gallery img'))return;dialog.querySelector('img').src=e.target.src;dialog.querySelector('img').alt=e.target.alt;dialog.showModal()});dialog.querySelector('button').onclick=()=>dialog.close();dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
-// Prefer the existing catalogue if available; preserve the verified embedded snapshot on failure.
-async function refreshCatalogue(){try{const doc=await getPage('0086-service-ai-installation.html');const parsed=[...doc.querySelectorAll('main .card[data-category]')].map((a,id)=>({id,title:a.querySelector('p')?.textContent.trim()||a.textContent.trim(),category:a.dataset.category,year:Number(a.dataset.year)||0,href:a.getAttribute('href'),image:a.querySelector('img')?.getAttribute('src')||''}));if(parsed.length&&parsed.every(p=>p.title&&p.href)){rows=parsed;route()}}catch{}}
+async function getPage(path){
+ if(pageCache.has(path))return pageCache.get(path);
+ const snapshot=window.__0086Catalogue?.pages?.[path];
+ if(snapshot){const doc=new DOMParser().parseFromString('<main>'+snapshot.html+'</main>','text/html');pageCache.set(path,doc);return doc;}
+ const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),12000);
+ try{const response=await fetch(resolve(path),{signal:ctrl.signal});if(!response.ok)throw new Error('HTTP '+response.status);const doc=new DOMParser().parseFromString(await response.text(),'text/html');if(!doc.querySelector('main'))throw new Error('Missing main');pageCache.set(path,doc);return doc;}finally{clearTimeout(timer);}
+}
+async function loadContent(path){
+ const doc=await getPage(path),node=document.createElement('div');node.className='source-content catalogue-content';
+ const source=doc.querySelector('main').cloneNode(true),snapshot=window.__0086Catalogue?.pages?.[path];
+ source.querySelectorAll('script,style,iframe,object,embed,form,link,.back,.header-back,.corner-icons,.lightbox').forEach(n=>n.remove());
+ for(const e of source.querySelectorAll('*')){
+  for(const a of [...e.attributes])if(a.name.startsWith('on')||['style','srcdoc'].includes(a.name)||(a.name==='id'&&!a.value.startsWith('catalog-')))e.removeAttribute(a.name);
+  for(const a of ['src','href','poster','data-image-src']){
+   const value=e.getAttribute(a);if(!value)continue;if(a==='href'&&value.startsWith('#catalog-'))continue;
+   let u;try{u=new URL(value,snapshot?.url||resolve(path));}catch{e.removeAttribute(a);continue;}
+   if(!['https:','http:','file:','mailto:'].includes(u.protocol)){e.removeAttribute(a);continue;}e.setAttribute(a,u.href);
+  }
+  if(e.tagName==='IMG'){e.loading='lazy';e.decoding='async';}
+  if(e.tagName==='VIDEO'){e.controls=true;e.playsInline=true;e.preload='none';e.removeAttribute('autoplay');}
+  if(e.tagName==='A'&&!e.getAttribute('href')?.startsWith('#catalog-')){e.target='_blank';e.rel='noopener noreferrer';}
+ }
+ node.append(...source.childNodes);return node;
+}
+function coverMarkup(p){return `<img class="project-cover" src="${esc(resolve(p.image))}" alt="${esc(p.title)}" loading="lazy"><a class="original-link" href="${esc(originalURL(p.href))}" target="_blank" rel="noopener noreferrer">${esc(p.title)} <span>↗</span></a>`}
+async function showProject(p,panel,ticket){const external=/^https?:\/\//.test(p.href);panel.innerHTML=external?coverMarkup(p):'<span class="loading" role="status" aria-label="作品加载中"></span>';if(external){panel.querySelector('img').addEventListener('error',e=>e.target.hidden=true,{once:true});return}try{const content=await loadContent(p.href);if(ticket!==routeTicket||!panel.isConnected)return;panel.replaceChildren(content);const a=document.createElement('a');a.className='original-link';a.href=originalURL(p.href);a.target='_blank';a.rel='noopener noreferrer';a.textContent='↗ '+p.title;panel.append(a)}catch{if(ticket!==routeTicket||!panel.isConnected)return;panel.innerHTML=coverMarkup(p);panel.querySelector('img').addEventListener('error',e=>e.target.hidden=true,{once:true})}}
+$('#projects').addEventListener('click',e=>{const summary=e.target.closest('summary');if(!summary||!summary.matches('.project > summary'))return;e.preventDefault();const p=rows.find(r=>r.id===Number(summary.parentElement.dataset.id));go({project:state.project===p.href?null:p.href})});$('#years').addEventListener('click',e=>{const b=e.target.closest('[data-year]');if(b)go({year:b.dataset.year,project:null})});$('#prev').onclick=()=>{const ys=yearOptions();go({year:ys[Math.max(0,ys.indexOf(state.year)-1)],project:null})};$('#next').onclick=()=>{const ys=yearOptions();go({year:ys[Math.min(ys.length-1,ys.indexOf(state.year)+1)],project:null})};window.addEventListener('hashchange',route);
+const dialog=$('#lightbox');
+$('#scroll').addEventListener('click',e=>{
+ const anchor=e.target.closest('a[href^="#catalog-"]');
+ if(anchor){e.preventDefault();document.getElementById(anchor.getAttribute('href').slice(1))?.scrollIntoView({block:'start',behavior:'auto'});return;}
+ const trigger=e.target.closest('[data-image-src]'),img=e.target.closest('.gallery img,.catalogue-content figure img');
+ if(!trigger&&!img)return;
+ e.preventDefault();dialog.querySelector('img').src=trigger?.getAttribute('data-image-src')||img.currentSrc||img.src;
+ dialog.querySelector('img').alt=trigger?.getAttribute('data-image-alt')||img?.alt||'';dialog.showModal();
+});
+dialog.querySelector('button').onclick=()=>dialog.close();dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
+// The latest published All Works snapshot is the sole catalogue source.
+function refreshCatalogue(){const current=window.__0086Catalogue?.projects;if(Array.isArray(current)&&current.length>=SOURCE_ROWS.length){rows=current.map((p,id)=>({...p,id}));route();}}
 // Weather is only a material input. There is intentionally no weather/control dashboard.
 // Production uses an operator-configured same-origin endpoint; evaluation uses Open-Meteo only on localhost/file.
 const localPreview=location.protocol==='file:'||['localhost','127.0.0.1','[::1]'].includes(location.hostname);
