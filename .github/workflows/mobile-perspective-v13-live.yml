@@ -1,0 +1,65 @@
+name: Confirm published perspective touch v13
+on:
+  push:
+    branches: [fix/mobile-touch-green-v12]
+    paths: [.github/workflows/mobile-perspective-v13-live.yml]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Prepare browser
+        run: |
+          pip install playwright -q
+          python -m playwright install chromium --with-deps >/dev/null
+      - name: Verify actual published source and touch behavior
+        run: |
+          mkdir -p /tmp/v13-live
+          python - <<'PY'
+          import pathlib,urllib.request,time,hashlib,json
+          from playwright.sync_api import sync_playwright
+          out=pathlib.Path('/tmp/v13-live');base='https://andai007.github.io/0086-site/';report={}
+          expected={'preview-0086.html':'3aea8baaec0d785d7534f52752f1b5451692cd6f','assets/preview-0086-field-v13.js':'91459ec8d9a84ef05d88255bb8e143be99abf567','assets/preview-0086-music-v6.js':'78d61bb94e36937df292ffc08c504a24eac596a4'}
+          def fetch(path):
+            req=urllib.request.Request(base+path+'?live='+str(time.time()),headers={'Cache-Control':'no-cache'})
+            with urllib.request.urlopen(req,timeout=15) as r:return r.read()
+          deadline=time.monotonic()+330;checks={}
+          while True:
+            try:
+              for path,sha in expected.items():
+                data=fetch(path);actual=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest();checks[path]=actual==sha
+              if all(checks.values()):break
+            except Exception as e:print('Publish check:',str(e),flush=True)
+            if time.monotonic()>deadline:raise RuntimeError('Published preview does not yet match verified files: '+str(checks))
+            time.sleep(12)
+          report['published_files']=checks
+          with sync_playwright() as p:
+            b=p.chromium.launch();ctx=b.new_context(viewport={'width':390,'height':844},device_scale_factor=2,is_mobile=True,has_touch=True);page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
+            page.goto(base+'preview-0086.html?v=13#/home',wait_until='domcontentloaded');page.wait_for_function("document.documentElement.dataset.designRevision==='clean-perspective-v13' && window.__0086Field?.frames>4",timeout=30000)
+            page.touchscreen.tap(45,200);page.wait_for_timeout(900)
+            cd=ctx.new_cdp_session(page)
+            def touch(kind,x=None,y=None):cd.send('Input.dispatchTouchEvent',{'type':kind,'touchPoints':[] if x is None else [{'x':x,'y':y,'id':1}]})
+            touch('touchStart',60,430)
+            for i in range(1,19):touch('touchMove',60+15*i,430);page.wait_for_timeout(25)
+            target=page.evaluate('__0086Field.targetCamera.x');touch('touchEnd');page.wait_for_timeout(1700)
+            report['touch']=page.evaluate('({camera:__0086Field.camera,target:__0086Field.targetCamera,mode:__0086Field.interaction,overlay:!!document.querySelector("#field-touch-feedback"),touch:__0086Field.touch})')
+            assert target>.6 and abs(report['touch']['camera']['x']-target)<.03 and not report['touch']['overlay']
+            page.screenshot(path=str(out/'live-mobile-home.png'))
+            page.evaluate("location.hash='#/works'");page.wait_for_function("document.querySelectorAll('#projects>.project').length===23");page.wait_for_timeout(400)
+            report['catalogue']=page.evaluate('({count:__0086Catalogue.projects.length,green:getComputedStyle(document.querySelector(".nav a.active")).backgroundColor,overflow:document.documentElement.scrollWidth>innerWidth})')
+            assert report['catalogue']['count']==23 and report['catalogue']['green']=='rgb(204, 255, 0)' and not report['catalogue']['overflow']
+            assert abs(page.evaluate('__0086Field.targetCamera.x')-target)<.001
+            page.screenshot(path=str(out/'live-mobile-works.png'))
+            report['sound']=page.evaluate('({title:__0086Music.title,playing:__0086Music.playing,time:__0086Music.audioTime,beats:__0086Music.beats})')
+            report['errors']=errors;assert not errors;report['passed']=True
+            ctx.close();b.close()
+          (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: perspective-v13-live-verified
+          path: /tmp/v13-live
+          retention-days: 3
