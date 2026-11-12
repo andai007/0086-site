@@ -14,10 +14,10 @@
 const root=new URL('./',location.href);
 const open='<scr'+'ipt>',close='</scr'+'ipt>';
 const weather='https://api.open-meteo.com/v1/forecast?latitude=22.5431&longitude=114.0579&current=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,is_day,wind_speed_10m,wind_direction_10m,wind_gusts_10m&wind_speed_unit=ms&timezone=Asia%2FShanghai';
-// Values audited from the reference site's live CSS, 2026-11-12:
-// Geist Mono 400; landing 18px/.08em; panel white .05, border white .14, blur 6px.
+// Verified reference: Geist Mono 400, landing 18px/.08em; panel white .05, border white .14, blur 6px.
+// Noto Sans SC supplies Chinese glyphs only; Geist Mono remains the Latin/number face.
 const style=`
-:root{--mono:'Geist Mono',ui-monospace,monospace;--glass:rgba(255,255,255,.05);--line:rgba(255,255,255,.14);--lime:#ccff00;--pink:#ff9999;--blue:#9999ff;--dim:#b7b7c6}
+:root{--mono:'Geist Mono','Noto Sans SC',ui-monospace,monospace;--glass:rgba(255,255,255,.05);--line:rgba(255,255,255,.14);--lime:#ccff00;--pink:#ff9999;--blue:#9999ff;--dim:#b7b7c6}
 body{font-family:var(--mono),'PingFang SC','Microsoft YaHei',sans-serif;font-weight:400}
 .glass{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 body[data-view=home]{background:#000}body[data-view=home]>.shell{display:none!important}
@@ -49,11 +49,11 @@ h1{font:400 clamp(19px,1.65vw,24px)/1.4 var(--mono),'PingFang SC','Microsoft YaH
 .project summary:hover,.project[open] summary{background:transparent}
 .ptype{display:block;font:400 10px/1.35 var(--mono);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
 .pname{font-family:var(--mono),'PingFang SC','Microsoft YaHei',sans-serif;font-size:clamp(14px,1.22vw,18px);font-weight:400;line-height:1.35;letter-spacing:0}
-.pyear{font-family:var(--mono);font-size:12px;line-height:1.45;color:#ccc}.list-meta{letter-spacing:.14em}.source-content{font-family:'Roboto','PingFang SC','Microsoft YaHei',sans-serif;font-size:15px;line-height:1.65;letter-spacing:0}
+.pyear{font-family:var(--mono);font-size:12px;line-height:1.45;color:#ccc}.list-meta{letter-spacing:.14em}.source-content{font-family:'Roboto','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;font-size:15px;line-height:1.65;letter-spacing:0}
 .source-content .title,.source-content .meta,.source-content .info,.source-content h1,.source-content h2,.source-content h3{font-family:var(--mono),'PingFang SC','Microsoft YaHei',sans-serif;font-weight:400}
 body[data-view=home] #site-music{left:auto!important;right:24px;bottom:22px!important;top:auto!important}body[data-view=home] #site-music .music-panel{left:auto;right:0;top:auto;bottom:calc(100% + 9px)}
 @media(max-height:760px) and (min-width:721px){.entry{padding-top:50px;padding-bottom:50px}.entry-logo{width:270px}.entry-description{margin:20px 0;font-size:12px}.entry-menu{gap:9px}.entry-link{min-height:48px;padding:10px 24px;font-size:16px;line-height:26px}.entry-link.about-entry{margin-top:16px}}
-@media(max-width:720px){.entry{padding:58px 22px 72px}.entry-content{transform:none}.entry-logo{width:min(280px,72vw)}.entry-description{font-size:10px;line-height:17px;letter-spacing:.12em;margin:28px 0}.entry-menu{width:min(448px,100%);gap:10px}.entry-link{min-height:52px;padding:13px 14px;font-size:15px;line-height:24px}.entry-link.about-entry{margin-top:18px}.entry-utility{gap:20px;top:calc(100% + 20px);font-size:9px}.entry-pause{left:18px;bottom:18px}.site-language{top:10px;left:12px}.return-home{top:10px;right:12px;padding:6px 10px;font-size:10px}body[data-view=inside] .shell{padding-top:54px}.side-heading{font-size:16px;line-height:24px;margin-bottom:12px}.side-panel{position:relative;padding:12px}.secondary{top:12px;right:12px;gap:13px}.secondary a{background:none;border:0;font-size:9px}.side .nav{padding-top:22px!important}.nav a{font-size:11px;min-height:40px}.year .year-number{font-size:14px}.ptype{font-size:9px}.pname{font-size:13px}.pyear{font-size:10px}#site-music{top:82px!important;right:25px!important;left:auto!important}.source-content{font-size:13px}body[data-view=home] #site-music{top:auto!important;bottom:18px!important;right:18px!important}.entry-content:before{width:100vw;height:90vh}}
+@media(max-width:720px){.entry{padding:58px 22px 72px}.entry-content{transform:none}.entry-logo{width:min(280px,72vw)}.entry-description{font-size:10px;line-height:17px;letter-spacing:.12em;margin:28px 0}.entry-menu{width:min(448px,100%);gap:10px}.entry-link{min-height:52px;padding:13px 14px;font-size:15px;line-height:24px}.entry-link.about-entry{margin-top:18px}.entry-utility{gap:20px;top:calc(100% + 20px);font-size:9px}.entry-pause{left:18px;bottom:18px}.site-language{top:10px;left:12px}.return-home{top:10px;right:12px;padding:6px 10px;font-size:10px}body[data-view=inside] .shell{padding-top:54px}.side-heading{font-size:16px;line-height:24px;margin-bottom:12px}.side-panel{position:relative;padding:12px}.secondary{top:12px;right:12px;gap:13px}.secondary a{background:none;border:0;font-size:9px}.side .nav{padding-top:22px!important}.nav a{font-size:11px;min-height:40px}.year .year-number{font-size:14px}.ptype{font-size:9px}.pname{font-size:13px}.pyear{font-size:10px}#site-music{top:99px!important;right:25px!important;left:auto!important}.source-content{font-size:13px}body[data-view=home] #site-music{top:auto!important;bottom:18px!important;right:18px!important}.entry-content:before{width:100vw;height:90vh}}
 @media(max-height:670px) and (max-width:720px){.entry{align-items:flex-start}.entry-logo{width:210px}.entry-description{margin:17px 0}.entry-menu{gap:8px}.entry-link{min-height:44px;padding:9px 14px}.entry-link.about-entry{margin-top:12px}.entry-utility{position:static;margin-top:18px}}
 @media(prefers-reduced-motion:reduce){.entry-link,.entry-link:before{transition:none}}
 `;
@@ -124,14 +124,14 @@ function interfaceSetup(){
     document.querySelectorAll('[data-home-label]').forEach(el=>el.textContent=copy[el.dataset.homeLabel]);
     document.querySelectorAll('.nav a[data-type]').forEach(el=>{const text=copy[el.dataset.type];if(el.firstChild.nodeType===Node.TEXT_NODE)el.firstChild.textContent=text+' '});
     document.querySelectorAll('[data-language]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.language===lang)));
-    try{localStorage.setItem('0086-language',lang)}catch{}route();
+    try{localStorage.setItem('0086-language',lang)}catch{}route();if(paused)drawFrame(0);
   };
   document.querySelectorAll('[data-language]').forEach(b=>b.addEventListener('click',()=>setLanguage(b.dataset.language)));
   let language='zh';try{language=localStorage.getItem('0086-language')||'zh'}catch{}setLanguage(language);
   document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.project summary')){e.preventDefault();e.target.click()}});
   document.addEventListener('pointercancel',()=>{mouse.down=false});
   window.addEventListener('hashchange',()=>{if(paused)drawFrame(0)});
-  document.documentElement.dataset.designRevision='entrance-geist-glass-v2';
+  document.documentElement.dataset.designRevision='entrance-geist-glass-v3';
 }
 const config={contentBase:root.href,weatherEndpoint:weather,weatherProvider:'open-meteo'};
 document.getElementById('retry').onclick=()=>location.reload();
@@ -140,7 +140,7 @@ fetch(new URL('preview-0086-source.html',root),{signal:controller.signal,cache:'
 .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.text()})
 .then(html=>{
   if(!html.includes('SOURCE_ROWS')||!html.includes('state=readRoute();const works'))throw new Error('Preview source mismatch');
-  html=html.replace('<head>','<head><meta name="robots" content="noindex,nofollow"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">'+open+'window.SITE_CONFIG='+JSON.stringify(config)+';'+close);
+  html=html.replace('<head>','<head><meta name="robots" content="noindex,nofollow"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=Noto+Sans+SC:wght@400&display=swap" rel="stylesheet">'+open+'window.SITE_CONFIG='+JSON.stringify(config)+';'+close);
   html=html.replace('</head>','<style>'+style+'</style></head>');
   html=html.replace('<body>','<body data-view="home">');
   html=html.replace('<div class="shell">',landing+'<div class="shell" hidden>');
