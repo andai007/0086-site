@@ -1,0 +1,69 @@
+name: Verify published EVA preview
+on:
+  push:
+    branches: [design/flat-weather-20261112]
+    paths: [.github/workflows/preview-v7-live.yml]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Browser setup
+        run: |
+          pip install playwright -q
+          python -m playwright install chromium --with-deps >/dev/null
+      - name: Verify deployed preview
+        run: |
+          mkdir -p /tmp/0086-eva-live
+          python - <<'PY'
+          import urllib.request,time,json,pathlib
+          from playwright.sync_api import sync_playwright
+          base='https://andai007.github.io/0086-site/';out=pathlib.Path('/tmp/0086-eva-live');report={};deadline=time.monotonic()+300
+          while True:
+            try:
+              req=urllib.request.Request(base+'preview-0086.html?verify='+str(time.time()),headers={'Cache-Control':'no-cache'})
+              html=urllib.request.urlopen(req,timeout=15).read().decode()
+              if 'preview-0086-eva-v7.js' in html:break
+            except Exception:pass
+            if time.monotonic()>deadline:raise RuntimeError('Preview publication not available')
+            time.sleep(10)
+          with sync_playwright() as p:
+            browser=p.chromium.launch(args=['--use-angle=swiftshader','--enable-unsafe-swiftshader'])
+            page=browser.new_page(viewport={'width':1440,'height':900})
+            errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
+            try:
+              page.goto(base+'preview-0086.html?v=7&check='+str(time.time())+'#/home',wait_until='domcontentloaded')
+              page.wait_for_function("window.__0086EVA?.version===7 && window.__0086Field && window.__0086Music",timeout=30000)
+              page.evaluate('document.fonts.ready');page.wait_for_timeout(1000)
+              report['home']=page.evaluate('({revision:document.documentElement.dataset.designRevision,renderer:__0086Field.renderer,silent:!__0086Music.playing,frames:__0086Field.frames})')
+              page.screenshot(path=str(out/'home-desktop.png'))
+              page.locator('.entry-link').first.click();page.wait_for_function('__0086Music.playing && __0086Music.audioTime>2',timeout=35000)
+              page.mouse.move(100,500,steps=12);page.wait_for_timeout(500);cam1=page.evaluate('__0086Field.camera')
+              for x,y in [(1300,250),(400,670),(1200,400)]:
+                page.mouse.move(x,y,steps=14);page.wait_for_timeout(420)
+              report['interaction']=page.evaluate('({playing:__0086Music.playing,source:__0086Music.title,time:__0086Music.audioTime,beats:__0086Music.beats,energy:__0086Music.sampleEnergy(),camera:__0086Field.camera,meter:__0086EVA.meterLevel,weather:__0086.weather.source})')
+              report['camera_moves']=abs(report['interaction']['camera']['x']-cam1['x'])>.2
+              page.locator('.nav a[data-type=all]').click();page.mouse.move(20,800);page.wait_for_timeout(1000)
+              report['style']=page.evaluate('({title:getComputedStyle(document.querySelector("#title")).fontSize,case:getComputedStyle(document.querySelector(".pname")).fontSize,nav:getComputedStyle(document.querySelector(".nav a")).fontSize,glass:getComputedStyle(document.querySelector(".main.glass")).backgroundColor,blur:getComputedStyle(document.querySelector(".main.glass")).backdropFilter,yearHeight:document.querySelector(".year").getBoundingClientRect().height,footerStripe:getComputedStyle(document.querySelector(".eva-corner.left")).display})')
+              page.screenshot(path=str(out/'works-desktop.png'))
+              page.locator('#sound-toggle').click();n=page.evaluate('__0086Music.beats');page.mouse.move(1100,400,steps=16);page.wait_for_timeout(500)
+              report['muted']=page.evaluate('({playing:__0086Music.playing,beats:__0086Music.beats,context:__0086Music.contextState})');report['mute_silent']=report['muted']['beats']==n and not report['muted']['playing']
+              page.set_viewport_size({'width':390,'height':844});page.wait_for_timeout(500);page.screenshot(path=str(out/'works-mobile.png'),full_page=True)
+              report['mobile_no_overflow']=page.evaluate('document.documentElement.scrollWidth<=innerWidth')
+              report['errors']=errors
+              assert report['home']['silent'] and report['interaction']['playing'] and report['interaction']['beats']>0 and report['interaction']['energy']>0
+              assert report['camera_moves'] and report['mute_silent'] and report['mobile_no_overflow'] and not errors
+              assert report['style']['title']=='16.32px' and report['style']['case']=='13.6px' and report['style']['footerStripe']=='none'
+            except Exception as e:
+              report['failure']=str(e);report['errors']=errors;page.screenshot(path=str(out/'failure.png'));raise
+            finally:
+              (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False,indent=2));browser.close()
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 0086-eva-live-verified
+          path: /tmp/0086-eva-live
+          retention-days: 2
