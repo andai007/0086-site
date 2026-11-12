@@ -1,0 +1,76 @@
+name: Verify published catalogue v10
+on:
+  push:
+    branches: [content/current-catalogue-v10]
+    paths: [.github/workflows/catalogue-v10-live.yml]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Prepare browser
+        run: |
+          pip install playwright requests -q
+          python -m playwright install chromium --with-deps >/dev/null
+      - name: Test published pages without mocks
+        run: |
+          mkdir -p /tmp/catalogue-v10-live
+          python - <<'PY'
+          import time,json,pathlib,hashlib,requests
+          from playwright.sync_api import sync_playwright
+          out=pathlib.Path('/tmp/catalogue-v10-live');base='https://andai007.github.io/0086-site/';report={};deadline=time.monotonic()+310
+          expected={'preview-0086.html':'17bc9b0524dacfa8ea29bff45cab68e312ce2524','preview-0086-source.html':'cbfcb00e95d08a8599a63f63b39b91c66cfb7c80','assets/preview-catalogue-v10.json':'808f17b715967bcfb0909faa8fed9a58afe4992b'}
+          while True:
+            try:
+              r=requests.get(base+'preview-0086.html?publish='+str(time.time()),timeout=15)
+              if r.ok and 'clean-catalogue-v10' in r.text:break
+            except requests.RequestException:pass
+            if time.monotonic()>deadline:raise RuntimeError('New catalogue preview not published yet')
+            time.sleep(12)
+          try:
+            hashes={}
+            for path,wanted in expected.items():
+              r=requests.get(base+path+'?verify='+str(time.time()),timeout=20);r.raise_for_status();content=r.content
+              hashes[path]=hashlib.sha1(b'blob '+str(len(content)).encode()+b'\0'+content).hexdigest()
+              assert hashes[path]==wanted,'Published file mismatch: '+path
+            report['published_hashes']=hashes
+            with sync_playwright() as p:
+              browser=p.chromium.launch();page=browser.new_page(viewport={'width':1440,'height':960});errors=[]
+              page.on('pageerror',lambda e:errors.append(str(e)))
+              page.goto(base+'preview-0086.html?v=10&verify='+str(time.time())+'#/works',wait_until='domcontentloaded')
+              page.wait_for_function("window.__0086Catalogue?.version===10&&window.__0086?.projects.length===23&&!!window.__0086Music",timeout=30000)
+              report['count']=page.locator('#projects > .project').count();assert report['count']==23
+              report['first_two']=page.locator('#projects .pname').all_text_contents()[:2]
+              assert report['first_two']==['一颗，平湖西瓜','怪奇疗愈所 — 山海经 IP']
+              report['no_eva']=page.locator('#eva-overlay').count()==0;assert report['no_eva']
+              page.locator('#sound-toggle').click();page.wait_for_function('__0086Music.playing&&__0086Music.audioTime>1',timeout=25000)
+              before=page.evaluate('__0086Music.beats');page.mouse.move(20,500);page.mouse.move(1300,400,steps=35);page.wait_for_timeout(500)
+              report['audio']=page.evaluate('({title:__0086Music.title,playing:__0086Music.playing,beats:__0086Music.beats})');assert report['audio']['beats']>before
+              for idx,name in [(0,'pinghu'),(1,'shanhai')]:
+                page.locator(f'.project[data-id="{idx}"] > summary').click();page.wait_for_selector(f'.project[data-id="{idx}"] .catalogue-content')
+                first=page.locator(f'.project[data-id="{idx}"] .catalogue-content img').first;first.scroll_into_view_if_needed();first.evaluate('e=>e.loading="eager"')
+                page.wait_for_function('(s)=>{let e=document.querySelector(s);return e&&e.complete&&e.naturalWidth>0}',arg=f'.project[data-id="{idx}"] .catalogue-content img',timeout=25000)
+                page.locator('#scroll').evaluate('e=>e.scrollTop=0');page.screenshot(path=str(out/(name+'-live.png')))
+                page.locator(f'.project[data-id="{idx}"] > summary').click()
+              page.wait_for_function("!document.querySelector('#projects > .project[open]')")
+              page.locator('#scroll').evaluate('e=>e.scrollTop=0');page.screenshot(path=str(out/'works-live.png'))
+              sizes=[]
+              for width in [320,390,768,1440]:
+                page.set_viewport_size({'width':width,'height':900});page.wait_for_timeout(100)
+                sizes.append(page.evaluate('({width:innerWidth,overflow:document.documentElement.scrollWidth>innerWidth+1})'))
+              report['layouts']=sizes;assert not any(x['overflow'] for x in sizes)
+              report['errors']=errors;assert not errors
+              if page.evaluate('__0086Music.playing'):page.locator('#sound-toggle').click()
+              browser.close()
+            report['passed']=True
+          finally:
+            (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: catalogue-v10-live-verified
+          path: /tmp/catalogue-v10-live
+          retention-days: 3
