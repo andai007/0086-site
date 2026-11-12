@@ -1,0 +1,62 @@
+name: Verify deployed world radio
+on:
+  push:
+    branches: [design/flat-weather-20261112]
+    paths: [.github/workflows/world-radio-live-check.yml]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Set up browser
+        run: |
+          pip install playwright -q
+          python -m playwright install chromium --with-deps >/dev/null
+      - name: Check actual published preview and audio
+        run: |
+          mkdir -p /tmp/world-radio-live
+          python - <<'PY'
+          import json,time,pathlib,urllib.request
+          from playwright.sync_api import sync_playwright
+          out=pathlib.Path('/tmp/world-radio-live');report={}
+          base='https://andai007.github.io/0086-site/'
+          deadline=time.monotonic()+290
+          while True:
+            try:
+              req=urllib.request.Request(base+'preview-0086.html?deployment='+str(time.time()),headers={'Cache-Control':'no-cache'})
+              text=urllib.request.urlopen(req,timeout=12).read().decode()
+              if 'preview-0086-music.js?v=5' in text:break
+            except Exception as e:print('Checking publish state:',str(e),flush=True)
+            if time.monotonic()>deadline:raise RuntimeError('New preview not yet published')
+            time.sleep(10)
+          try:
+            with sync_playwright() as p:
+              browser=p.chromium.launch();page=browser.new_page(viewport={'width':1440,'height':900})
+              errors=[];page.on('pageerror',lambda error:errors.append(str(error)))
+              page.goto(base+'preview-0086.html?v=5&verify='+str(time.time())+'#/home',wait_until='domcontentloaded')
+              page.wait_for_function("window.__0086Music?.mode==='world-radio'",timeout=30000)
+              report['silent_on_load']=page.evaluate("!document.querySelector('audio').getAttribute('src')")
+              page.locator('.entry-link').first.click()
+              page.wait_for_function('__0086Music.playing && __0086Music.audioTime>2',timeout=35000)
+              before=page.evaluate('__0086Music.audioTime')
+              page.locator('.nav a[data-type=space]').click();page.wait_for_timeout(1600)
+              report['playback']=page.evaluate("({mode:__0086Music.mode,title:__0086Music.title,time:__0086Music.audioTime,playing:__0086Music.playing,stream:__0086Music.stream,catalogue:__0086Music.catalogue,volume:document.querySelector('audio').volume})")
+              report['continuous']=report['playback']['playing'] and report['playback']['time']>before
+              page.locator('#sound-toggle').click()
+              report['mute_stops_stream']=page.evaluate("!__0086Music.playing && !document.querySelector('audio').getAttribute('src')")
+              report['design_revision']=page.evaluate('document.documentElement.dataset.designRevision')
+              report['errors']=errors
+              page.screenshot(path=str(out/'preview-radio-live.png'))
+              assert report['silent_on_load'] and report['continuous'] and report['mute_stops_stream'] and not errors
+              browser.close()
+          finally:
+            (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: world-radio-live-verified
+          path: /tmp/world-radio-live
+          retention-days: 2
