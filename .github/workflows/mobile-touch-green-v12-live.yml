@@ -1,0 +1,37 @@
+name: Confirm published mobile touch v12
+on:
+  push:
+    branches: [fix/mobile-touch-green-v12]
+    paths: [.github/workflows/mobile-touch-green-v12-live.yml]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Verify published bytes and preserved catalogue
+        run: |
+          python - <<'PY'
+          import urllib.request,time,hashlib,json,concurrent.futures
+          base='https://andai007.github.io/0086-site/'
+          expected={'preview-0086.html':'831943cdde503df43bebb4bdd07da82353ecf877','assets/preview-0086-field-v6.js':'dbc3369b1465039bcdb232bcd9d79460bce6fb16','assets/preview-0086-music-v6.js':'78d61bb94e36937df292ffc08c504a24eac596a4'}
+          def get(path):
+            req=urllib.request.Request(base+path+'?v=12&verify='+str(time.time()),headers={'Cache-Control':'no-cache'})
+            with urllib.request.urlopen(req,timeout=15) as r:return r.read()
+          def check(path):
+            raw=get(path);actual=hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()
+            return path,actual
+          deadline=time.monotonic()+320
+          while True:
+            try:
+              with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:actual=dict(pool.map(check,expected))
+              if actual==expected:break
+              print('Deployment not yet current',actual,flush=True)
+            except Exception as e:print(type(e).__name__,str(e),flush=True)
+            if time.monotonic()>deadline:raise RuntimeError('Published preview did not match verified files')
+            time.sleep(8)
+          catalogue=json.loads(get('assets/preview-catalogue-v10.json'))
+          assert len(catalogue['projects'])==23
+          print(json.dumps({'published':True,'exact_verified_blobs':actual,'projects':len(catalogue['projects']),'revision':'clean-touch-v12'},indent=2))
+          PY
