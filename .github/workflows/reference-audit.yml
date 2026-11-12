@@ -1,0 +1,71 @@
+name: Reference visual audit
+on:
+  push:
+    branches: [design/flat-weather-20261112]
+    paths: [.github/workflows/reference-audit.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Read reference styles
+        run: |
+          mkdir -p /tmp/reference-audit
+          python - <<'PY'
+          import urllib.request,re,json
+          from urllib.parse import urljoin
+          u='https://www.flatfestival.org/'
+          html=urllib.request.urlopen(u,timeout=30).read().decode('utf-8')
+          sheets=re.findall(r'<link[^>]+href=[\"\']([^\"\']+)[\"\'][^>]*>',html)
+          css='\n'.join(re.findall(r'<style[^>]*>([\s\S]*?)</style>',html))
+          print('STYLE_LINKS',json.dumps(sheets))
+          for href in sheets:
+            if '.css' in href or 'fonts.googleapis' in href:
+              try: css+='\n'+urllib.request.urlopen(urljoin(u,href),timeout=20).read().decode()
+              except Exception as e: print('CSS_ERROR',str(e))
+          fragments=[]
+          for match in re.finditer(r'[^{}]*\{[^{}]*(?:font-family|backdrop-filter|rgba\(|letter-spacing)[^{}]*\}',css):
+            fragment=match.group(0)
+            if len(fragment)<2200: fragments.append(fragment)
+          print('REFERENCE_CSS_BEGIN\n'+'\n'.join(fragments)[:48000]+'\nREFERENCE_CSS_END')
+          open('/tmp/reference-audit/styles.json','w').write(json.dumps({'stylesheet_urls':sheets,'rules':fragments},ensure_ascii=False,indent=2))
+          PY
+      - name: Install browser inspector
+        run: pip install playwright -q
+      - name: Inspect and capture reference
+        run: |
+          python - <<'PY'
+          import json,shutil,os
+          from playwright.sync_api import sync_playwright
+          out='/tmp/reference-audit/'
+          with sync_playwright() as p:
+            exe=shutil.which('google-chrome') or shutil.which('chromium') or shutil.which('chromium-browser')
+            if not exe:
+              os.system('python -m playwright install chromium --with-deps > /dev/null 2>&1')
+            browser=p.chromium.launch(executable_path=exe,headless=True,args=['--no-sandbox'])
+            page=browser.new_page(viewport={'width':1468,'height':1024},device_scale_factor=1)
+            page.goto('https://www.flatfestival.org/',wait_until='domcontentloaded',timeout=60000)
+            page.wait_for_timeout(3500)
+            def inspect():
+              return page.evaluate('''() => ({fonts:[...document.fonts].map(f=>({family:f.family,status:f.status,weight:f.weight})), body:{font:getComputedStyle(document.body).fontFamily}, elements:[...document.querySelectorAll('button,a,h1,h2,nav,aside,main,[class*=panel],[class*=landing],[class*=menu],[class*=sidebar]')].filter(e=>e.getBoundingClientRect().width>0&&e.getBoundingClientRect().height>0&&getComputedStyle(e).visibility!=='hidden').slice(0,100).map(e=>{const s=getComputedStyle(e),r=e.getBoundingClientRect();return {tag:e.tagName,class:e.className,id:e.id,text:e.textContent.trim().slice(0,100),font:s.fontFamily,size:s.fontSize,weight:s.fontWeight,spacing:s.letterSpacing,line:s.lineHeight,bg:s.backgroundColor,blur:s.backdropFilter,border:s.borderColor,padding:s.padding,width:r.width,height:r.height,x:r.x,y:r.y}})})''')
+            home=inspect();page.screenshot(path=out+'flat-home.png')
+            print('HOME_AUDIT',json.dumps(home,ensure_ascii=False))
+            for label in ['Registration','Inscripciones','Schedule','Cronograma']:
+              target=page.get_by_text(label,exact=True)
+              try:
+                target.first.click(timeout=2000);page.wait_for_timeout(1700);break
+              except Exception: pass
+            inside=inspect();page.screenshot(path=out+'flat-inside.png')
+            print('INSIDE_AUDIT',json.dumps(inside,ensure_ascii=False))
+            open(out+'audit.json','w').write(json.dumps({'home':home,'inside':inside},ensure_ascii=False,indent=2))
+            browser.close()
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: flat-reference-audit
+          path: /tmp/reference-audit/
+          retention-days: 2
