@@ -1,0 +1,33 @@
+name: Confirm published return control v11
+on:
+  push:
+    branches: [fix/preview-return-v11]
+    paths: [.github/workflows/return-home-v11-live.yml]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify published HTML and retained catalogue
+        run: |
+          python - <<'PY'
+          import urllib.request,time,hashlib,json
+          base='https://andai007.github.io/0086-site/'
+          expected='04be050162c96d400d175e45446bfe4ad3aeeb00'
+          deadline=time.monotonic()+240
+          while True:
+            try:
+              req=urllib.request.Request(base+'preview-0086.html?v=11&check='+str(time.time()),headers={'Cache-Control':'no-cache'})
+              data=urllib.request.urlopen(req,timeout=12).read()
+              sha=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+              if sha==expected:break
+              print('Publish not propagated yet:',sha,flush=True)
+            except Exception as e:print('Publish check:',str(e),flush=True)
+            if time.monotonic()>deadline:raise RuntimeError('Verified HTML not yet published')
+            time.sleep(12)
+          catalogue=json.load(urllib.request.urlopen(base+'assets/preview-catalogue-v10.json?check='+str(time.time()),timeout=15))
+          assert len(catalogue['projects'])==23
+          print(json.dumps({'published':True,'html_blob':sha,'matches_browser_verified_version':True,'project_count':len(catalogue['projects']),'only_changed_ui':'return-home','preview':base+'preview-0086.html?v=11#/works'},ensure_ascii=False))
+          PY
