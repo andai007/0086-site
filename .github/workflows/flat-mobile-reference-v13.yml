@@ -1,0 +1,72 @@
+name: Inspect FLAT mobile reference v13
+on:
+  push:
+    branches: [fix/mobile-touch-green-v12]
+    paths: [.github/workflows/flat-mobile-reference-v13.yml]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Prepare browser
+        run: |
+          pip install requests beautifulsoup4 playwright -q
+          python -m playwright install chromium --with-deps >/dev/null
+      - name: Inspect real mobile reference
+        run: |
+          mkdir -p /tmp/flat-mobile-v13/sources
+          cat > /tmp/audit.py <<'PY'
+          import pathlib,json,time,re,requests
+          from urllib.parse import urljoin,urlparse
+          from bs4 import BeautifulSoup
+          from playwright.sync_api import sync_playwright
+          out=pathlib.Path('/tmp/flat-mobile-v13');root='https://www.flatfestival.org/'
+          r=requests.get(root,timeout=20);r.raise_for_status();(out/'sources/index.html').write_text(r.text)
+          doc=BeautifulSoup(r.text,'html.parser');scripts=[]
+          for i,s in enumerate(doc.find_all('script')):
+            u=urljoin(root,s['src']) if s.get('src') else None
+            try:
+              text=requests.get(u,timeout=20).text if u else s.get_text()
+              if len(text)>2500000:continue
+              name='script-%02d.js'%i;(out/'sources'/name).write_text(text)
+              scripts.append({'file':name,'url':u or 'inline','bytes':len(text)})
+              if len(text)<400000:
+                hits=[text[max(0,m.start()-180):m.end()+350] for m in re.finditer(r'touchstart|touchmove|touchend|pointerdown|pointermove|deviceorientation|OrbitControls|damping|inertia|uMouse|raycast|mouseX|mouseY|velocity|isMobile',text,re.I)]
+                print('SOURCE',name,u,'TOUCH EXCERPTS',json.dumps(hits,ensure_ascii=False)[:24000])
+            except Exception as e:print('source unavailable',u,str(e))
+          report={'scripts':scripts,'scope':'actual live site in Chromium mobile touch emulation, not a physical phone'}
+          with sync_playwright() as p:
+            b=p.chromium.launch(args=['--use-angle=swiftshader','--enable-unsafe-swiftshader'])
+            ctx=b.new_context(viewport={'width':390,'height':844},device_scale_factor=2,is_mobile=True,has_touch=True,record_video_dir=str(out/'videos'),record_video_size={'width':390,'height':844})
+            page=ctx.new_page();errors=[]
+            page.on('pageerror',lambda e:errors.append(str(e)))
+            page.add_init_script("""(()=>{window.__listenerAudit=[];const add=EventTarget.prototype.addEventListener;EventTarget.prototype.addEventListener=function(t,f,o){if(/touch|pointer|mouse|orientation/.test(t))window.__listenerAudit.push({event:t,target:this===window?'window':this===document?'document':this.tagName||this.constructor.name,source:typeof f==='function'?f.toString().slice(0,9000):'',options:o});return add.call(this,t,f,o)}})()""")
+            page.goto(root,wait_until='domcontentloaded',timeout=45000);page.wait_for_timeout(5000)
+            report['viewport']=page.evaluate('({w:innerWidth,h:innerHeight,dpr:devicePixelRatio,scroll:document.documentElement.scrollHeight})')
+            report['canvases']=page.locator('canvas').evaluate_all('(xs)=>xs.map(x=>({id:x.id,w:x.width,h:x.height,style:getComputedStyle(x).cssText,rect:x.getBoundingClientRect().toJSON()}))')
+            report['listeners']=page.evaluate('__listenerAudit')
+            report['controls']=page.locator('a,button').evaluate_all('(xs)=>xs.map(x=>({text:x.innerText,href:x.getAttribute("href"),id:x.id,cls:x.className})).filter(x=>x.text).slice(0,45)')
+            page.screenshot(path=str(out/'flat-home-before.png'))
+            client=ctx.new_cdp_session(page)
+            def touch(kind,points):client.send('Input.dispatchTouchEvent',{'type':kind,'touchPoints':[{'x':x,'y':y,'id':1} for x,y in points]})
+            touch('touchStart',[(65,280)]);page.wait_for_timeout(500);page.screenshot(path=str(out/'flat-held.png'))
+            for i in range(1,19):touch('touchMove',[(65+14*i,280+6*i)]);page.wait_for_timeout(28)
+            page.screenshot(path=str(out/'flat-drag.png'));touch('touchEnd',[]);page.wait_for_timeout(900);page.screenshot(path=str(out/'flat-released.png'))
+            report['after_drag_scroll']=page.evaluate('scrollY')
+            page.goto(root+'#inscripciones',wait_until='domcontentloaded');page.wait_for_timeout(2000);page.screenshot(path=str(out/'flat-inside.png'))
+            report['inside_text']=page.locator('body').inner_text()[:5000]
+            report['inside_layers']=page.locator('canvas,main,section,.panel').evaluate_all('(xs)=>xs.map(x=>({tag:x.tagName,id:x.id,cls:x.className,pe:getComputedStyle(x).pointerEvents,touch:getComputedStyle(x).touchAction,position:getComputedStyle(x).position,rect:x.getBoundingClientRect().toJSON()})).filter(x=>x.rect.width&&x.rect.height).slice(0,30)')
+            report['errors']=errors;ctx.close();b.close()
+          (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+          print('REPORT',json.dumps({k:v for k,v in report.items() if k!='listeners'},ensure_ascii=False)[:16000])
+          print('LISTENERS',json.dumps(report['listeners'],ensure_ascii=False)[:22000])
+          PY
+          python /tmp/audit.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: flat-mobile-reference-v13
+          path: /tmp/flat-mobile-v13
+          retention-days: 3
