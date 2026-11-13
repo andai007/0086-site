@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#000000">
+<title>0086 Studios™</title>
+<style>html,body{margin:0;min-height:100%;background:#000;color:#fff;font:14px/1.6 monospace}#boot{position:fixed;inset:0;display:grid;place-content:center;gap:20px;text-align:center}#boot img{width:220px;height:auto;filter:invert(1);margin:auto}.line{height:1px;width:220px;background:#333;overflow:hidden}.line:after{content:'';display:block;height:1px;width:40%;background:#002fa7;animation:move 1s ease-in-out infinite alternate}button{background:none;border:1px solid #555;color:inherit;padding:9px 20px;font:inherit;cursor:pointer}@keyframes move{to{transform:translateX(150%)}}@media(prefers-reduced-motion:reduce){.line:after{animation:none}}</style>
+</head>
+<body>
+<main id="boot"><img src="assets/0086-logo.png" alt="0086 Studios"><div class="line" role="status" aria-label="正在打开网站"></div><p id="message" hidden></p><button id="retry" hidden>重新打开</button></main>
+<script>
+(() => {
+'use strict';
+const root=new URL('./',location.href);
+const open='<scr'+'ipt>',close='</scr'+'ipt>';
+const weather='https://api.open-meteo.com/v1/forecast?latitude=22.5431&longitude=114.0579&current=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,is_day,wind_speed_10m,wind_direction_10m,wind_gusts_10m&wind_speed_unit=ms&timezone=Asia%2FShanghai';
+const returnStyles=`
+@media(any-pointer:coarse){.entry{touch-action:pan-y pinch-zoom}}
+/* Only the return control: preserve existing typography, layout and audio. */
+.return-home{display:inline-flex;align-items:center;justify-content:center;gap:7px;top:13px;right:24px;height:28px;min-width:0;width:auto;padding:6px 0;border:0;background:transparent;box-shadow:none;color:#b7b7c6;font:400 10.56px/15.84px var(--mono);letter-spacing:.06em;text-decoration:none;white-space:nowrap;text-transform:none;transition:color .15s}
+.return-home svg{display:block;flex:0 0 12px;width:12px;height:12px;pointer-events:none}
+.return-home .return-label{display:block;white-space:nowrap}
+.return-home::before{content:'';position:absolute;inset:-8px 0}
+.return-home:hover,.return-home:active{color:#fff;background:transparent;border:0;box-shadow:none}
+.return-home:focus-visible{outline:1px solid rgba(255,255,255,.7);outline-offset:5px}
+@media(max-width:560px){.return-home{right:16px}}
+@media(prefers-reduced-motion:reduce){.return-home{transition:none}}
+`;
+const v16Styles=`
+@media(max-width:560px){
+body[data-view=home] .entry{padding:60px 18px 86px}
+body[data-view=home] .entry-menu{gap:14px}
+body[data-view=home] .entry-link{min-height:64px;padding-top:17px;padding-bottom:17px}
+body[data-view=home] .entry-utility{margin-top:28px;padding-bottom:30px;gap:12px 18px}
+body[data-view=home] #site-music{bottom:max(14px,env(safe-area-inset-bottom))}
+}
+@media(max-width:360px),(max-width:560px) and (max-height:740px){
+body[data-view=home] .entry{padding:54px 14px 76px}
+body[data-view=home] .entry-logo{width:150px}
+body[data-view=home] .entry-description{margin:18px 0}
+body[data-view=home] .entry-menu{gap:10px}
+body[data-view=home] .entry-link{min-height:62px;padding-top:16px;padding-bottom:16px}
+body[data-view=home] .entry-link.about-entry{margin-top:16px}
+body[data-view=home] .entry-utility{margin-top:22px;padding-bottom:30px}
+}
+`;
+const landing=`
+<nav id="site-language" class="site-language" aria-label="Language"><button type="button" data-language="zh" aria-pressed="true">中文</button><button type="button" data-language="en" aria-pressed="false">EN</button></nav>
+<a class="return-home" href="#/home" aria-label="返回首页" hidden><svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true" focusable="false"><path d="M13 8H3m5-5L3 8l5 5" stroke="currentColor" stroke-width="1.35" stroke-linecap="square" stroke-linejoin="miter"/></svg><span class="return-label">首页</span></a>
+<main class="entry" id="landing" aria-label="0086 Studios"><div class="entry-content">
+<img class="entry-logo" src="assets/0086-logo.png" width="604" height="211" alt="0086 Studios">
+<p class="entry-description">AI-DRIVEN CREATIVE LAB<br>SHENZHEN, CHINA</p>
+<nav class="entry-menu" aria-label="进入网站">
+<a class="entry-link" href="#/works?type=interactive" data-home-label="interactive">互动装置</a>
+<a class="entry-link" href="#/works?type=space" data-home-label="space">空间</a>
+<a class="entry-link" href="#/works?type=exhibition" data-home-label="exhibition">展览</a>
+<a class="entry-link" href="#/works?type=ip" data-home-label="ip">IP设计</a>
+<a class="entry-link about-entry" href="#/about" data-home-label="about">about us</a>
+</nav><nav class="entry-utility" aria-label="更多"><a href="#/works">Selected Works</a><a href="#/ai">AI</a><a href="mailto:contact@0086studios.com">Contact ↗</a></nav>
+</div></main>
+`;
+function interfaceSetup(){
+  const copies={zh:{all:'Selected Works',interactive:'互动装置',space:'空间',exhibition:'展览',ip:'IP设计',other:'创意技术',about:'about us'},en:{all:'Selected Works',interactive:'Interactive Installations',space:'Space',exhibition:'Exhibitions',ip:'IP Design',other:'Creative Technology',about:'About us'}};
+  const setLanguage=lang=>{
+    const copy=copies[lang]||copies.zh;document.documentElement.lang=lang==='en'?'en':'zh-CN';
+    Object.assign(LABELS,copy);
+    const homeLink=document.querySelector('.return-home');
+    homeLink.querySelector('.return-label').textContent=lang==='en'?'HOME':'首页';
+    homeLink.setAttribute('aria-label',lang==='en'?'Back to home':'返回首页');
+    document.querySelectorAll('[data-home-label]').forEach(el=>el.textContent=copy[el.dataset.homeLabel]);
+    document.querySelectorAll('.nav a[data-type]').forEach(el=>{const text=copy[el.dataset.type];if(el.firstChild.nodeType===Node.TEXT_NODE)el.firstChild.textContent=text+' '});
+    document.querySelectorAll('[data-language]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.language===lang)));
+    try{localStorage.setItem('0086-language',lang)}catch{}route();
+  };
+  document.querySelectorAll('[data-language]').forEach(b=>b.addEventListener('click',()=>setLanguage(b.dataset.language)));
+  let language='zh';try{language=localStorage.getItem('0086-language')||'zh'}catch{}setLanguage(language);
+  document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.project > summary')){e.preventDefault();e.target.click()}});
+  document.documentElement.dataset.designRevision='clean-mobile-feedback-v14';
+}
+const config={contentBase:root.href,weatherEndpoint:weather,weatherProvider:'open-meteo'};
+document.getElementById('retry').onclick=()=>location.reload();
+const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),15000);
+Promise.all([
+ fetch(new URL('preview-0086-source.html?v=10',root),{signal:controller.signal,cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.text();}),
+ fetch(new URL('assets/preview-catalogue-v10.json?v=10',root),{signal:controller.signal,cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('Catalogue HTTP '+r.status);return r.json();})
+]).then(([html,catalogue])=>{
+  if(catalogue.version!==10||!Array.isArray(catalogue.projects)||catalogue.projects.length<23)throw new Error('Catalogue mismatch');
+  if(!html.includes('SOURCE_ROWS')||!html.includes('state=readRoute();const works'))throw new Error('Preview source mismatch');
+  html=html.replace('<head>','<head><meta name="robots" content="noindex,nofollow"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=Noto+Sans+SC:wght@400&display=swap" rel="stylesheet">'+open+'window.SITE_CONFIG='+JSON.stringify(config)+';window.__0086Catalogue='+JSON.stringify(catalogue).replace(/</g,'\\u003c')+';'+close);
+  html=html.replace('</head>','<link rel="stylesheet" href="assets/preview-catalogue-v10.css?v=10"></head>');
+  html=html.replace('</head>','<link rel="stylesheet" href="assets/preview-0086-layout-v4.css?v=4"><link rel="stylesheet" href="assets/preview-0086-light-v6.css?v=7"><style id="language-neutral">.site-language{border-color:rgba(255,255,255,.25)}.site-language button[aria-pressed=true]{background:rgba(255,255,255,.1);color:#fff}</style></head>');
+  html=html.replace('</head>','<style id="return-home-clean">'+returnStyles+'</style><style id="v16-mobile-spacing">'+v16Styles+'</style><style id="selection-green">.side .nav a.active{background:var(--lime);border-color:var(--lime);color:#080811}</style></head>');
+  html=html.replace(/<button\b[^>]*\bdata-motion\b[^>]*>[\s\S]*?<\/button>/g,'');
+  html=html.replace('<body>','<body data-view="home">');
+  html=html.replace('<div class="shell">',landing+'<div class="shell" hidden>');
+  html=html.replace('<nav class="nav" aria-label="作品分类">','<div class="side-heading">Selected Works</div><nav class="nav" aria-label="作品分类">');
+  html=html.replace('class="brand" href="#/works"','class="brand" href="#/home"').replace('href="#/works" aria-label="0086 Studios 首页"','href="#/home" aria-label="0086 Studios 首页"');
+  html=html.replace("location.hash.slice(1)||'/works'","location.hash.slice(1)||'/home'");
+  html=html.replace("view:['/about','/ai'].includes(path)","view:['/home','/about','/ai'].includes(path)");
+  html=html.replace('state=readRoute();const works',`state=readRoute();const home=state.view==='home';document.body.dataset.view=home?'home':'inside';$('#landing').hidden=!home;$('.shell').hidden=home;$('.return-home').hidden=home;if(home){document.title='0086 Studios™';return;}const works`);
+  const graphicsStart=html.indexOf('// Geometry is reconstructed continuously');
+  const graphicsEnd=html.indexOf('// Read-only diagnostics;',graphicsStart);
+  if(graphicsStart<0||graphicsEnd<graphicsStart)throw new Error('Renderer boundary not found');
+  html=html.slice(0,graphicsStart)+html.slice(graphicsEnd);
+  html=html.replace('resize();run();route();','route();');
+  html=html.replace('current:{...current}','current:{...(window.__0086Field?.weather||current)}');
+  html=html.replace('</body>',open+'('+interfaceSetup.toString()+')();'+close+'<scr'+'ipt src="assets/preview-0086-field-v16.js?v=16" defer>'+close+'<scr'+'ipt src="assets/preview-0086-music-v7.js?v=7" defer>'+close+'</body>');
+  clearTimeout(timeout);document.open();document.write(html);document.close();
+}).catch(error=>{clearTimeout(timeout);const line=document.querySelector('.line');if(line)line.hidden=true;const message=document.getElementById('message');if(message){message.textContent='页面暂时未能载入，请重试。';message.hidden=false;document.getElementById('retry').hidden=false}console.error(error)});
+})();
+</script>
+</body></html>
