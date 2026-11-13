@@ -78,9 +78,9 @@ const landing=`
 <p class="entry-description">AI-DRIVEN CREATIVE LAB<br>SHENZHEN, CHINA</p>
 <nav class="entry-menu" aria-label="进入网站">
 <a class="entry-link" href="#/works?type=exhibition" data-home-label="exhibition">展览</a>
-<a class="entry-link" href="#/works?type=interactive" data-home-label="interactive">互动装置</a>
 <a class="entry-link" href="#/works?type=space" data-home-label="space">空间</a>
 <a class="entry-link" href="#/works?type=ip" data-home-label="ip">IP设计</a>
+<a class="entry-link" href="#/works?type=interactive" data-home-label="interactive">互动装置</a>
 <a class="entry-link about-entry" href="#/about" data-home-label="about">about us</a>
 </nav><nav class="entry-utility" aria-label="更多"><a href="#/works">Selected Works</a><a href="#/ai">AI</a><a href="mailto:contact@0086studios.com">Contact ↗</a></nav>
 </div></main><div id="solar-atmosphere" aria-hidden="true"><i id="clear-sky"></i><i id="dawn-glow"></i></div><div id="weather-readout" role="status" aria-live="polite">深圳天气连接中</div>
@@ -129,7 +129,7 @@ const config={version:24,contentBase:root.href,weatherEndpoint:weather,weatherPr
 document.getElementById('retry').onclick=()=>location.reload();
 const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),15000);
 Promise.all([
- fetch(new URL('preview-0086-source.html?v=11',root),{signal:controller.signal,cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.text();}),
+ fetch(new URL('preview-0086-source.html?v=12',root),{signal:controller.signal,cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.text();}),
  fetch(new URL('assets/preview-catalogue-v10.json?v=12',root),{signal:controller.signal,cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('Catalogue HTTP '+r.status);return r.json();})
 ]).then(([html,catalogue])=>{
   if(catalogue.version!==10||!Array.isArray(catalogue.projects)||catalogue.projects.length<23)throw new Error('Catalogue mismatch');
