@@ -12,6 +12,13 @@
 (() => {
 'use strict';
 const root=new URL('/',location.href);
+let initialLanguage='zh';
+try{if(localStorage.getItem('0086-language')==='en')initialLanguage='en'}catch{}
+if(initialLanguage==='en'){
+  document.documentElement.lang='en';
+  document.querySelector('.line').setAttribute('aria-label','Opening website');
+  document.getElementById('retry').textContent='Try again';
+}
 const open='<scr'+'ipt>',close='</scr'+'ipt>';
 const weather='https://api.open-meteo.com/v1/forecast?latitude=22.5431&longitude=114.0579&current=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,is_day,shortwave_radiation,uv_index,wind_speed_10m,wind_direction_10m,wind_gusts_10m&daily=sunrise,sunset&wind_speed_unit=ms&timezone=Asia%2FShanghai';
 const returnStyles=`
@@ -70,9 +77,9 @@ const landing=`
 <img class="entry-logo" src="assets/0086-logo.png" width="604" height="211" alt="0086 Studios">
 <p class="entry-description">AI-DRIVEN CREATIVE LAB<br>SHENZHEN, CHINA</p>
 <nav class="entry-menu" aria-label="进入网站">
+<a class="entry-link" href="#/works?type=exhibition" data-home-label="exhibition">展览</a>
 <a class="entry-link" href="#/works?type=interactive" data-home-label="interactive">互动装置</a>
 <a class="entry-link" href="#/works?type=space" data-home-label="space">空间</a>
-<a class="entry-link" href="#/works?type=exhibition" data-home-label="exhibition">展览</a>
 <a class="entry-link" href="#/works?type=ip" data-home-label="ip">IP设计</a>
 <a class="entry-link about-entry" href="#/about" data-home-label="about">about us</a>
 </nav><nav class="entry-utility" aria-label="更多"><a href="#/works">Selected Works</a><a href="#/ai">AI</a><a href="mailto:contact@0086studios.com">Contact ↗</a></nav>
@@ -80,9 +87,31 @@ const landing=`
 `;
 function interfaceSetup(){
   const copies={zh:{all:'Selected Works',interactive:'互动装置',space:'空间',exhibition:'展览',ip:'IP设计',other:'创意技术',about:'about us'},en:{all:'Selected Works',interactive:'Interactive Installations',space:'Space',exhibition:'Exhibitions',ip:'IP Design',other:'Creative Technology',about:'About us'}};
+  const labels=[
+    ['.entry-menu','进入网站','Explore the site'],
+    ['.entry-utility','更多','More links'],
+    ['.brand','0086 Studios 首页','0086 Studios home'],
+    ['.nav','作品分类','Project categories'],
+    ['.secondary','关于与联系','About and contact'],
+    ['#prev','上一组年份','Previous year'],
+    ['#next','下一组年份','Next year'],
+    ['#years','按年份筛选','Filter by year'],
+    ['#lightbox','作品图片','Project image'],
+    ['#lightbox button','关闭图片','Close image']
+  ];
   const setLanguage=lang=>{
     const copy=copies[lang]||copies.zh;document.documentElement.lang=lang==='en'?'en':'zh-CN';
     Object.assign(LABELS,copy);
+    const en=lang==='en';
+    for(const [selector,zh,label] of labels)document.querySelector(selector).setAttribute('aria-label',en?label:zh);
+    document.querySelector('.skip').textContent=en?'Skip to works':'跳至作品';
+    document.querySelector('.secondary [data-view="about"]').textContent=copy.about;
+    document.querySelector('[data-language="zh"]').textContent=en?'Chinese':'中文';
+    const dialog=document.querySelector('#lightbox');
+    if(dialog.open)dialog.close();
+    const weatherReadout=document.querySelector('#weather-readout');
+    weatherReadout.textContent=en?'Connecting to Shenzhen weather':'深圳天气连接中';
+    document.dispatchEvent(new Event('0086-language-change'));
     const homeLink=document.querySelector('.return-home');
     homeLink.querySelector('.return-label').textContent=lang==='en'?'HOME':'首页';
     homeLink.setAttribute('aria-label',lang==='en'?'Back to home':'返回首页');
@@ -100,11 +129,12 @@ const config={version:24,contentBase:root.href,weatherEndpoint:weather,weatherPr
 document.getElementById('retry').onclick=()=>location.reload();
 const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),15000);
 Promise.all([
- fetch(new URL('preview-0086-source.html?v=10',root),{signal:controller.signal,cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.text();}),
- fetch(new URL('assets/preview-catalogue-v10.json?v=11',root),{signal:controller.signal,cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('Catalogue HTTP '+r.status);return r.json();})
+ fetch(new URL('preview-0086-source.html?v=11',root),{signal:controller.signal,cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.text();}),
+ fetch(new URL('assets/preview-catalogue-v10.json?v=12',root),{signal:controller.signal,cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error('Catalogue HTTP '+r.status);return r.json();})
 ]).then(([html,catalogue])=>{
   if(catalogue.version!==10||!Array.isArray(catalogue.projects)||catalogue.projects.length<23)throw new Error('Catalogue mismatch');
   if(!html.includes('SOURCE_ROWS')||!html.includes('state=readRoute();const works'))throw new Error('Preview source mismatch');
+  if(initialLanguage==='en')html=html.replace('<html lang="zh-CN">','<html lang="en">');
   html=html.replace('<head>','<head><meta name="description" content="0086 Studios — 深圳创意科技工作室：互动装置、沉浸式空间、展览与 IP 设计。Interactive installations, immersive spaces, exhibitions and IP design."><meta name="generator" content="0086-official-v24"><link rel="canonical" href="https://0086studios.xyz/"><meta property="og:title" content="0086 Studios™"><meta property="og:description" content="互动装置 · 空间 · 展览 · IP设计"><meta property="og:url" content="https://0086studios.xyz/"><meta property="og:image" content="https://0086studios.xyz/assets/0086-logo.png"><link rel="icon" href="/assets/0086-logo.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=Noto+Sans+SC:wght@400&display=swap" rel="stylesheet">'+open+'window.SITE_CONFIG='+JSON.stringify(config)+';window.__0086Catalogue='+JSON.stringify(catalogue).replace(/</g,'\\u003c')+';'+close);
   html=html.replace('</head>','<link rel="stylesheet" href="assets/preview-catalogue-v10.css?v=10"></head>');
   html=html.replace('</head>','<link rel="stylesheet" href="assets/preview-0086-layout-v4.css?v=4"><link rel="stylesheet" href="assets/preview-0086-light-v6.css?v=7"><style id="language-neutral">.site-language{border-color:rgba(255,255,255,.25)}.site-language button[aria-pressed=true]{background:rgba(255,255,255,.1);color:#fff}</style></head>');
@@ -126,9 +156,9 @@ Promise.all([
   html=html.replace('target=weatherToField(payload);const fetched','target=weatherToField(payload);window.__0086WeatherRaw=payload;const fetched');
   html=html.replace("const CACHE_KEY='0086-weather-v1'","const CACHE_KEY='0086-weather-volumetric-v24'");
   html=html.replace('current:{...current}','current:{...(window.__0086Field?.weather||current)}');
-  html=html.replace('</body>',open+'('+interfaceSetup.toString()+')();'+close+'<scr'+'ipt src="assets/preview-0086-field-v24.js?v=24" defer>'+close+'<scr'+'ipt src="assets/preview-0086-music-v7.js?v=7" defer>'+close+'</body>');
+  html=html.replace('</body>',open+'('+interfaceSetup.toString()+')();'+close+'<scr'+'ipt src="assets/preview-0086-field-v24.js?v=25" defer>'+close+'<scr'+'ipt src="assets/preview-0086-music-v7.js?v=7" defer>'+close+'</body>');
   clearTimeout(timeout);document.open();document.write(html);document.close();
-}).catch(error=>{clearTimeout(timeout);const line=document.querySelector('.line');if(line)line.hidden=true;const message=document.getElementById('message');if(message){message.textContent='页面暂时未能载入，请重试。';message.hidden=false;document.getElementById('retry').hidden=false}console.error(error)});
+}).catch(error=>{clearTimeout(timeout);const line=document.querySelector('.line');if(line)line.hidden=true;const message=document.getElementById('message');if(message){message.textContent=initialLanguage==='en'?'The page could not load. Please try again.':'页面暂时未能载入，请重试。';message.hidden=false;document.getElementById('retry').hidden=false}console.error(error)});
 })();
 </script>
 </body></html>

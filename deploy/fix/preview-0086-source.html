@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>0086 Studios™ — Selected Works</title>
+<meta name="description" content="0086 Studios™ — 互动装置、空间、展览与 IP设计。">
+<meta name="theme-color" content="#080812">
+<style>
+:root{color-scheme:dark;--bg:#070711;--text:#f2f0f6;--dim:#b0adbf;--line:rgba(188,186,216,.23);--glass:rgba(26,26,42,.56);--lime:#d4ff00;--pink:#ff979b;--blue:#8e9dff;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}body{background:var(--bg);color:var(--text);font:14px/1.5 var(--mono),'PingFang SC','Microsoft YaHei',sans-serif;-webkit-font-smoothing:antialiased}button,a,input{font:inherit}button{cursor:pointer;color:inherit;border-radius:0}button,a{-webkit-tap-highlight-color:transparent}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--lime);outline-offset:4px}button:disabled{opacity:.35;cursor:default}::selection{color:#090910;background:var(--lime)}[hidden]{display:none!important}.skip{position:fixed;left:12px;top:-80px;z-index:20;background:var(--lime);color:#080811;padding:12px}.skip:focus{top:12px}
+#field{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}.shell{position:relative;z-index:1;display:grid;grid-template-columns:minmax(270px,28.3%) minmax(0,1fr);gap:2.4vw;width:100%;height:100dvh;padding:8.8vh 2.1vw 9.2vh}.side{display:flex;flex-direction:column;min-height:0;gap:24px}.glass{background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}.side-panel{padding:24px 20px 22px;flex-shrink:0}.brand{display:block;width:100%;margin:2px 0 25px}.brand img{display:block;width:100%;max-width:268px;height:auto;filter:invert(1);object-fit:contain;object-position:left center}.side small{letter-spacing:.16em;color:var(--dim);font-size:10px}.nav{display:grid;gap:8px}.nav a{display:flex;align-items:center;justify-content:space-between;min-height:46px;padding:11px 17px;border:1px solid var(--line);background:rgba(255,255,255,.025);letter-spacing:.11em;transition:background .15s,color .15s}.nav a:hover{background:rgba(255,255,255,.08)}.nav a.active{background:var(--pink);color:#080811;border-color:var(--pink)}.nav a[data-type=all].active{background:var(--lime);border-color:var(--lime)}.nav .num{font-size:11px;opacity:.7;letter-spacing:0}.secondary{margin-top:16px;padding-top:16px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:8px}.secondary a{display:flex;align-items:center;justify-content:center;min-height:43px;border:1px solid var(--line);letter-spacing:.06em}.secondary a:last-child{grid-column:span 2}.secondary a:hover,.secondary a.active{background:rgba(255,255,255,.12)}.side-foot{padding:0 3px;display:flex;flex-direction:column;gap:14px;flex:1;justify-content:flex-end}.side-foot .rule{width:100%;height:1px;background:var(--line);position:relative}.side-foot .rule:before{content:'';position:absolute;inset:0 63% 0 0;background:var(--blue)}.side-foot-row{display:flex;align-items:center;justify-content:space-between;color:var(--dim);font-size:11px;letter-spacing:.12em}.motion{border:1px solid var(--line);width:32px;height:30px;background:transparent;font-size:15px;line-height:1}.motion:hover{color:var(--lime)}.mobile-motion{display:none}
+.main{min-width:0;min-height:0;display:flex;flex-direction:column}.main-head{padding:25px 24px 18px;flex-shrink:0}.title-row{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}h1{font-size:clamp(19px,1.9vw,28px);font-weight:400;letter-spacing:.14em;line-height:1.4;margin:0}.subhead{color:var(--lime);font-size:10px;letter-spacing:.18em;margin-top:9px}.arrows{display:flex;gap:8px}.square{width:42px;height:42px;background:transparent;border:1px solid rgba(152,159,255,.6);font-size:20px}.square:hover{background:rgba(255,255,255,.08)}.years{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-top:25px}.year{position:relative;height:83px;border:1px solid var(--line);background:rgba(255,255,255,.025);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:7px}.year .year-number{font-size:19px}.year .year-count{font-size:10px;letter-spacing:.1em;color:var(--dim)}.year:hover{background:rgba(255,255,255,.08)}.year.active{background:var(--lime);color:#080811;border-color:var(--lime)}.year.active:after{content:'';position:absolute;inset:-5px;border:1px dashed rgba(212,255,0,.5);pointer-events:none}.year.active .year-count{color:#202500}.scroll{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:2px 24px 24px;scrollbar-width:thin;scrollbar-color:#646178 transparent}.list-meta{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.13em;color:var(--dim);margin:0 0 13px}.projects{display:flex;flex-direction:column;gap:10px}.project{background:rgba(6,6,14,.5);border:1px solid var(--line);border-left:2px solid var(--project-accent,#c4c1d0)}.project summary{display:grid;grid-template-columns:54px minmax(0,1fr) 26px;gap:15px;align-items:center;padding:17px 18px;cursor:pointer;list-style:none;min-height:82px}.project summary::-webkit-details-marker{display:none}.project summary:hover{background:rgba(255,255,255,.045)}.project[open]{border-color:var(--project-accent,var(--lime))}.project[open] summary{background:rgba(255,255,255,.035)}.pyear{font-size:12px;color:var(--dim)}.ptype{font-size:10px;letter-spacing:.12em;color:var(--project-accent,var(--dim));margin-bottom:5px}.pname{font-size:clamp(14px,1.22vw,18px);line-height:1.6;letter-spacing:.015em}.plus{font-size:25px;text-align:right;font-weight:300}.project[open] .plus{transform:rotate(45deg)}.detail{padding:0 18px 20px 87px}.project-cover{display:block;width:100%;height:auto;max-height:460px;object-fit:contain;background:rgba(0,0,0,.2);margin:8px 0 18px}.project-cover:not([src]){display:none}.original-link{display:inline-flex;gap:16px;align-items:center;font-size:11px;letter-spacing:.1em;border-bottom:1px solid var(--dim);padding:8px 0;margin-top:15px}.original-link:hover{color:var(--lime);border-color:var(--lime)}.detail .source-content{padding:5px 0 0}.source-content{font:15px/1.9 var(--mono),'PingFang SC',sans-serif;letter-spacing:.015em;color:#dedde5}.source-content p,.source-content .desc{margin:0 0 22px}.source-content .hero{display:flex;flex-direction:column;gap:20px}.source-content .hero-img{display:block;width:100%;height:auto}.source-content .title{font-size:28px;color:var(--text);line-height:1.5;margin-bottom:12px}.detail .source-content .title{display:none}.source-content .meta{font-size:11px;color:var(--dim);margin:0 0 20px}.source-content .info{display:flex;flex-wrap:wrap;gap:12px 24px;font-size:11px;padding:16px 0;border-block:1px solid var(--line);color:var(--dim);margin:24px 0}.source-content h1,.source-content h2,.source-content h3{font-family:inherit;font-weight:400;letter-spacing:.03em;line-height:1.5;margin:24px 0 14px}.source-content h1{font-size:28px}.source-content h2{font-size:23px}.source-content h3{font-size:17px}.source-content img{max-width:100%;height:auto;display:block}.source-content video{width:100%;max-height:70vh;background:#070711;display:block;margin:20px 0}.source-content .gallery{display:grid;grid-template-columns:1fr 1fr;gap:10px}.source-content .gallery img{width:100%;height:auto;cursor:zoom-in}.source-content .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.source-content .card{border:1px solid var(--line);padding:20px;background:transparent}.source-content ul{padding-left:1.4em}.source-content li{margin-bottom:12px}.source-content .section-title img,.source-content .hero-row img{display:none}.source-content .ai-logo{width:min(320px,100%);filter:invert(1)}.source-content a{text-decoration:underline;text-underline-offset:4px}.article{padding:5px 0 25px}.empty{padding:50px 0;color:var(--dim);font-size:13px}.loading{display:block;height:1px;width:28%;margin:25px 0;background:var(--lime);animation:loading 1.4s ease-in-out infinite alternate}.error{color:var(--dim);font-size:12px}.credit{margin:40px 0 0;padding-top:15px;border-top:1px solid var(--line);color:var(--dim);font-size:10px}.lightbox{border:1px solid var(--line);background:#090912;padding:0;max-width:94vw;max-height:94dvh;color:white}.lightbox::backdrop{background:rgba(0,0,0,.86);backdrop-filter:blur(12px)}.lightbox img{max-width:90vw;max-height:85dvh;display:block;object-fit:contain}.lightbox button{position:absolute;right:10px;top:10px;border:1px solid var(--line);background:#090912;min-width:44px;min-height:44px;font-size:24px}.lightbox button:hover{color:var(--lime)}
+@keyframes loading{to{width:70%;opacity:.35}}
+@media(min-width:1650px){.shell{max-width:1920px;margin:auto;left:0;right:0}.side-panel{padding:30px}.nav a{min-height:52px}.main-head{padding:30px}.scroll{padding-inline:30px}}
+@media(max-width:1000px){.shell{grid-template-columns:240px minmax(0,1fr);gap:18px;padding:40px 20px}.side-panel{padding:20px 15px}.brand img{max-width:210px}.main-head{padding:20px 17px 15px}.scroll{padding:0 17px 20px}.project summary{grid-template-columns:38px 1fr 20px;gap:10px;padding:14px 12px}.detail{padding:0 12px 16px 60px}.years{gap:5px}.year{height:72px}.year .year-number{font-size:16px}}
+@media(max-width:720px){.shell{display:flex;flex-direction:column;gap:12px;padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))}.side{flex:none;display:block}.side-panel{padding:14px}.brand{width:112px;margin:0 0 15px}.brand img{width:112px}.nav{display:flex;overflow-x:auto;gap:5px;scrollbar-width:none}.nav a{min-height:40px;padding:8px 11px;font-size:11px;white-space:nowrap;gap:10px;flex-shrink:0;letter-spacing:.03em}.nav .num{font-size:9px}.secondary{position:absolute;top:27px;right:27px;margin:0;padding:0;border:0;display:flex;gap:16px}.secondary a{min-height:26px;border:0;font-size:10px}.side-foot{display:none}.mobile-motion{display:block;font-size:15px}.main{flex:1}.main-head{padding:17px 14px 12px}.title-row{align-items:center;gap:10px}h1{font-size:18px;letter-spacing:.08em}.subhead{margin-top:6px;font-size:9px}.square{width:32px;height:32px}.arrows{gap:5px}.years{margin-top:20px;gap:5px}.year{height:64px}.year .year-number{font-size:14px}.year .year-count{font-size:9px}.year.active:after{inset:-3px}.scroll{padding:0 14px 18px}.list-meta{font-size:9px;margin:2px 0 10px}.project summary{grid-template-columns:32px 1fr 17px;gap:8px;padding:13px 10px;min-height:76px}.pyear{font-size:10px}.ptype{font-size:9px}.pname{font-size:13px}.plus{font-size:21px}.detail{padding:0 12px 16px}.source-content{font-size:13px}.source-content .grid,.source-content .gallery{grid-template-columns:1fr}.source-content .title{font-size:21px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#content">跳至作品</a>
+<canvas id="field" aria-hidden="true"></canvas>
+<div class="shell">
+<aside class="side"><div class="side-panel glass">
+<a class="brand" href="#/works" aria-label="0086 Studios 首页"><img src="assets/0086-logo.png" alt="0086 Studios" width="604" height="211"></a>
+<nav class="nav" aria-label="作品分类">
+<a href="#/works" data-type="all">Selected Works <span class="num" data-count="all">23</span></a>
+<a href="#/works?type=exhibition" data-type="exhibition">展览 <span class="num" data-count="exhibition">9</span></a>
+<a href="#/works?type=interactive" data-type="interactive">互动装置 <span class="num" data-count="interactive">7</span></a>
+<a href="#/works?type=space" data-type="space">空间 <span class="num" data-count="space">2</span></a>
+<a href="#/works?type=ip" data-type="ip">IP设计 <span class="num" data-count="ip">4</span></a>
+</nav>
+<nav class="secondary" aria-label="关于与联系"><a href="#/about" data-view="about">about us</a><a href="#/ai" data-view="ai">AI</a><a href="mailto:contact@0086studios.com">Contact ↗</a></nav>
+</div><div class="side-foot"><div class="side-foot-row"><span>0086 STUDIOS™</span><button class="motion" id="pause" data-motion type="button" aria-label="暂停背景动画" aria-pressed="false">Ⅱ</button></div><div class="rule"></div><small>SHENZHEN, CHINA</small></div></aside>
+<main class="main glass" id="content" tabindex="-1"><header class="main-head"><div class="title-row"><div><h1 id="title">Selected Works</h1><div class="subhead" id="subtitle">0086 STUDIOS™</div></div><div class="arrows" id="arrows"><button class="square mobile-motion" type="button" data-motion aria-label="暂停背景动画" aria-pressed="false">Ⅱ</button><button class="square" type="button" id="prev" aria-label="上一组年份">‹</button><button class="square" type="button" id="next" aria-label="下一组年份">›</button></div></div><nav class="years" id="years" aria-label="按年份筛选"></nav></header><section class="scroll" id="scroll"><div class="list-meta" id="list-meta"><span id="list-label">Selected Works</span><span id="total" aria-live="polite">23</span></div><div class="projects" id="projects"></div><article class="article" id="article" hidden></article></section></main>
+</div>
+<dialog class="lightbox" id="lightbox" aria-label="作品图片"><button type="button" aria-label="关闭图片">×</button><img alt=""></dialog>
+<script src="assets/external-media-config.js"></script>
+<script>
+'use strict';
+// Source: 0086-service-ai-installation.html, Git blob 8d86f9022ebe3deba4062ff52c73911b2e4e5f4a.
+// Keep names/categories/years exactly as supplied. A source year of 0 is unknown, not a date.
+const SOURCE_ROWS=[
+  [
+    "一颗，平湖西瓜",
+    "exhibition",
+    0,
+    "case-pinghu-watermelon.html",
+    "https://0086studios.xyz/assets/thumbs/pinghu-watermelon/cover.webp"
+  ],
+  [
+    "怪奇疗愈所 — 山海经 IP",
+    "ip",
+    0,
+    "case-shanhai-ip.html",
+    "https://0086studios.xyz/assets/display/shanhai-ip/cover-poster-v1.webp"
+  ],
+  [
+    "诗的歌",
+    "interactive",
+    2025,
+    "case-poem-song.html",
+    "https://0086studios.xyz/assets/display/poem-song/poem-01-display.webp"
+  ],
+  [
+    "从水中诗，到诗中潮—徐志摩在海宁",
+    "exhibition",
+    2025,
+    "case-xuzhimo-haining.html",
+    "https://0086studios.xyz/assets/display/xuzhimo-haining/FullSizeRender 12-display.webp"
+  ],
+  [
+    "三道水-徐志摩",
+    "interactive",
+    2025,
+    "case-sandaoshui-xuzhimo.html",
+    "https://0086studios.xyz/assets/thumbs/cases/sandaoshui-xuzhimo-thumb.webp"
+  ],
+  [
+    "衣等舱 AI换衣间",
+    "interactive",
+    2025,
+    "case-ai-fitting-room.html",
+    "https://0086studios.xyz/assets/display/yidengcang/IMG_4266-2-display.webp"
+  ],
+  [
+    "海宁回信",
+    "interactive",
+    2025,
+    "case-immersive-experience.html",
+    "https://0086studios.xyz/assets/display/haining-reply/haining-01-display.webp"
+  ],
+  [
+    "故纸新词-王国维在海宁",
+    "exhibition",
+    2025,
+    "case-wangguowei.html",
+    "https://0086studios.xyz/assets/display/wangguowei/IMG_0997-display.webp"
+  ],
+  [
+    "Thinkpad零售门店",
+    "interactive",
+    2025,
+    "case-narrative-installation.html",
+    "https://0086studios.xyz/assets/display/thinkpad-retail/img-7773-display.webp"
+  ],
+  [
+    "亲密人机-A Heart in Thinkpad",
+    "exhibition",
+    2024,
+    "case-heart-in-thinkpad.html",
+    "https://0086studios.xyz/assets/display/thinkpad/1DSC00798-1-display.webp"
+  ],
+  [
+    "AI情绪思想盒",
+    "interactive",
+    2024,
+    "case-ai-emotion-box.html",
+    "https://0086studios.xyz/assets/display/ai-emotion-box/ai-emotion-01-display.webp"
+  ],
+  [
+    "Autoband",
+    "other",
+    2024,
+    "case-interactive-site.html",
+    "https://0086studios.xyz/assets/thumbs/autoband/autoband-01-thumb.webp"
+  ],
+  [
+    "Beyond The Boundary",
+    "interactive",
+    2024,
+    "case-beyond-the-boundary.html",
+    "https://0086studios.xyz/assets/display/beyond-the-boundary/截屏2025-06-12 19.44.40-display.webp"
+  ],
+  [
+    "NFT",
+    "ip",
+    2023,
+    "case-nft.html",
+    "https://0086studios.xyz/assets/display/nft/red-display.webp"
+  ],
+  [
+    "湄洲妈-妈祖IP",
+    "ip",
+    2023,
+    "case-mazu-ip.html",
+    "https://0086studios.xyz/assets/display/mazu/湄洲妈进度汇报v07170202.002-display.webp"
+  ],
+  [
+    "隔火",
+    "ip",
+    2023,
+    "case-gehuo.html",
+    "https://0086studios.xyz/assets/display/gehuo/gehuo-09-display.webp"
+  ],
+  [
+    "GAME ON 潮流游戏展",
+    "exhibition",
+    2019,
+    "case-game-on.html",
+    "https://0086studios.xyz/assets/display/game-on/2-µÿ√Ê≤„»Îø⁄ª∫≥Â«¯ 03-display.webp"
+  ],
+  [
+    "神偷奶爸大视界全球首展",
+    "exhibition",
+    2018,
+    "http://shenzhen.sina.cn/news/2018-12-14/detail-ihqackac8193584.d.html",
+    "https://0086studios.xyz/assets/thumbs/cases/minions-expo-thumb.webp"
+  ],
+  [
+    "teamLab 武汉",
+    "exhibition",
+    2018,
+    "https://futurepark.teamlab.art/en/places/mpluswuhan/",
+    "https://0086studios.xyz/assets/thumbs/cases/teamlab-wuhan-thumb.webp"
+  ],
+  [
+    "神秘敦煌文化展",
+    "exhibition",
+    2017,
+    "https://hk.thevalue.com/articles/exhibition-mysterious-dunhuang-buddhist-statuary-and-frescoes-ar-shenzhen-future-park-2018",
+    "https://0086studios.xyz/assets/thumbs/cases/dunhuang-thumb.webp"
+  ],
+  [
+    "花舞印象",
+    "space",
+    2017,
+    "https://www.teamlab.art/zh-hans/e/wuatc/",
+    "https://0086studios.xyz/assets/thumbs/cases/flower-impression-thumb.webp"
+  ],
+  [
+    "teamLab 深圳",
+    "exhibition",
+    2017,
+    "https://www.teamlab.art/e/shenzhen/",
+    "https://0086studios.xyz/assets/thumbs/cases/teamlab-shenzhen-thumb.webp"
+  ],
+  [
+    "绽放花园",
+    "space",
+    2016,
+    "https://jiaju.sina.cn/news/20170629/6286044594455249476.shtml",
+    "https://0086studios.xyz/assets/thumbs/cases/blooming-garden-thumb.webp"
+  ]
+];
+const LABELS={all:'Selected Works',interactive:'互动装置',space:'空间',exhibition:'展览',ip:'IP设计',other:'创意技术'};
+const isEnglish=()=>document.documentElement.lang==='en';
+const localize=(zh,en)=>isEnglish()?en:zh;
+const projectTitle=p=>isEnglish()?(p.title_en||p.title):p.title;
+const ACCENTS={interactive:'#a2acff',space:'#8ec9d4',exhibition:'#dad7e1',ip:'#ff979b',other:'#dad7e1'};
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const config=window.SITE_CONFIG||{};
+const base=new URL(config.contentBase||'./',location.href);
+const resolve=p=>new URL(p,base).href;
+const originalURL=p=>new URL(p,'https://0086studios.xyz/').href;
+let rows=SOURCE_ROWS.map(([title,category,year,href,image],id)=>({title,category,year,href,image,id}));
+let state={view:'works',type:'all',year:'all',project:null},routeTicket=0;
+const pageCache=new Map();
+function go(next,replace=false){const s={...state,...next};const q=new URLSearchParams();if(s.type!=='all')q.set('type',s.type);if(s.year!=='all')q.set('year',s.year);if(s.project)q.set('project',s.project);const hash='#/'+s.view+(q.size?'?'+q:'');if(replace){history.replaceState(null,'',hash);route()}else if(location.hash!==hash)location.hash=hash;else route()}
+function readRoute(){const raw=location.hash.slice(1)||'/works';const [path,query]=raw.split('?');const q=new URLSearchParams(query||'');return {view:['/about','/ai'].includes(path)?path.slice(1):'works',type:Object.hasOwn(LABELS,q.get('type'))?q.get('type'):'all',year:/^\d{4}$/.test(q.get('year')||'')?q.get('year'):'all',project:q.get('project')}}
+function filtered(s=state){return rows.filter(p=>(s.type==='all'||p.category===s.type)&&(s.year==='all'||String(p.year)===s.year)).sort((a,b)=>b.year-a.year||Number(b.category==='exhibition')-Number(a.category==='exhibition')||a.id-b.id)}
+function yearOptions(){return ['all',...[...new Set(rows.map(p=>p.year).filter(Boolean))].sort((a,b)=>b-a).map(String)]}
+function updateYears(){const years=yearOptions();$('#years').innerHTML=years.map(y=>{const count=filtered({...state,year:y}).length;return `<button class="year ${state.year===y?'active':''}" data-year="${y}" aria-pressed="${state.year===y}"><span class="year-number">${y==='all'?'ALL':y}</span><span class="year-count">${String(count).padStart(2,'0')}</span></button>`}).join('');const i=years.indexOf(state.year);$('#prev').disabled=i<=0;$('#next').disabled=i===years.length-1}
+async function route(){const ticket=++routeTicket;const previous=state;state=readRoute();const works=state.view==='works';$$('.nav a').forEach(a=>{a.classList.toggle('active',works&&a.dataset.type===state.type);a.setAttribute('aria-current',works&&a.dataset.type===state.type?'page':'false')});$$('[data-count]').forEach(n=>n.textContent=String(rows.filter(p=>n.dataset.count==='all'||p.category===n.dataset.count).length).padStart(2,'0'));$$('[data-view]').forEach(a=>a.classList.toggle('active',a.dataset.view===state.view));$('#title').textContent=works?LABELS[state.type]:(state.view==='about'?localize('about us','About us'):'AI');document.title='0086 Studios™ — '+$('#title').textContent;$('#years').hidden=!works;$('#arrows').hidden=!works;$('#projects').hidden=!works;$('#list-meta').hidden=!works;$('#article').hidden=works;if(previous.view!==state.view||previous.type!==state.type||previous.year!==state.year)$('#scroll').scrollTop=0;
+if(!works){$('#article').innerHTML=`<span class="loading" role="status" aria-label="${localize('内容加载中','Loading content')}"></span>`;try{const content=await loadContent(state.view==='about'?'0086-about.html':'0086-ai.html');if(ticket!==routeTicket)return;$('#article').replaceChildren(content);if(state.view==='about'&&weatherUsesOpenMeteo){const cr=document.createElement('div');cr.className='credit';cr.innerHTML='Data adapted: <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>';$('#article').append(cr)}}catch(e){if(ticket!==routeTicket)return;$('#article').innerHTML=`<p class="error">${localize('内容暂时无法加载。','Content is temporarily unavailable.')}</p><a class="original-link" href="${resolve(state.view==='about'?'0086-about.html':'0086-ai.html')}">${localize('打开原页面 ↗','Open original page ↗')}</a>`}return}
+updateYears();const visible=filtered();$('#total').textContent=String(visible.length).padStart(2,'0');$('#list-label').textContent=state.year==='all'?LABELS[state.type]:state.year;
+$('#projects').innerHTML=visible.length?visible.map(p=>`<details class="project" data-id="${p.id}" style="--project-accent:${ACCENTS[p.category]||ACCENTS.other}" ${state.project===p.href?'open':''}><summary><span class="pyear">${p.year||''}</span><span><span class="ptype">${esc(LABELS[p.category]||'')}</span><span class="pname" style="display:block">${esc(projectTitle(p))}</span></span><span class="plus" aria-hidden="true">+</span></summary><div class="detail"></div></details>`).join(''):`<p class="empty">${localize('没有符合条件的作品。','No projects match these filters.')}</p>`;
+const selected=visible.find(p=>p.href===state.project);if(selected){const panel=$(`.project[data-id="${selected.id}"] .detail`);showProject(selected,panel,ticket)}}
+async function getPage(path){
+ const en=isEnglish(),key=(en?'en:':'zh:')+path;
+ if(pageCache.has(key))return pageCache.get(key);
+ const snapshot=window.__0086Catalogue?.pages?.[path];
+ const markup=en?snapshot?.html_en:snapshot?.html;
+ if(markup!==undefined){const doc=new DOMParser().parseFromString('<main>'+markup+'</main>','text/html');pageCache.set(key,doc);return doc;}
+ if(en)throw new Error('Missing English content');
+ const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),12000);
+ try{const response=await fetch(resolve(path),{signal:ctrl.signal});if(!response.ok)throw new Error('HTTP '+response.status);const doc=new DOMParser().parseFromString(await response.text(),'text/html');if(!doc.querySelector('main'))throw new Error('Missing main');pageCache.set(key,doc);return doc;}finally{clearTimeout(timer);}
+}
+async function loadContent(path){
+ const doc=await getPage(path),node=document.createElement('div');node.className='source-content catalogue-content';
+ const source=doc.querySelector('main').cloneNode(true),snapshot=window.__0086Catalogue?.pages?.[path];
+ source.querySelectorAll('script,style,iframe,object,embed,form,link,.back,.header-back,.corner-icons,.lightbox').forEach(n=>n.remove());
+ for(const e of source.querySelectorAll('*')){
+  for(const a of [...e.attributes])if(a.name.startsWith('on')||['style','srcdoc'].includes(a.name)||(a.name==='id'&&!a.value.startsWith('catalog-')))e.removeAttribute(a.name);
+  for(const a of ['src','href','poster','data-image-src']){
+   const value=e.getAttribute(a);if(!value)continue;if(a==='href'&&value.startsWith('#catalog-'))continue;
+   let u;try{u=new URL(value,snapshot?.url||resolve(path));}catch{e.removeAttribute(a);continue;}
+   if(!['https:','http:','file:','mailto:'].includes(u.protocol)){e.removeAttribute(a);continue;}e.setAttribute(a,u.href);
+  }
+  if(e.tagName==='IMG'){e.loading='lazy';e.decoding='async';}
+  if(e.tagName==='VIDEO'){e.controls=true;e.playsInline=true;e.preload='none';e.removeAttribute('autoplay');}
+  if(e.tagName==='A'&&!e.getAttribute('href')?.startsWith('#catalog-')){e.target='_blank';e.rel='noopener noreferrer';}
+ }
+ node.append(...source.childNodes);return node;
+}
+function coverMarkup(p){return `<img class="project-cover" src="${esc(resolve(p.image))}" alt="${esc(projectTitle(p))}" loading="lazy"><a class="original-link" href="${esc(originalURL(p.href))}" target="_blank" rel="noopener noreferrer">${esc(projectTitle(p))} <span>↗</span></a>`}
+async function showProject(p,panel,ticket){const external=/^https?:\/\//.test(p.href);panel.innerHTML=external?coverMarkup(p):`<span class="loading" role="status" aria-label="${localize('作品加载中','Loading project')}"></span>`;if(external){panel.querySelector('img').addEventListener('error',e=>e.target.hidden=true,{once:true});return}try{const content=await loadContent(p.href);if(ticket!==routeTicket||!panel.isConnected)return;panel.replaceChildren(content);const a=document.createElement('a');a.className='original-link';a.href=originalURL(p.href);a.target='_blank';a.rel='noopener noreferrer';a.textContent='↗ '+projectTitle(p);panel.append(a)}catch{if(ticket!==routeTicket||!panel.isConnected)return;panel.innerHTML=coverMarkup(p);panel.querySelector('img').addEventListener('error',e=>e.target.hidden=true,{once:true})}}
+$('#projects').addEventListener('click',e=>{const summary=e.target.closest('summary');if(!summary||!summary.matches('.project > summary'))return;e.preventDefault();const p=rows.find(r=>r.id===Number(summary.parentElement.dataset.id));go({project:state.project===p.href?null:p.href})});$('#years').addEventListener('click',e=>{const b=e.target.closest('[data-year]');if(b)go({year:b.dataset.year,project:null})});$('#prev').onclick=()=>{const ys=yearOptions();go({year:ys[Math.max(0,ys.indexOf(state.year)-1)],project:null})};$('#next').onclick=()=>{const ys=yearOptions();go({year:ys[Math.min(ys.length-1,ys.indexOf(state.year)+1)],project:null})};window.addEventListener('hashchange',route);
+const dialog=$('#lightbox');
+$('#scroll').addEventListener('click',e=>{
+ const anchor=e.target.closest('a[href^="#catalog-"]');
+ if(anchor){e.preventDefault();document.getElementById(anchor.getAttribute('href').slice(1))?.scrollIntoView({block:'start',behavior:'auto'});return;}
+ const trigger=e.target.closest('[data-image-src]'),img=e.target.closest('.gallery img,.catalogue-content figure img');
+ if(!trigger&&!img)return;
+ e.preventDefault();dialog.querySelector('img').src=trigger?.getAttribute('data-image-src')||img.currentSrc||img.src;
+ dialog.querySelector('img').alt=trigger?.getAttribute('data-image-alt')||img?.alt||'';dialog.showModal();
+});
+dialog.querySelector('button').onclick=()=>dialog.close();dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
+// The latest published All Works snapshot is the sole catalogue source.
+function refreshCatalogue(){const current=window.__0086Catalogue?.projects;if(Array.isArray(current)&&current.length>=SOURCE_ROWS.length){rows=current.map((p,id)=>({...p,id}));route();}}
+// Weather is only a material input. There is intentionally no weather/control dashboard.
+// Production uses an operator-configured same-origin endpoint; evaluation uses Open-Meteo only on localhost/file.
+const localPreview=location.protocol==='file:'||['localhost','127.0.0.1','[::1]'].includes(location.hostname);
+const weatherUsesOpenMeteo=config.weatherProvider==='open-meteo'||!config.weatherEndpoint;
+const WEATHER_URL=config.weatherEndpoint||(localPreview?'https://api.open-meteo.com/v1/forecast?latitude=22.5431&longitude=114.0579&current=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,is_day,wind_speed_10m,wind_direction_10m,wind_gusts_10m&wind_speed_unit=ms&timezone=Asia%2FShanghai':'/api/weather/shenzhen');
+const clamp=(n,a=0,b=1)=>Math.max(a,Math.min(b,n));const neutral={power:.26,windX:.3,windY:.1,rain:0,humidity:.55,cloud:.4,day:.5,warm:.35,gust:.05};let target={...neutral},current={...neutral},weatherSource='neutral';
+function weatherToField(payload){const c=payload.current||payload;const required=['wind_speed_10m','wind_direction_10m','relative_humidity_2m','precipitation','cloud_cover','is_day','temperature_2m'];if(!required.every(k=>typeof c[k]==='number'&&Number.isFinite(c[k])))throw new Error('Incomplete weather response');let speed=c.wind_speed_10m,gust=c.wind_gusts_10m??speed;const units=payload.current_units?.wind_speed_10m;if(units==='km/h'){speed/=3.6;gust/=3.6}else if(units&&units!=='m/s')throw new Error('Unsupported wind unit');const angle=c.wind_direction_10m*Math.PI/180;return {power:.12+.88*(1-Math.exp(-Math.max(0,speed)/6)),windX:-Math.sin(angle),windY:Math.cos(angle),rain:clamp(c.precipitation/6),humidity:clamp(c.relative_humidity_2m/100),cloud:clamp(c.cloud_cover/100),day:clamp(c.is_day),warm:clamp((c.temperature_2m-12)/24),gust:clamp((gust-speed)/12)}}
+const CACHE_KEY='0086-weather-v1';let cacheAt=0,weatherBusy=false;
+try{const cached=JSON.parse(localStorage.getItem(CACHE_KEY)||'null');if(cached&&Date.now()-cached.at<3600000&&Date.now()>=cached.at){target=weatherToField(cached.payload);cacheAt=cached.at;weatherSource='cache'}}catch{}
+async function updateWeather(){if(weatherBusy||document.hidden)return;weatherBusy=true;const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),8000);try{const res=await fetch(WEATHER_URL,{signal:ctrl.signal});if(!res.ok)throw new Error('Weather '+res.status);const payload=await res.json();target=weatherToField(payload);const fetched=payload.fetched_at??Date.now();if(typeof fetched!=='number'||Date.now()-fetched>3600000||fetched>Date.now()+60000)throw new Error('Stale weather');cacheAt=fetched;weatherSource=payload.stale?'cache':'live';try{localStorage.setItem(CACHE_KEY,JSON.stringify({at:cacheAt,payload}))}catch{}}catch{if(Date.now()-cacheAt>3600000){target={...neutral};weatherSource='neutral'}else weatherSource='cache'}finally{clearTimeout(timer);weatherBusy=false;document.documentElement.dataset.weatherSource=weatherSource}}
+// Geometry is reconstructed continuously, with frame-rate-independent motion and 60-second data smoothing.
+const canvas=$('#field'),ctx=canvas.getContext('2d',{alpha:false});const reduced=matchMedia('(prefers-reduced-motion: reduce)');let paused=reduced.matches,w=innerWidth,h=innerHeight,time=0,last=0,raf=0,points=[],mouse={x:-9999,y:-9999,down:false},pulse=null;
+function resize(){w=innerWidth;h=innerHeight;const d=Math.min(devicePixelRatio||1,1.6);canvas.width=Math.round(w*d);canvas.height=Math.round(h*d);ctx.setTransform(d,0,0,d,0,0);let seed=86;const rnd=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};points=Array.from({length:w<720?1300:3600},()=>({a:rnd()*Math.PI*2,b:rnd()*Math.PI*2,r:Math.pow(rnd(),.55),size:.4+rnd()*1.4,phase:rnd()*6.28,ox:0,oy:0}));drawFrame(0)}
+function drawFrame(dt){if(!ctx)return;time+=dt*(.13+current.power*.6);const ease=1-Math.exp(-dt/20);for(const k in current)current[k]+=(target[k]-current[k])*ease;ctx.fillStyle='#070711';ctx.fillRect(0,0,w,h);const cx=w*.53,cy=h*.48,R=Math.min(w,h)*.45;const glow=ctx.createRadialGradient(cx+Math.sin(time*.2)*R*.5,cy,1,cx,cy,R*1.4);glow.addColorStop(0,`rgba(89,98,183,${.12+current.cloud*.25})`);glow.addColorStop(.5,'rgba(48,55,118,.09)');glow.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);const lobeX=w*(.40+.11*Math.sin(time*.27)),lobeY=h*(.38+.17*Math.cos(time*.21));const lobe=ctx.createRadialGradient(lobeX,lobeY,0,lobeX,lobeY,R*.8);lobe.addColorStop(0,`rgba(111,119,220,${.14+current.cloud*.25})`);lobe.addColorStop(.35,'rgba(83,95,191,.13)');lobe.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=lobe;ctx.fillRect(0,0,w,h);const ca=Math.cos(time*.12),sa=Math.sin(time*.12),rain=current.rain;
+for(const p of points){const a=p.a+time*.26,b=p.b+time*.18;const thick=(.12+p.r*(.18+current.cloud*.15))*(1.12-current.humidity*.35);const radius=1+Math.cos(b)*thick+.06*Math.sin(a*5+time);let x=Math.cos(a)*radius,y=Math.sin(a)*radius,z=Math.sin(b)*thick;const x2=x*ca-z*sa,z2=x*sa+z*ca;x=x2;y=y*.77+z2*.65;const curl=Math.sin(a*3+time*1.1+p.phase)*(.04+current.gust*.14);let px=cx+x*R*1.38+Math.sin(time*.45)*R*.12+curl*R+current.windX*Math.sin(time*.3)*70;let py=cy+y*R+Math.sin(a*2+time)*R*.13+current.windY*Math.sin(time*.3)*40;const fall=((p.phase/6.28+time*.18)%1)*h;px=px*(1-rain*.7)+(p.a/6.28*w+current.windX*fall*.18)*rain*.7;py=py*(1-rain*.7)+fall*rain*.7;const dx=px-mouse.x,dy=py-mouse.y,dist=Math.hypot(dx,dy);let tx=0,ty=0;if(dist<140&&dist>1){const force=(1-dist/140)*(mouse.down?-42:45);tx=dx/dist*force;ty=dy/dist*force}if(pulse){const pd=Math.hypot(px-pulse.x,py-pulse.y),age=(performance.now()-pulse.at)/1000,front=age*260,force=Math.exp(-Math.pow((pd-front)/45,2))*30*Math.max(0,1-age/2);tx+=(px-pulse.x)/Math.max(pd,1)*force;ty+=(py-pulse.y)/Math.max(pd,1)*force;if(age>2)pulse=null}const k=dt?1-Math.exp(-dt*6):1;p.ox+=(tx-p.ox)*k;p.oy+=(ty-p.oy)*k;px+=p.ox;py+=p.oy;const alpha=clamp((.35+z2*.35+p.r*.25)*(.65+current.day*.35),.12,.85);const red=Math.round(121+current.warm*35),green=Math.round(140+current.day*14);ctx.fillStyle=`rgba(${red},${green},242,${alpha})`;if(rain>.12){ctx.fillRect(px,py,p.size*.7,1+rain*(3+p.size*4))}else{ctx.beginPath();ctx.arc(px,py,p.size*(.65+(z2+1)*.25),0,6.283);ctx.fill()}}
+}
+function loop(now){raf=0;if(document.hidden||paused)return;const dt=last?Math.min((now-last)/1000,.05):0;last=now;drawFrame(dt);raf=requestAnimationFrame(loop)}
+function run(){if(raf)cancelAnimationFrame(raf);raf=0;last=0;if(!paused&&!document.hidden)raf=requestAnimationFrame(loop);else drawFrame(0);$$('[data-motion]').forEach(b=>{b.textContent=paused?'▷':'Ⅱ';b.setAttribute('aria-pressed',String(paused));b.setAttribute('aria-label',paused?'继续背景动画':'暂停背景动画')})}
+window.addEventListener('resize',resize);document.addEventListener('pointermove',e=>{mouse.x=e.clientX;mouse.y=e.clientY},{passive:true});document.addEventListener('pointerleave',()=>{mouse.x=-9999;mouse.y=-9999});document.addEventListener('pointerdown',e=>{if(e.target.closest('button,a,summary,input,dialog'))return;mouse.down=true;pulse={x:e.clientX,y:e.clientY,at:performance.now()}});window.addEventListener('pointerup',()=>mouse.down=false);window.addEventListener('blur',()=>{mouse.down=false;mouse.x=-9999;mouse.y=-9999});$$('[data-motion]').forEach(b=>b.onclick=()=>{paused=!paused;run()});reduced.addEventListener('change',e=>{paused=e.matches;run()});document.addEventListener('visibilitychange',()=>{run();if(!document.hidden&&Date.now()-cacheAt>600000)updateWeather()});
+// Read-only diagnostics; no simulated readings are presented as live weather.
+window.__0086={get state(){return {...state}},get weather(){return {source:weatherSource,target:{...target},current:{...current}}},weatherToField,get projects(){return rows.map(p=>({...p}))}};
+resize();run();route();refreshCatalogue();updateWeather();setInterval(updateWeather,600000);
+</script>
+</body></html>

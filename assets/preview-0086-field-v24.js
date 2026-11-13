@@ -12,15 +12,15 @@ const bound=(x,a,b)=>Math.max(a,Math.min(b,x));
 const pointer={x:innerWidth*.5,y:innerHeight*.5,active:0,nx:0,ny:0};
 const pose={x:0,y:0},weather={power:.26,windX:.3,windY:.1,rain:0,humidity:.55,cloud:.4,day:.5,warm:.35,gust:.05,sun:0,dawn:0,sunAzimuth:0,twilight:0};
 const WX_PRESETS={
- clear:{power:.18,windX:.18,windY:.98,rain:0,humidity:.38,cloud:.06,day:1,warm:.58,gust:.02,sun:.34,dawn:0,sunAzimuth:.10,twilight:0,label:'模拟·晴 27°C 风 0.8m/s 无雨',sunrise:'06:30'},
- wind:{power:.78,windX:-.94,windY:.34,rain:0,humidity:.58,cloud:.28,day:1,warm:.52,gust:.42,sun:.34,dawn:0,sunAzimuth:.2,twilight:0,label:'模拟·大风 25°C 风 9.0m/s 无雨',sunrise:'06:30'},
- rain:{power:.48,windX:-.55,windY:.84,rain:.58,humidity:.92,cloud:.90,day:.65,warm:.45,gust:.20,sun:0,dawn:0,sunAzimuth:0,twilight:0,label:'模拟·雨 23°C 风 3.1m/s 雨 3.5mm',sunrise:'06:30'},
- storm:{power:1,windX:.88,windY:.47,rain:1,humidity:.98,cloud:1,day:.20,warm:.30,gust:.92,sun:0,dawn:0,sunAzimuth:0,twilight:0,label:'模拟·暴雨 20°C 风 14.0m/s 雨 8.0mm',sunrise:'06:30'},
- night:{power:.30,windX:.30,windY:-.95,rain:0,humidity:.68,cloud:.22,day:0,warm:.32,gust:.08,sun:0,dawn:0,sunAzimuth:1,twilight:1,label:'模拟·夜间 20°C 风 1.5m/s 无雨',sunrise:'06:30'},
- cloudy:{power:.34,windX:-.25,windY:.97,rain:0,humidity:.78,cloud:.96,day:1,warm:.42,gust:.10,sun:.02,dawn:0,sunAzimuth:0,twilight:0,label:'模拟·多云 22°C 风 2.0m/s 无雨',sunrise:'06:30'},
- sunny:{power:.16,windX:.12,windY:.99,rain:0,humidity:.34,cloud:.02,day:1,warm:.78,gust:.01,sun:1,dawn:0,sunAzimuth:.48,twilight:0,label:'模拟·大太阳 29°C 风 0.6m/s 无雨',sunrise:'06:30'},
- sunrise:{power:.16,windX:-.12,windY:.99,rain:0,humidity:.70,cloud:.10,day:.55,warm:.50,gust:.01,sun:.20,dawn:1,sunAzimuth:-1,twilight:0,label:'模拟·日出 22°C 风 0.5m/s 无雨',sunrise:'06:30'},
- sunset:{power:.20,windX:.20,windY:.98,rain:0,humidity:.64,cloud:.16,day:.35,warm:.48,gust:.02,sun:.12,dawn:1,sunAzimuth:1,twilight:1,label:'模拟·日落 24°C 风 0.8m/s 无雨',sunrise:'06:30'}
+ clear:{power:.18,windX:.18,windY:.98,rain:0,humidity:.38,cloud:.06,day:1,warm:.58,gust:.02,sun:.34,dawn:0,sunAzimuth:.10,twilight:0,label:'模拟·晴 27°C 风 0.8m/s 无雨',labelEn:'Clear 27°C · Wind 0.8m/s · No rain',sunrise:'06:30'},
+ wind:{power:.78,windX:-.94,windY:.34,rain:0,humidity:.58,cloud:.28,day:1,warm:.52,gust:.42,sun:.34,dawn:0,sunAzimuth:.2,twilight:0,label:'模拟·大风 25°C 风 9.0m/s 无雨',labelEn:'Windy 25°C · Wind 9.0m/s · No rain',sunrise:'06:30'},
+ rain:{power:.48,windX:-.55,windY:.84,rain:.58,humidity:.92,cloud:.90,day:.65,warm:.45,gust:.20,sun:0,dawn:0,sunAzimuth:0,twilight:0,label:'模拟·雨 23°C 风 3.1m/s 雨 3.5mm',labelEn:'Rain 23°C · Wind 3.1m/s · Rain 3.5mm',sunrise:'06:30'},
+ storm:{power:1,windX:.88,windY:.47,rain:1,humidity:.98,cloud:1,day:.20,warm:.30,gust:.92,sun:0,dawn:0,sunAzimuth:0,twilight:0,label:'模拟·暴雨 20°C 风 14.0m/s 雨 8.0mm',labelEn:'Heavy rain 20°C · Wind 14.0m/s · Rain 8.0mm',sunrise:'06:30'},
+ night:{power:.30,windX:.30,windY:-.95,rain:0,humidity:.68,cloud:.22,day:0,warm:.32,gust:.08,sun:0,dawn:0,sunAzimuth:1,twilight:1,label:'模拟·夜间 20°C 风 1.5m/s 无雨',labelEn:'Night 20°C · Wind 1.5m/s · No rain',sunrise:'06:30'},
+ cloudy:{power:.34,windX:-.25,windY:.97,rain:0,humidity:.78,cloud:.96,day:1,warm:.42,gust:.10,sun:.02,dawn:0,sunAzimuth:0,twilight:0,label:'模拟·多云 22°C 风 2.0m/s 无雨',labelEn:'Cloudy 22°C · Wind 2.0m/s · No rain',sunrise:'06:30'},
+ sunny:{power:.16,windX:.12,windY:.99,rain:0,humidity:.34,cloud:.02,day:1,warm:.78,gust:.01,sun:1,dawn:0,sunAzimuth:.48,twilight:0,label:'模拟·大太阳 29°C 风 0.6m/s 无雨',labelEn:'Sunny 29°C · Wind 0.6m/s · No rain',sunrise:'06:30'},
+ sunrise:{power:.16,windX:-.12,windY:.99,rain:0,humidity:.70,cloud:.10,day:.55,warm:.50,gust:.01,sun:.20,dawn:1,sunAzimuth:-1,twilight:0,label:'模拟·日出 22°C 风 0.5m/s 无雨',labelEn:'Sunrise 22°C · Wind 0.5m/s · No rain',sunrise:'06:30'},
+ sunset:{power:.20,windX:.20,windY:.98,rain:0,humidity:.64,cloud:.16,day:.35,warm:.48,gust:.02,sun:.12,dawn:1,sunAzimuth:1,twilight:1,label:'模拟·日落 24°C 风 0.8m/s 无雨',labelEn:'Sunset 24°C · Wind 0.8m/s · No rain',sunrise:'06:30'}
 };
 const wxName=new URLSearchParams(location.search).get('wx'),forced=WX_PRESETS[wxName]||null;
 if(forced)for(const key in weather)weather[key]=forced[key];
@@ -275,14 +275,21 @@ function updateWeatherEffect(){
 const readout=document.getElementById('weather-readout');
 function refreshWeatherReadout(){
  if(!readout)return;
- if(forced){readout.textContent='深圳 '+forced.label+' · 日出 '+forced.sunrise;readout.dataset.simulated='true';return;}
+ const en=document.documentElement.lang==='en';
+ if(forced){
+  readout.textContent=en?`Shenzhen · Simulated · ${forced.labelEn} · Sunrise ${forced.sunrise}`:'深圳 '+forced.label+' · 日出 '+forced.sunrise;
+  readout.dataset.simulated='true';
+  return;
+ }
  const payload=window.__0086WeatherRaw;const current=payload?.current||payload;
  liveSolar=solarFromPayload(payload);liveSignals=signalsFromPayload(payload);
- if(!current||!Number.isFinite(current.temperature_2m)||!Number.isFinite(current.wind_speed_10m)){readout.textContent='深圳天气连接中';return;}
+ if(!current||!Number.isFinite(current.temperature_2m)||!Number.isFinite(current.wind_speed_10m)){readout.textContent=en?'Connecting to Shenzhen weather':'深圳天气连接中';return;}
  let speed=current.wind_speed_10m;const unit=payload?.current_units?.wind_speed_10m;if(unit==='km/h')speed/=3.6;
  const rain=Number.isFinite(current.precipitation)?Math.max(0,current.precipitation):0;
  const rise=liveSolar.sunrise?.slice(11,16)||'--:--';
- readout.textContent=`深圳 ${Math.round(current.temperature_2m)}°C 风 ${speed.toFixed(1)}m/s ${rain>.05?'雨 '+rain.toFixed(1)+'mm':'无雨'} · 日出 ${rise}`;
+ readout.textContent=en
+  ?`Shenzhen ${Math.round(current.temperature_2m)}°C · Wind ${speed.toFixed(1)}m/s · ${rain>.05?'Rain '+rain.toFixed(1)+'mm':'No rain'} · Sunrise ${rise}`
+  :`深圳 ${Math.round(current.temperature_2m)}°C 风 ${speed.toFixed(1)}m/s ${rain>.05?'雨 '+rain.toFixed(1)+'mm':'无雨'} · 日出 ${rise}`;
  readout.dataset.simulated='false';
 }
 function draw(dt){
@@ -439,6 +446,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden){halt();end
 reduced.addEventListener('change',()=>{halt();release();if(reduced.matches)pose.x=pose.y=pointer.nx=pointer.ny=0;schedule();});
 canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();lost=true;halt();restoreTimer=setTimeout(()=>{if(lost){useFallback('WebGL context lost');resize();}},350);});canvas.addEventListener('webglcontextrestored',()=>{clearTimeout(restoreTimer);if(!gl)return;lost=false;count=0;try{setup();}catch(e){useFallback('WebGL restore failed');}resize();});
 window.addEventListener('pagehide',halt);window.addEventListener('pageshow',schedule);
+document.addEventListener('0086-language-change',refreshWeatherReadout);
 updateWeatherEffect();refreshWeatherReadout();setInterval(refreshWeatherReadout,1000);
 window.__0086Field=Object.freeze({version:24,designRevision:'volumetric-corelight-v24',loopMs:LOOP,get phase(){return phase;},get weatherOverride(){return forced?wxName:null;},get particleCount(){return gl?count:stars.length;},get renderer(){return gl?'webgl-volumetric-weather-points':'canvas-fallback';},get rendererIssue(){return rendererIssue;},get inputSource(){return inputSource;},get viewport(){return {width,height};},get frames(){return frames;},get camera(){return {...pose};},get targetCamera(){return {x:pointer.nx,y:pointer.ny};},get interaction(){return touchMode?'volumetric-touch':'desktop-pointer';},get touchPoint(){return {...touchPoint};},get weather(){return {...weather};},get weatherEffect(){return {speed:weatherEffect.speed,drift:{...weatherEffect.drift},rainAmount:weatherEffect.rainAmount,brightness:weatherEffect.brightness,sun:weatherEffect.sun,dawn:weatherEffect.dawn,sunAzimuth:weatherEffect.sunAzimuth,windPush:weatherEffect.windPush,gustPulse:weatherEffect.gustPulse,sunGlow:weatherEffect.sunGlow,clarity:weatherEffect.clarity,coreLight:weatherEffect.coreLight,coreWarmth:weatherEffect.coreWarmth,coreOffset:weatherEffect.coreOffset,tint:{warm:weatherEffect.tint.warm,rgb:[...weatherEffect.tint.rgb]}};},get solarTimes(){return {sunrise:liveSolar.sunrise,sunset:liveSolar.sunset};},get pulseAge(){return(performance.now()-hitAt)/1000;},get pointer(){return {...pointer};},get energy(){return level;},get reducedMotion(){return reduced.matches;},get touch(){return {taps:touchTaps,moves:touchMoves,active:touchId!==null,ripples:0};}});
 resize();
